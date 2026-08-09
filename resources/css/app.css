@@ -1,0 +1,235 @@
+@layer tailwind-base, tailwind-utilities;
+
+@layer tailwind-base {
+    @tailwind base;
+}
+
+@layer tailwind-utilities {
+    @tailwind components;
+    @tailwind utilities;
+}
+
+[x-cloak] {
+    display: none;
+}
+
+/* ============================================
+   VARIABLES DE TEMA GLOBAL
+   Colores personalizables para toda la aplicación
+   ============================================ */
+:root {
+    /* Color principal - Verde Esmeralda para aplicaciones ambientales */
+    --theme-primary: #047857;
+    --theme-primary-light: #10b981;
+    --theme-primary-dark: #065f46;
+    --theme-primary-lighter: #059669;
+    
+    /* Gradientes */
+    --theme-gradient-start: var(--theme-primary);
+    --theme-gradient-end: var(--theme-primary-light);
+    --theme-gradient-hover-start: var(--theme-primary-dark);
+    --theme-gradient-hover-end: var(--theme-primary-lighter);
+    
+    /* Fondos */
+    --theme-bg-light: #f0fdf4;
+    --theme-bg-hover: #ecfdf5;
+    
+    /* Sombras */
+    --theme-shadow-sm: 0 2px 4px rgba(4, 120, 87, 0.2);
+    --theme-shadow-md: 0 4px 6px rgba(4, 120, 87, 0.3);
+    --theme-shadow-lg: 0 6px 12px rgba(4, 120, 87, 0.4);
+    --theme-shadow-xl: 0 8px 16px rgba(4, 120, 87, 0.5);
+}
+
+/* ============================================
+   ESTILOS GLOBALES DE TABLAS
+   ============================================ */
+
+/* Headers de tabla con tema verde */
+.themed-table thead,
+.themed-thead,
+thead.themed-thead,
+.table thead.themed-thead,
+table thead.themed-thead {
+    background: linear-gradient(135deg, #047857 0%, #10b981 100%) !important;
+    color: white !important;
+}
+
+.themed-table thead th,
+.themed-thead th,
+thead.themed-thead th,
+.table thead.themed-thead th,
+table thead.themed-thead th {
+    color: white !important;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    padding: 1rem 0.75rem !important;
+    font-weight: 600 !important;
+    vertical-align: middle !important;
+}
+
+/* Hover en filas */
+.themed-table tbody tr:hover,
+.table-hover tbody tr:hover,
+.table-striped tbody tr:hover,
+.table tbody tr:hover {
+    background-color: #f0fdf4 !important;
+    cursor: pointer;
+}
+
+/* Hover en tablas Tailwind (sin .table) */
+table tbody tr:hover {
+    background-color: var(--theme-bg-hover, #ecfdf5);
+    cursor: pointer;
+}
+[data-theme="dark"] table tbody tr:hover {
+    background-color: rgba(255,255,255,0.04);
+}
+
+/* Scrollbars personalizados */
+.table-responsive::-webkit-scrollbar,
+.dataTables_wrapper .dataTables_scrollBody::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track,
+.dataTables_wrapper .dataTables_scrollBody::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb,
+.dataTables_wrapper .dataTables_scrollBody::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #047857 0%, #10b981 100%);
+    border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover,
+.dataTables_wrapper .dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #065f46 0%, #059669 100%);
+}
+
+/* ============================================
+   BOOTSTRAP-SELECT (selectControl)
+   Estilo del botón desplegable de bootstrap-select
+   ============================================ */
+.selectControl {
+    background: white;
+    border: 1px solid #ced4da;
+    border-radius: .375rem;
+    color: #495057;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+.selectControl:focus {
+    border-color: #10b981;
+    box-shadow: 0 0 0 .2rem rgba(16,185,129,.25);
+}
+.selectControl.btn.disabled {
+    background: #e9ecef;
+    opacity: 1;
+}
+.bootstrap-select .dropdown-toggle:focus {
+    outline: none !important;
+}
+[data-theme="dark"] .selectControl {
+    background: #374151;
+    border-color: #4b5563;
+    color: #e5e7eb;
+}
+
+/* ============================================
+   COMPONENTES — reemplazo de Bootstrap
+   ============================================ */
+@layer components {
+
+    /* ── Botones ─────────────────────────────── */
+    .tw-btn {
+        @apply inline-flex items-center gap-1.5 rounded px-3 py-1.5 text-sm font-medium transition-colors cursor-pointer;
+    }
+    .tw-btn-xs {
+        @apply inline-flex items-center gap-1 rounded px-2 py-1 text-xs font-medium transition-colors cursor-pointer;
+    }
+
+    /* Color variants */
+    .tw-btn-emerald  { @apply bg-emerald-600 text-white hover:bg-emerald-700; }
+    .tw-btn-blue     { @apply bg-blue-600 text-white hover:bg-blue-700; }
+    .tw-btn-amber    { @apply bg-amber-500 text-white hover:bg-amber-600; }
+    .tw-btn-red      { @apply bg-red-600 text-white hover:bg-red-700; }
+    .tw-btn-gray     { @apply bg-gray-500 text-white hover:bg-gray-600; }
+    .tw-btn-outline         { @apply border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600; }
+    .tw-btn-outline-emerald { @apply border border-emerald-600 bg-transparent text-emerald-700 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-900/20; }
+    .tw-btn-outline-blue    { @apply border border-blue-500 bg-transparent text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20; }
+    .tw-btn-outline-red     { @apply border border-red-500 bg-transparent text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20; }
+    .tw-btn-outline-amber   { @apply border border-amber-500 bg-transparent text-amber-700 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-900/20; }
+    .tw-btn-link            { @apply bg-transparent text-emerald-700 hover:text-emerald-900 hover:underline dark:text-emerald-400; }
+
+    /* Disabled state */
+    .tw-btn:disabled, .tw-btn-xs:disabled {
+        @apply opacity-50 cursor-not-allowed;
+    }
+
+    /* ── Badges ──────────────────────────────── */
+    .tw-badge {
+        @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium;
+    }
+    .tw-badge-green  { @apply bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300; }
+    .tw-badge-red    { @apply bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300; }
+    .tw-badge-amber  { @apply bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300; }
+    .tw-badge-blue   { @apply bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300; }
+    .tw-badge-gray   { @apply bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300; }
+
+    /* ── Inputs / Selects ────────────────────── */
+    .tw-input {
+        @apply w-full rounded border-gray-300 text-sm shadow-sm
+               focus:border-emerald-500 focus:ring-emerald-500
+               dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400;
+    }
+    .tw-input-sm {
+        @apply w-full rounded border-gray-300 py-1 text-sm shadow-sm
+               focus:border-emerald-500 focus:ring-emerald-500
+               dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200;
+    }
+    .tw-label {
+        @apply mb-1 block text-xs font-medium text-gray-700 dark:text-gray-300;
+    }
+
+    /* ── Alertas ─────────────────────────────── */
+    .tw-alert {
+        @apply mb-4 flex items-start gap-3 rounded-lg border p-3 text-sm;
+    }
+    .tw-alert-green  { @apply border-green-200 bg-green-50 text-green-800 dark:border-green-800 dark:bg-green-900/30 dark:text-green-300; }
+    .tw-alert-amber  { @apply border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-900/30 dark:text-amber-300; }
+    .tw-alert-red    { @apply border-red-200 bg-red-50 text-red-800 dark:border-red-800 dark:bg-red-900/30 dark:text-red-300; }
+    .tw-alert-blue   { @apply border-blue-200 bg-blue-50 text-blue-800 dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-300; }
+
+    /* ── Panel header (reemplaza card-header) ── */
+    .tw-panel-header {
+        @apply mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 pb-3 dark:border-gray-700;
+    }
+
+    /* ── Spinner de carga ───────────────────── */
+    .tw-spinner {
+        @apply inline-block h-4 w-4 animate-spin rounded-full border-2 border-emerald-600 border-t-transparent;
+    }
+    .tw-spinner-sm {
+        @apply inline-block h-3 w-3 animate-spin rounded-full border-2 border-emerald-600 border-t-transparent;
+    }
+
+    /* ── Tabla base ──────────────────────────── */
+    .tw-table {
+        @apply w-full text-left text-sm;
+    }
+    .tw-table th {
+        @apply px-3 py-2 font-semibold;
+    }
+    .tw-table td {
+        @apply px-3 py-2 text-gray-700 dark:text-gray-300;
+    }
+    .tw-table tbody {
+        @apply divide-y divide-gray-100 dark:divide-gray-700;
+    }
+    .tw-table-wrap {
+        @apply overflow-x-auto rounded border border-gray-200 dark:border-gray-700;
+    }
+}

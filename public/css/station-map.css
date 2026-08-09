@@ -1,0 +1,147 @@
+/* =============================================================================
+   Estilos del mapa de estaciones (vista resources/views/station/map.blade.php).
+   Contenedor del mapa, capa de lluvia y animaciones de los marcadores.
+   ============================================================================= */
+
+/* Contenedor del mapa de Google Maps (ocupa el 70% del alto de la ventana). */
+#map {
+    height: 70vh;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+/* Capa <canvas> superpuesta donde se dibuja el efecto de lluvia; no intercepta clics. */
+#rain-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 500;
+}
+
+/* Marcador de estación con problema (retrasada/caída): parpadeo + halo tipo alarma. */
+.warning-alert-marker {
+    /* Variable RGB base para halo, brillo y ondas del marcador de alerta. */
+    --warning-alert-color-rgb: 255, 72, 72;
+    position: relative;
+    isolation: isolate;
+    will-change: transform, opacity, filter;
+    animation: warning-alert-blink 1.15s ease-in-out infinite;
+    filter: drop-shadow(0 0 6px rgba(var(--warning-alert-color-rgb), 0.95));
+}
+
+/* Variante negra del marcador de alerta (estación offline por mucho tiempo). */
+.warning-alert-marker--black {
+    /* Variable RGB alternativa para alertas offline en color oscuro. */
+    --warning-alert-color-rgb: 24, 24, 27;
+}
+
+/* Dos ondas exteriores que simulan una sirena visual alrededor del icono. */
+.warning-alert-marker::before,
+.warning-alert-marker::after {
+    content: '';
+    position: absolute;
+    inset: -7px;
+    border-radius: 999px;
+    border: 2px solid rgba(var(--warning-alert-color-rgb), 0.9);
+    background: radial-gradient(circle, rgba(var(--warning-alert-color-rgb), 0.22) 0%, rgba(var(--warning-alert-color-rgb), 0.08) 45%, rgba(var(--warning-alert-color-rgb), 0) 75%);
+    pointer-events: none;
+    z-index: -1;
+    animation: warning-alert-wave 1.8s ease-out infinite;
+}
+
+/* Segunda onda desfasada media animación para que el efecto sea continuo. */
+.warning-alert-marker::after {
+    animation-delay: 0.9s;
+}
+
+/* Permite que el icono SVG se dibuje fuera de su caja (sin recortes). */
+.warning-alert-marker svg {
+    overflow: visible;
+}
+
+/* Keyframes: pulso del icono del warning (escala + brillo) para atraer la atención. */
+@keyframes warning-alert-blink {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+        filter: drop-shadow(0 0 5px rgba(var(--warning-alert-color-rgb), 0.75));
+    }
+    50% {
+        transform: scale(1.08);
+        opacity: 0.82;
+        filter: drop-shadow(0 0 14px rgba(var(--warning-alert-color-rgb), 1));
+    }
+}
+
+/* Keyframes: expande y desvanece el halo del warning para reforzar la alerta. */
+@keyframes warning-alert-wave {
+    0% {
+        transform: scale(0.78);
+        opacity: 0.95;
+    }
+    70% {
+        opacity: 0.28;
+    }
+    100% {
+        transform: scale(1.65);
+        opacity: 0;
+    }
+}
+
+/* Marcador de estación ACTIVA: contenedor de la onda tipo radar (opcional). */
+.station-pulse-marker {
+    position: relative;
+    isolation: isolate;
+}
+
+/* Anillos que se expanden hacia afuera. Liviano: solo anima transform/opacity (GPU). */
+.station-pulse-marker::before,
+.station-pulse-marker::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    /* Variable definida desde JS para pintar el pulso con el color del marcador. */
+    border: 2px solid var(--station-pulse-color, #3968a6);
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+    pointer-events: none;
+    z-index: -1;
+    will-change: transform, opacity;
+    animation: station-pulse-wave 2.4s ease-out infinite;
+}
+
+/* Segundo anillo desfasado para que la onda activa sea continua. */
+.station-pulse-marker::after {
+    animation-delay: 1.2s;
+}
+
+/* Keyframes: la onda activa crece desde el tamaño del punto hacia afuera y se desvanece. */
+@keyframes station-pulse-wave {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.55;
+    }
+    70% {
+        opacity: 0.15;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(3.6);
+        opacity: 0;
+    }
+}
+
+/* Accesibilidad: desactiva la onda activa para quien prefiere menos movimiento. */
+@media (prefers-reduced-motion: reduce) {
+    .station-pulse-marker::before,
+    .station-pulse-marker::after {
+        animation: none;
+    }
+}

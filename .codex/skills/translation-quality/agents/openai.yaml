@@ -1,0 +1,4 @@
+interface:
+  display_name: "Translation Quality"
+  short_description: "Validate multilingual translations and UTF-8 text quality"
+  default_prompt: "Use this skill when editing translations or multilingual UI text."

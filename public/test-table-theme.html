@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Tema de Tablas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/theme/themes.css">
+    <style>
+        body {
+            padding: 2rem;
+            background: #f8f9fa;
+        }
+        .test-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="test-card">
+            <h2 class="mb-4">🧪 Prueba de Tema de Tablas</h2>
+            
+            <div class="alert alert-info">
+                <strong>Instrucciones:</strong>
+                <ul class="mb-0">
+                    <li>El header de la tabla debería tener un gradiente verde (#047857 → #10b981)</li>
+                    <li>El texto del header debería ser blanco</li>
+                    <li>Al pasar el mouse sobre las filas, deberían tener fondo verde claro (#f0fdf4)</li>
+                </ul>
+            </div>
+
+            <h4 class="mt-4">Tabla de Prueba con clase <code>themed-thead</code></h4>
+            <table class="table table-sm table-striped table-bordered">
+                <thead class="themed-thead">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Juan Pérez</td>
+                        <td>juan@example.com</td>
+                        <td><span class="badge badge-success">Activo</span></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>María García</td>
+                        <td>maria@example.com</td>
+                        <td><span class="badge badge-success">Activo</span></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Carlos López</td>
+                        <td>carlos@example.com</td>
+                        <td><span class="badge badge-warning">Pendiente</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <hr class="my-4">
+
+            <h4>Estado del CSS</h4>
+            <div id="css-status"></div>
+
+            <script>
+                // Verificar si el CSS se cargó
+                window.addEventListener('load', function() {
+                    const thead = document.querySelector('.themed-thead');
+                    const styles = window.getComputedStyle(thead);
+                    const background = styles.background;
+                    const color = styles.color;
+                    
+                    document.getElementById('css-status').innerHTML = `
+                        <div class="card p-3 mt-3">
+                            <h5>Información de Debug:</h5>
+                            <p><strong>Background:</strong> ${background}</p>
+                            <p><strong>Color:</strong> ${color}</p>
+                            <p><strong>Archivo CSS:</strong> <a href="/css/theme/themes.css" target="_blank">/css/theme/themes.css</a></p>
+                            <hr>
+                            ${background.includes('gradient') || background.includes('#047857') || background.includes('rgb(4, 120, 87)') 
+                                ? '<div class="alert alert-success">✅ <strong>CSS CARGADO CORRECTAMENTE</strong> - El gradiente verde se está aplicando</div>' 
+                                : '<div class="alert alert-danger">❌ <strong>ERROR</strong> - El CSS no se está cargando. Revisa la consola del navegador (F12)</div>'}
+                        </div>
+                    `;
+                });
+            </script>
+        </div>
+    </div>
+</body>
+</html>
+

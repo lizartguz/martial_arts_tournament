@@ -1,0 +1,37 @@
+/* Estilos de botones para autenticación */
+
+.auth-button {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    outline: none;
+    transform: transition-all duration-200;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.auth-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5), 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.auth-button:hover {
+    transform: scale(1.02);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.auth-button:active {
+    transform: scale(0.98);
+}
+
+.auth-button-primary {
+    background: linear-gradient(to right, rgb(101, 192, 74), rgb(115, 163, 26));
+    color: white;
+}
+
+.auth-button-primary:hover {
+    opacity: 0.9;
+}

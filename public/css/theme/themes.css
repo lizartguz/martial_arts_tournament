@@ -1,0 +1,751 @@
+/* ============================================
+   TEMA OSCURO - Sistema SenvaTec
+   ============================================ */
+
+:root {
+    --bg-color: #ffffff;
+    --text-color: #212529;
+    --card-bg: #ffffff;
+    --card-border: #dee2e6;
+    --hover-bg: #f8f9fa;
+    
+    /* ============================================
+       COLORES TEMÁTICOS PERSONALIZABLES
+       Cambia estos colores para personalizar toda la aplicación
+       ============================================ */
+    
+    /* Color principal - Verde Esmeralda para aplicaciones ambientales */
+    --theme-primary: #047857;           /* Verde esmeralda oscuro */
+    --theme-primary-light: #10b981;     /* Verde esmeralda claro */
+    --theme-primary-dark: #065f46;      /* Verde esmeralda más oscuro */
+    --theme-primary-lighter: #059669;   /* Verde medio */
+    
+    /* Colores de gradientes */
+    --theme-gradient-start: var(--theme-primary);
+    --theme-gradient-end: var(--theme-primary-light);
+    --theme-gradient-hover-start: var(--theme-primary-dark);
+    --theme-gradient-hover-end: var(--theme-primary-lighter);
+    
+    /* Fondos con transparencia */
+    --theme-bg-light: #f0fdf4;          /* Fondo verde muy claro */
+    --theme-bg-hover: #ecfdf5;          /* Fondo verde hover */
+    
+    /* Sombras temáticas */
+    --theme-shadow-sm: 0 2px 4px rgba(4, 120, 87, 0.2);
+    --theme-shadow-md: 0 4px 6px rgba(4, 120, 87, 0.3);
+    --theme-shadow-lg: 0 6px 12px rgba(4, 120, 87, 0.4);
+    --theme-shadow-xl: 0 8px 16px rgba(4, 120, 87, 0.5);
+    
+    /* Borde temático */
+    --theme-border: var(--theme-primary);
+}
+
+[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --text-color: #e9ecef;
+    --card-bg: #2d2d2d;
+    --card-border: #404040;
+    --hover-bg: #3a3a3a;
+}
+
+/* ===== ESTILOS BASE ===== */
+body[data-theme="dark"] {
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
+}
+
+
+/* ===== CONTENIDO PRINCIPAL ===== */
+body[data-theme="dark"] .content-wrapper {
+    background-color: var(--bg-color);
+}
+
+
+/* ===== TARJETAS ===== */
+body[data-theme="dark"] .card {
+    background-color: var(--card-bg) !important;
+    border-color: var(--card-border) !important;
+    color: var(--text-color) !important;
+}
+
+body[data-theme="dark"] .card-header {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    border-bottom-color: var(--card-border) !important;
+    color: var(--text-color) !important;
+}
+
+body[data-theme="dark"] .card-title {
+    color: var(--text-color) !important;
+}
+
+body[data-theme="dark"] .card-body {
+    color: var(--text-color) !important;
+    background-color: var(--card-bg) !important;
+}
+
+body[data-theme="dark"] .card-footer {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    border-top-color: var(--card-border) !important;
+    color: var(--text-color) !important;
+}
+
+
+/* ===== TABLAS ===== */
+body[data-theme="dark"] .table {
+    color: var(--text-color) !important;
+    background-color: transparent !important;
+}
+
+body[data-theme="dark"] .table thead th {
+    color: var(--text-color) !important;
+    border-bottom-color: var(--card-border) !important;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+}
+
+body[data-theme="dark"] .table tbody tr {
+    border-top-color: var(--card-border) !important;
+}
+
+body[data-theme="dark"] .table tbody td,
+body[data-theme="dark"] .table tbody th {
+    color: var(--text-color) !important;
+    border-color: var(--card-border) !important;
+}
+
+body[data-theme="dark"] .table-striped > tbody > tr:nth-of-type(odd) > td,
+body[data-theme="dark"] .table-striped > tbody > tr:nth-of-type(odd) > th {
+    background-color: var(--hover-bg) !important;
+}
+
+body[data-theme="dark"] .table-hover tbody tr:hover {
+    background-color: var(--hover-bg) !important;
+}
+
+body[data-theme="dark"] .table-bordered {
+    border-color: var(--card-border) !important;
+}
+
+body[data-theme="dark"] .table-bordered th,
+body[data-theme="dark"] .table-bordered td {
+    border-color: var(--card-border) !important;
+}
+
+
+/* ===== FORMULARIOS ===== */
+/* :not(.btn) evita que botones con clase form-control pierdan su color de acción */
+body[data-theme="dark"] .form-control:not(.btn),
+body[data-theme="dark"] .form-select:not(.btn),
+body[data-theme="dark"] input[type="text"],
+body[data-theme="dark"] input[type="email"],
+body[data-theme="dark"] input[type="password"],
+body[data-theme="dark"] input[type="number"],
+body[data-theme="dark"] input[type="date"],
+body[data-theme="dark"] input[type="time"],
+body[data-theme="dark"] input[type="datetime-local"],
+body[data-theme="dark"] input[type="search"],
+body[data-theme="dark"] select,
+body[data-theme="dark"] textarea {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--card-border) !important;
+}
+
+body[data-theme="dark"] .form-control:not(.btn):focus,
+body[data-theme="dark"] .form-select:not(.btn):focus,
+body[data-theme="dark"] input:focus,
+body[data-theme="dark"] select:focus,
+body[data-theme="dark"] textarea:focus {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: #6c9ef5 !important;
+    box-shadow: 0 0 0 0.2rem rgba(108, 158, 245, 0.25) !important;
+}
+
+body[data-theme="dark"] .form-control::placeholder,
+body[data-theme="dark"] input::placeholder,
+body[data-theme="dark"] textarea::placeholder {
+    color: rgba(233, 236, 239, 0.5) !important;
+}
+
+body[data-theme="dark"] .form-label,
+body[data-theme="dark"] label {
+    color: var(--text-color) !important;
+}
+
+
+
+/* ===== BADGES ===== */
+body[data-theme="dark"] .badge {
+    color: var(--text-color);
+}
+
+body[data-theme="dark"] .badge.bg-secondary {
+    background-color: #4a4a4a !important;
+}
+
+body[data-theme="dark"] .badge.bg-success {
+    background-color: #28a745 !important;
+}
+
+body[data-theme="dark"] .badge.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+body[data-theme="dark"] .bad_type_ge.bg-warning {
+    background-color: #ffc107 !important;
+}
+
+body[data-theme="dark"] .badge.bg-info {
+    background-color: #17a2b8 !important;
+}
+
+body[data-theme="dark"] .badge.bg-primary {
+    background-color: #007bff !important;
+}
+
+/* ===== ENLACES ===== */
+body[data-theme="dark"] a {
+    color: #6c9ef5;
+}
+
+body[data-theme="dark"] a:hover {
+    color: #8ab4f8;
+}
+
+
+
+
+
+/* ===== ALERTAS ===== */
+body[data-theme="dark"] .alert {
+    border-color: var(--card-border);
+}
+
+body[data-theme="dark"] .alert-secondary {
+    background-color: #3a3a3a;
+    border-color: #404040;
+    color: var(--text-color);
+}
+
+
+
+/* ===== GRÁFICOS (CHART.JS) ===== */
+/* Los colores de los gráficos se manejan via JavaScript */
+
+/* ===== ESTILOS GLOBALES DE TABLAS CON TEMA ===== */
+/* Aplicar a todas las tablas con clase .themed-table o thead con clase .themed-thead */
+
+/* Headers de tabla con tema verde */
+.themed-table thead,
+.themed-thead,
+thead.themed-thead,
+.table thead.themed-thead,
+table thead.themed-thead {
+    background: linear-gradient(135deg, #047857 0%, #10b981 100%) !important;
+    background: linear-gradient(135deg, var(--theme-gradient-start, #047857) 0%, var(--theme-gradient-end, #10b981) 100%) !important;
+    color: white !important;
+}
+
+.themed-table thead th,
+.themed-thead th,
+thead.themed-thead th,
+.table thead.themed-thead th,
+table thead.themed-thead th {
+    color: white !important;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
+    padding: 1rem 0.75rem !important;
+    font-weight: 600 !important;
+    vertical-align: middle !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.themed-table tbody tr,
+.table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.themed-table tbody tr:hover,
+.table-hover tbody tr:hover,
+.table-striped tbody tr:hover,
+.table tbody tr:hover {
+    background-color: #f0fdf4 !important;
+    background-color: var(--theme-bg-light, #f0fdf4) !important;
+    cursor: pointer;
+}
+
+/* Estilos para scrollbars en tablas */
+.table-responsive::-webkit-scrollbar,
+.dataTables_wrapper .dataTables_scrollBody::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track,
+.dataTables_wrapper .dataTables_scrollBody::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb,
+.dataTables_wrapper .dataTables_scrollBody::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #047857 0%, #10b981 100%);
+    background: linear-gradient(135deg, var(--theme-gradient-start, #047857) 0%, var(--theme-gradient-end, #10b981) 100%);
+    border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover,
+.dataTables_wrapper .dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #065f46 0%, #059669 100%);
+    background: linear-gradient(135deg, var(--theme-gradient-hover-start, #065f46) 0%, var(--theme-gradient-hover-end, #059669) 100%);
+}
+
+/* ===== TRANSICIONES SUAVES ===== */
+body,
+.card,
+.table,
+input,
+select,
+textarea {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ===== BOTÓN TOGGLE MODO OSCURO ===== */
+.dark-mode-toggle {
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s ease;
+}
+
+.dark-mode-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+body[data-theme="dark"] .dark-mode-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode-toggle i {
+    font-size: 1.2rem;
+}
+
+body[data-theme="dark"] .dark-mode-toggle i.fa-sun {
+    display: inline;
+}
+
+body[data-theme="dark"] .dark-mode-toggle i.fa-moon {
+    display: none;
+}
+
+.dark-mode-toggle i.fa-sun {
+    display: none;
+}
+
+
+
+
+/* ===== BARRAS DE PROGRESO ===== */
+body[data-theme="dark"] .progress {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+}
+
+body[data-theme="dark"] .progress-bar {
+    background-color: #6c9ef5 !important;
+}
+
+/* ===== SPINNERS Y LOADING ===== */
+body[data-theme="dark"] .spinner-border,
+body[data-theme="dark"] .spinner-grow {
+    color: #6c9ef5 !important;
+}
+
+/* ===== TEXT MUTED Y OTROS TEXTOS ===== */
+body[data-theme="dark"] .text-muted {
+    color: rgba(233, 236, 239, 0.6) !important;
+}
+
+body[data-theme="dark"] .text-dark {
+    color: var(--text-color) !important;
+}
+
+body[data-theme="dark"] .text-secondary {
+    color: #adb5bd !important;
+}
+
+body[data-theme="dark"] .bg-light {
+    background-color: var(--card-bg) !important;
+}
+
+body[data-theme="dark"] .bg-white {
+    background-color: var(--card-bg) !important;
+}
+
+body[data-theme="dark"] .border {
+    border-color: var(--card-border) !important;
+}
+
+
+/* ===== DATATABLES ===== */
+body[data-theme="dark"] .dataTables_wrapper {
+    color: var(--text-color) !important;
+}
+
+body[data-theme="dark"] .dataTables_wrapper .dataTables_length,
+body[data-theme="dark"] .dataTables_wrapper .dataTables_filter,
+body[data-theme="dark"] .dataTables_wrapper .dataTables_info,
+body[data-theme="dark"] .dataTables_wrapper .dataTables_paginate {
+    color: var(--text-color) !important;
+}
+
+body[data-theme="dark"] .dataTables_wrapper .dataTables_filter input {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--card-border) !important;
+}
+
+body[data-theme="dark"] .dataTables_wrapper .dataTables_length select {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--card-border) !important;
+}
+
+/* ===== ACCORDIONS ===== */
+body[data-theme="dark"] .accordion-item {
+    background-color: var(--card-bg) !important;
+    border-color: var(--card-border) !important;
+}
+
+body[data-theme="dark"] .accordion-header {
+    background-color: var(--card-bg) !important;
+}
+
+body[data-theme="dark"] .accordion-button {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+body[data-theme="dark"] .accordion-button:not(.collapsed) {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    color: var(--text-color) !important;
+}
+
+body[data-theme="dark"] .accordion-body {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+
+/* ===== HR Y DIVISORES ===== */
+body[data-theme="dark"] hr {
+    border-color: var(--card-border) !important;
+    opacity: 0.3 !important;
+}
+
+/* ===== CÓDIGO Y PRE ===== */
+body[data-theme="dark"] code {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    color: #ff79c6 !important;
+}
+
+body[data-theme="dark"] pre {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    color: var(--text-color) !important;
+    border-color: var(--card-border) !important;
+}
+
+
+
+
+
+/* ===== ESTILOS ESPECÍFICOS PARA MAPA DE ESTACIONES ===== */
+
+/* Panel flotante del mapa - modo claro (por defecto) */
+.map-floating-panel {
+    background-color: #ffffff !important;
+    color: #212529 !important;
+}
+
+.map-zoom-indicator {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    color: #3968a6 !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+}
+
+.map-zoom-indicator span,
+.map-zoom-indicator i {
+    color: #3968a6 !important;
+}
+
+/* Panel flotante del mapa - modo oscuro */
+body[data-theme="dark"] .map-floating-panel {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Filas de estaciones en el mapa - hover modo claro */
+.map-station-row:hover {
+    background-color: #f0fdf4 !important;
+}
+
+/* Filas de estaciones en el mapa - hover modo oscuro */
+body[data-theme="dark"] .map-station-row:hover {
+    background-color: var(--hover-bg) !important;
+}
+
+/* Indicador de zoom - modo oscuro */
+body[data-theme="dark"] .map-zoom-indicator {
+    background-color: rgba(45, 45, 45, 0.95) !important;
+    color: var(--text-color) !important;
+}
+
+body[data-theme="dark"] .map-zoom-indicator span {
+    color: var(--text-color) !important;
+}
+
+/* Tablas dentro del panel del mapa - modo claro */
+.map-floating-panel .table {
+    color: #212529 !important;
+    background-color: transparent !important;
+}
+
+.map-floating-panel .table td {
+    color: #212529 !important;
+}
+
+.map-floating-panel .table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.02) !important;
+}
+
+.map-floating-panel .table thead th {
+    color: white !important;
+}
+
+/* Inputs de búsqueda en el panel del mapa - modo claro */
+.map-floating-panel .form-control {
+    background-color: #ffffff !important;
+    color: #212529 !important;
+    border-color: #ced4da !important;
+}
+
+.map-floating-panel .form-control::placeholder {
+    color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Tablas dentro del panel del mapa - modo oscuro */
+body[data-theme="dark"] .map-floating-panel .table {
+    color: var(--text-color) !important;
+}
+
+body[data-theme="dark"] .map-floating-panel .table td {
+    color: var(--text-color) !important;
+}
+
+body[data-theme="dark"] .map-floating-panel .table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+/* Inputs de búsqueda en el panel del mapa - modo oscuro */
+body[data-theme="dark"] .map-floating-panel .form-control {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    color: var(--text-color) !important;
+    border-color: var(--card-border) !important;
+}
+
+body[data-theme="dark"] .map-floating-panel .form-control::placeholder {
+    color: rgba(233, 236, 239, 0.5) !important;
+}
+
+/* Badges en el mapa */
+body[data-theme="dark"] .badge-info {
+    background-color: #17a2b8 !important;
+    color: white !important;
+}
+
+/* Scrollbar para el panel del mapa */
+body[data-theme="dark"] .map-floating-panel::-webkit-scrollbar,
+body[data-theme="dark"] .map-station-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+body[data-theme="dark"] .map-floating-panel::-webkit-scrollbar-track,
+body[data-theme="dark"] .map-station-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+body[data-theme="dark"] .map-floating-panel::-webkit-scrollbar-thumb,
+body[data-theme="dark"] .map-station-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+body[data-theme="dark"] .map-floating-panel::-webkit-scrollbar-thumb:hover,
+body[data-theme="dark"] .map-station-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Estilos para el contenedor de la lista de estaciones */
+.map-station-list {
+    background-color: transparent !important;
+}
+
+body[data-theme="dark"] .map-station-list {
+    background-color: transparent !important;
+}
+
+/* Pequeños textos en el mapa - modo claro */
+.map-floating-panel small {
+    color: #17a2b8 !important;
+}
+
+/* Pequeños textos en el mapa - modo oscuro */
+body[data-theme="dark"] .map-floating-panel small {
+    color: #6c9ef5 !important;
+}
+
+/* Sombras para el panel en modo claro */
+.map-floating-panel {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+}
+
+/* Sombras para el panel en modo oscuro */
+body[data-theme="dark"] .map-floating-panel {
+    box-shadow: 0 2px 12px rgba(0,0,0,0.8) !important;
+}
+
+body[data-theme="dark"] .map-zoom-indicator {
+    box-shadow: 0 2px 12px rgba(0,0,0,0.8) !important;
+}
+
+/* ===== ESTILOS PARA MODALES DE INFORMACIÓN METEOROLÓGICA ===== */
+
+/* Cajas de datos meteorológicos - modo claro */
+body .weather-data-box {
+    background-color: #f8f9fa !important;
+    border-color: #dee2e6 !important;
+}
+
+body .weather-data-box h5,
+body .weather-data-box small {
+    color: #212529 !important;
+}
+
+/* Cajas de datos meteorológicos - modo oscuro */
+body[data-theme="dark"] .weather-data-box {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border-color: var(--card-border) !important;
+}
+
+body[data-theme="dark"] .weather-data-box h5,
+body[data-theme="dark"] .weather-data-box small {
+    color: var(--text-color) !important;
+}
+
+/* Cuerpo del modal meteorológico - modo claro */
+body .weather-modal-body {
+    background-color: #f8f9fa !important;
+}
+
+body .weather-modal-body span {
+    color: #212529 !important;
+}
+
+/* Cuerpo del modal meteorológico - modo oscuro */
+body[data-theme="dark"] .weather-modal-body {
+    background-color: var(--card-bg) !important;
+}
+
+body[data-theme="dark"] .weather-modal-body span {
+    color: var(--text-color) !important;
+}
+
+/* Texto en componentes meteorológicos - modo claro */
+body .weather-text {
+    color: #212529 !important;
+}
+
+/* Texto en componentes meteorológicos - modo oscuro */
+body[data-theme="dark"] .weather-text {
+    color: var(--text-color) !important;
+}
+
+/* Divisores en modales meteorológicos - modo claro */
+body .weather-divider {
+    height: 2px;
+    background-color: rgb(102, 102, 102) !important;
+    border: none !important;
+    opacity: 0.3 !important;
+}
+
+/* Divisores en modales meteorológicos - modo oscuro */
+body[data-theme="dark"] .weather-divider {
+    background-color: var(--card-border) !important;
+    opacity: 0.5 !important;
+}
+
+/* Headers de modales meteorológicos con gradiente - modo claro */
+body .weather-modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+}
+
+/* Headers de modales meteorológicos - modo oscuro */
+body[data-theme="dark"] .weather-modal-header {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%) !important;
+    color: white !important;
+}
+
+/* Inputs de fecha en modales - modo claro */
+body .weather-modal-body input[type="date"] {
+    background-color: #ffffff !important;
+    color: #212529 !important;
+    border-color: #ced4da !important;
+}
+
+/* Inputs de fecha en modales - modo oscuro */
+body[data-theme="dark"] .weather-modal-body input[type="date"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--card-border) !important;
+}
+
+/* Selects en modales meteorológicos - modo claro */
+body .weather-modal-body select {
+    background-color: #ffffff !important;
+    color: #212529 !important;
+    border-color: #ced4da !important;
+}
+
+/* Selects en modales meteorológicos - modo oscuro */
+body[data-theme="dark"] .weather-modal-body select {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--card-border) !important;
+}
+
+/* Labels en modales meteorológicos - modo claro */
+body .weather-modal-body label {
+    color: #212529 !important;
+}
+
+/* Labels en modales meteorológicos - modo oscuro */
+body[data-theme="dark"] .weather-modal-body label {
+    color: var(--text-color) !important;
+}
+
+/* Scrollbar para la columna de steelseries */
+body[data-theme="dark"] .weather-modal-body > div > div:first-child::-webkit-scrollbar {
+    width: 8px;
+}
+
+body[data-theme="dark"] .weather-modal-body > div > div:first-child::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+body[data-theme="dark"] .weather-modal-body > div > div:first-child::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+body[data-theme="dark"] .weather-modal-body > div > div:first-child::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}

@@ -40,31 +40,49 @@ class UserTable extends Component
         'roles' => [],
     ];
 
+    /**
+     * Inicializa el componente de usuarios.
+     */
     public function mount(): void
     {
         Gate::authorize('users.view');
     }
 
+    /**
+     * Reinicia la paginación al cambiar la búsqueda.
+     */
     public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el estado.
+     */
     public function updatingStatus(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el rol.
+     */
     public function updatingRole(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tamaño de página.
+     */
     public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Abre el formulario para crear un registro.
+     */
     public function create(): void
     {
         Gate::authorize('users.create');
@@ -73,6 +91,9 @@ class UserTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Carga el registro seleccionado para editarlo.
+     */
     public function edit(int $id): void
     {
         Gate::authorize('users.update');
@@ -100,6 +121,9 @@ class UserTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Valida y guarda los datos del formulario.
+     */
     public function save(): void
     {
         Gate::authorize($this->editingId ? 'users.update' : 'users.create');
@@ -152,6 +176,9 @@ class UserTable extends Component
         $this->closeModal();
     }
 
+    /**
+     * Prepara la confirmación de eliminación del registro.
+     */
     public function confirmDelete(int $id): void
     {
         Gate::authorize('users.delete');
@@ -174,6 +201,9 @@ class UserTable extends Component
         $this->showDeleteModal = true;
     }
 
+    /**
+     * Elimina el registro seleccionado cuando está permitido.
+     */
     public function delete(): void
     {
         Gate::authorize('users.delete');
@@ -208,12 +238,18 @@ class UserTable extends Component
         $this->dispatch('successAlert', ['success' => __('mma.admin.users.messages.deleted')]);
     }
 
+    /**
+     * Cierra el modal principal y limpia su estado.
+     */
     public function closeModal(): void
     {
         $this->showModal = false;
         $this->resetForm();
     }
 
+    /**
+     * Cierra el modal de eliminación.
+     */
     public function closeDeleteModal(): void
     {
         $this->showDeleteModal = false;
@@ -221,17 +257,26 @@ class UserTable extends Component
         $this->deleteName = '';
     }
 
+    /**
+     * Limpia filtros y reinicia la paginación.
+     */
     public function resetFilters(): void
     {
         $this->reset(['search', 'status', 'role']);
         $this->resetPage();
     }
 
+    /**
+     * Valida si el usuario puede manage.
+     */
     public function canManage(User $user): bool
     {
         return $this->hierarchy()->canManageUser(auth()->user(), $user);
     }
 
+    /**
+     * Devuelve la etiqueta visible de role.
+     */
     public function roleLabel(string $roleName): string
     {
         $key = "mma.roles.names.{$roleName}";
@@ -242,6 +287,9 @@ class UserTable extends Component
             : $translated;
     }
 
+    /**
+     * Traduce el estado del registro.
+     */
     public function statusLabel(int $state): string
     {
         return $state === 1
@@ -249,11 +297,17 @@ class UserTable extends Component
             : __('mma.admin.common.inactive');
     }
 
+    /**
+     * Gestiona full name dentro de la tabla de usuarios.
+     */
     public function fullName(User $user): string
     {
         return trim((string) $user->name.' '.(string) $user->lastname) ?: $user->email;
     }
 
+    /**
+     * Renderiza la tabla de usuarios con filtros activos.
+     */
     public function render()
     {
         $visibleRoleNames = $this->hierarchy()->visibleRoleNamesFor(auth()->user());
@@ -261,7 +315,13 @@ class UserTable extends Component
         $users = User::query()
             ->with('roles:id,name')
             ->whereHas('roles', fn ($roleQuery) => $roleQuery->whereIn('name', $visibleRoleNames))
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($this->search !== '', function ($query) {
+                /**
+                 * Agrupa condiciones adicionales dentro de la consulta.
+                 */
                 $query->where(function ($subQuery) {
                     $subQuery->where('name', 'like', "%{$this->search}%")
                         ->orWhere('lastname', 'like', "%{$this->search}%")
@@ -290,6 +350,9 @@ class UserTable extends Component
         return view('livewire.admin.users.user-table', compact('users', 'roles', 'assignableRoles'));
     }
 
+    /**
+     * Define las reglas de validación del formulario.
+     */
     protected function rules(): array
     {
         return [
@@ -305,6 +368,9 @@ class UserTable extends Component
         ];
     }
 
+    /**
+     * Traduce los atributos usados por la validación.
+     */
     protected function attributes(): array
     {
         return [
@@ -319,6 +385,9 @@ class UserTable extends Component
         ];
     }
 
+    /**
+     * Restaura el formulario a sus valores iniciales.
+     */
     protected function resetForm(): void
     {
         $this->editingId = null;
@@ -335,6 +404,9 @@ class UserTable extends Component
         $this->resetErrorBag();
     }
 
+    /**
+     * Convierte campos vacíos en valores nulos persistibles.
+     */
     protected function normalizeNullableFields(array &$validated): void
     {
         foreach (['lastname', 'number_phone', 'identity_document', 'password'] as $field) {
@@ -344,6 +416,9 @@ class UserTable extends Component
         }
     }
 
+    /**
+     * Gestiona allowed roles for save dentro de la tabla de usuarios.
+     */
     protected function allowedRolesForSave(array $requestedRoles): array
     {
         $actor = auth()->user();
@@ -356,6 +431,9 @@ class UserTable extends Component
         return $hierarchy->filterAllowedRoleNames($actor, $requestedRoles);
     }
 
+    /**
+     * Gestiona assignable role names dentro de la tabla de usuarios.
+     */
     protected function assignableRoleNames(): array
     {
         $actor = auth()->user();
@@ -368,11 +446,17 @@ class UserTable extends Component
             ->all();
     }
 
+    /**
+     * Gestiona hierarchy dentro de la tabla de usuarios.
+     */
     protected function hierarchy(): AuthorizationHierarchyService
     {
         return app(AuthorizationHierarchyService::class);
     }
 
+    /**
+     * Gestiona audit dentro de la tabla de usuarios.
+     */
     protected function audit(): AuthorizationAuditLogger
     {
         return app(AuthorizationAuditLogger::class);

@@ -13,10 +13,16 @@ use Illuminate\Support\Facades\Log;
 
 class NotificationPushC extends Controller
 {
+    /**
+     * Inyecta las dependencias requeridas por la clase.
+     */
     public function __construct(
         private readonly NotificationAttachmentService $notificationAttachmentService,
     ) {}
 
+    /**
+     * Muestra la pantalla principal del módulo.
+     */
     public function index(Request $request)
     {
         abort_unless($request->user()?->can('notifications.view'), 403);
@@ -24,6 +30,9 @@ class NotificationPushC extends Controller
         return view('notificationspush.index');
     }
 
+    /**
+     * Ejecuta la operación save notification form.
+     */
     public function saveNotificationForm(Request $request): RedirectResponse
     {
         $this->debugNotificationFormLog('POST /notificationsp/save recibido', [
@@ -178,6 +187,9 @@ class NotificationPushC extends Controller
         }
     }
 
+    /**
+     * Ejecuta la operación toggle status.
+     */
     public function toggleStatus(NotificationM $notification): RedirectResponse
     {
         try {
@@ -202,6 +214,9 @@ class NotificationPushC extends Controller
         }
     }
 
+    /**
+     * Elimina el registro solicitado cuando está permitido.
+     */
     public function destroy(NotificationM $notification): RedirectResponse
     {
         DB::beginTransaction();
@@ -233,11 +248,17 @@ class NotificationPushC extends Controller
         }
     }
 
+    /**
+     * Elimina una imagen almacenada cuando existe.
+     */
     private function deleteStoredImageIfExists(?string $path): void
     {
         $this->notificationAttachmentService->delete($path);
     }
 
+    /**
+     * Ejecuta la operación debug notification form log.
+     */
     private function debugNotificationFormLog(string $message, array $extra = []): void
     {
         try {

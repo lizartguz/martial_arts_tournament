@@ -7,7 +7,7 @@ use Illuminate\Database\Migrations\Migration;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Aplica los cambios definidos por la migración.
      */
     public function up(): void
     {
@@ -24,6 +24,9 @@ return new class extends Migration
             throw new \Exception('Error: team_foreign_key on config/permission.php not loaded. Run [php artisan config:clear] and try again.');
         }
 
+        /**
+         * Ejecuta la logica asociada a este callback.
+         */
         Schema::create($tableNames['permissions'], function (Blueprint $table) {
             $table->bigIncrements('id'); // permission id
             $table->string('name');       // For MySQL 8.0 use string('name', 125);
@@ -33,6 +36,9 @@ return new class extends Migration
             $table->unique(['name', 'guard_name']);
         });
 
+        /**
+         * Ejecuta la logica asociada a este callback.
+         */
         Schema::create($tableNames['roles'], function (Blueprint $table) use ($teams, $columnNames) {
             $table->bigIncrements('id'); // role id
             if ($teams || config('permission.testing')) { // permission.testing is a fix for sqlite testing
@@ -49,6 +55,9 @@ return new class extends Migration
             }
         });
 
+        /**
+         * Ejecuta la logica asociada a este callback.
+         */
         Schema::create($tableNames['model_has_permissions'], function (Blueprint $table) use ($tableNames, $columnNames, $pivotPermission, $teams) {
             $table->unsignedBigInteger($pivotPermission);
 
@@ -73,6 +82,9 @@ return new class extends Migration
 
         });
 
+        /**
+         * Ejecuta la logica asociada a este callback.
+         */
         Schema::create($tableNames['model_has_roles'], function (Blueprint $table) use ($tableNames, $columnNames, $pivotRole, $teams) {
             $table->unsignedBigInteger($pivotRole);
 
@@ -96,6 +108,9 @@ return new class extends Migration
             }
         });
 
+        /**
+         * Ejecuta la logica asociada a este callback.
+         */
         Schema::create($tableNames['role_has_permissions'], function (Blueprint $table) use ($tableNames, $pivotRole, $pivotPermission) {
             $table->unsignedBigInteger($pivotPermission);
             $table->unsignedBigInteger($pivotRole);
@@ -119,7 +134,7 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Revierte los cambios definidos por la migración.
      */
     public function down(): void
     {

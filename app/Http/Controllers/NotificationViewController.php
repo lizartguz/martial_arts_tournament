@@ -11,12 +11,17 @@ use Illuminate\View\View;
 
 class NotificationViewController extends Controller
 {
+    /**
+     * Inyecta las dependencias requeridas por la clase.
+     */
     public function __construct(
         private readonly NotificationAccessService $notificationAccessService,
         private readonly NotificationAttachmentService $notificationAttachmentService,
     ) {}
 
-    // Muestra el contenido completo del aviso despues de validar sesion y destinatario.
+    /**
+     * Muestra el recurso solicitado cuando el usuario tiene acceso.
+     */
     public function show(Request $request, NotificationM $notification): View
     {
         abort_unless(
@@ -42,7 +47,9 @@ class NotificationViewController extends Controller
         return view('notificationspush.show', compact('notification', 'images'));
     }
 
-    // Simula el detalle que vera un usuario al abrir una notificacion push.
+    /**
+     * Muestra la vista previa permitida de la notificación.
+     */
     public function preview(Request $request): View
     {
         abort_unless($this->notificationAccessService->canManage($request->user()), 403);

@@ -12,6 +12,9 @@ class LanguageSelect extends Component
     public $triggerClass;
     protected $listeners = ['setLanguage', 'updateSession'];
 
+    /**
+     * Inicializa el componente de language select.
+     */
     public function mount($triggerClass = null)
     {
         $this->triggerClass = $triggerClass ?? '';
@@ -21,6 +24,9 @@ class LanguageSelect extends Component
         }
     }
 
+    /**
+     * Gestiona set language dentro de la tabla de language select.
+     */
     public function setLanguage($value)
     {
         session(['locale' => $value]);
@@ -29,6 +35,9 @@ class LanguageSelect extends Component
         return redirect(request()->header('Referer'));
     }
 
+    /**
+     * Gestiona update session dentro de la tabla de language select.
+     */
     public function updateSession($value)
     {
         session(['locale' => $value]);
@@ -37,6 +46,9 @@ class LanguageSelect extends Component
         $this->selectedLanguage = $value;
     }
 
+    /**
+     * Renderiza la tabla de language select con filtros activos.
+     */
     public function render()
     {
         $languages = [

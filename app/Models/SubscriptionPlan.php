@@ -20,16 +20,25 @@ class SubscriptionPlan extends Model
         'status' => 'integer',
     ];
 
+    /**
+     * Relaciona beneficios del plan.
+     */
     public function planFeatures()
     {
         return $this->hasMany(SubscriptionPlanFeature::class)->orderBy('display_order')->orderBy('id');
     }
 
+    /**
+     * Relaciona suscripciones de usuarios asociadas.
+     */
     public function userSubscriptions()
     {
         return $this->hasMany(UserSubscription::class);
     }
 
+    /**
+     * Relaciona solicitudes de compra asociadas.
+     */
     public function purchaseRequests()
     {
         return $this->hasMany(PurchaseRequest::class, 'subscription_plan_id');

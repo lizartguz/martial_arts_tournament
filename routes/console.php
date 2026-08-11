@@ -4,6 +4,9 @@ use App\Services\PushNotificationService;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Ejecuta la logica del comando de consola.
+ */
 Artisan::command('app:notification-dispatch-push', function (PushNotificationService $pushNotificationService) {
     $result = $pushNotificationService->dispatchPendingNotifications();
 

@@ -6,8 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Aplica los cambios definidos por la migración.
+     */
     public function up(): void
     {
+        /**
+         * Define la estructura de la tabla events.
+         */
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
@@ -35,6 +41,9 @@ return new class extends Migration
             $table->index(['is_featured', 'status']);
         });
 
+        /**
+         * Define la estructura de la tabla fights.
+         */
         Schema::create('fights', function (Blueprint $table) {
             $table->id();
             $table->foreignId('event_id')->constrained()->cascadeOnDelete();
@@ -61,6 +70,9 @@ return new class extends Migration
             $table->index(['status', 'starts_at']);
         });
 
+        /**
+         * Define la estructura de la tabla fight_results.
+         */
         Schema::create('fight_results', function (Blueprint $table) {
             $table->id();
             $table->foreignId('fight_id')->unique()->constrained()->cascadeOnDelete();
@@ -75,6 +87,9 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        /**
+         * Define la estructura de la tabla event_media.
+         */
         Schema::create('event_media', function (Blueprint $table) {
             $table->id();
             $table->foreignId('event_id')->constrained()->cascadeOnDelete();
@@ -93,6 +108,9 @@ return new class extends Migration
             $table->index(['event_id', 'is_featured']);
         });
 
+        /**
+         * Define la estructura de la tabla fighter_media.
+         */
         Schema::create('fighter_media', function (Blueprint $table) {
             $table->id();
             $table->foreignId('fighter_id')->constrained()->cascadeOnDelete();
@@ -110,6 +128,9 @@ return new class extends Migration
             $table->index(['fighter_id', 'is_featured']);
         });
 
+        /**
+         * Define la estructura de la tabla news_posts.
+         */
         Schema::create('news_posts', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
@@ -130,6 +151,9 @@ return new class extends Migration
             $table->index(['is_featured', 'status']);
         });
 
+        /**
+         * Define la estructura de la tabla sponsors.
+         */
         Schema::create('sponsors', function (Blueprint $table) {
             $table->id();
             $table->string('name', 180);
@@ -144,6 +168,9 @@ return new class extends Migration
             $table->softDeletes();
         });
 
+        /**
+         * Define la estructura de la tabla event_sponsor.
+         */
         Schema::create('event_sponsor', function (Blueprint $table) {
             $table->id();
             $table->foreignId('event_id')->constrained()->cascadeOnDelete();
@@ -156,6 +183,9 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Revierte los cambios definidos por la migración.
+     */
     public function down(): void
     {
         Schema::dropIfExists('event_sponsor');

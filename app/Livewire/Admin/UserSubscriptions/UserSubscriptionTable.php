@@ -40,41 +40,65 @@ class UserSubscriptionTable extends Component
         'metadata_note' => '',
     ];
 
+    /**
+     * Inicializa el componente de suscripciones de usuario.
+     */
     public function mount(): void
     {
         Gate::authorize('user_subscriptions.view');
     }
 
+    /**
+     * Reinicia la paginación al cambiar la búsqueda.
+     */
     public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el plan.
+     */
     public function updatingPlanId(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el estado.
+     */
     public function updatingStatus(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar la fecha inicial.
+     */
     public function updatingDateFrom(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar la fecha final.
+     */
     public function updatingDateTo(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tamaño de página.
+     */
     public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Abre el formulario para crear un registro.
+     */
     public function create(): void
     {
         Gate::authorize('user_subscriptions.create');
@@ -84,6 +108,9 @@ class UserSubscriptionTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Carga el registro seleccionado para editarlo.
+     */
     public function edit(int $id): void
     {
         Gate::authorize('user_subscriptions.update');
@@ -109,6 +136,9 @@ class UserSubscriptionTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Valida y guarda los datos del formulario.
+     */
     public function save(): void
     {
         Gate::authorize($this->editingId ? 'user_subscriptions.update' : 'user_subscriptions.create');
@@ -142,6 +172,9 @@ class UserSubscriptionTable extends Component
         $this->closeModal();
     }
 
+    /**
+     * Gestiona confirm cancel dentro de la tabla de suscripciones de usuario.
+     */
     public function confirmCancel(int $id): void
     {
         Gate::authorize('user_subscriptions.update');
@@ -157,6 +190,9 @@ class UserSubscriptionTable extends Component
         $this->showCancelModal = true;
     }
 
+    /**
+     * Valida si el usuario puede cel.
+     */
     public function cancel(): void
     {
         Gate::authorize('user_subscriptions.update');
@@ -175,12 +211,18 @@ class UserSubscriptionTable extends Component
         $this->dispatch('successAlert', ['success' => __('mma.admin.user_subscriptions.messages.cancelled')]);
     }
 
+    /**
+     * Cierra el modal principal y limpia su estado.
+     */
     public function closeModal(): void
     {
         $this->showModal = false;
         $this->resetForm();
     }
 
+    /**
+     * Cierra el modal de anulación.
+     */
     public function closeCancelModal(): void
     {
         $this->showCancelModal = false;
@@ -188,12 +230,18 @@ class UserSubscriptionTable extends Component
         $this->cancelName = '';
     }
 
+    /**
+     * Limpia filtros y reinicia la paginación.
+     */
     public function resetFilters(): void
     {
         $this->reset(['search', 'planId', 'status', 'dateFrom', 'dateTo']);
         $this->resetPage();
     }
 
+    /**
+     * Devuelve las opciones de estado permitidas.
+     */
     public function statusOptions(): array
     {
         return [
@@ -205,6 +253,9 @@ class UserSubscriptionTable extends Component
         ];
     }
 
+    /**
+     * Devuelve las opciones disponibles de source.
+     */
     public function sourceOptions(): array
     {
         return [
@@ -216,6 +267,9 @@ class UserSubscriptionTable extends Component
         ];
     }
 
+    /**
+     * Traduce el estado del registro.
+     */
     public function statusLabel(?int $status): string
     {
         return $status === null
@@ -223,11 +277,17 @@ class UserSubscriptionTable extends Component
             : ($this->statusOptions()[$status] ?? (string) $status);
     }
 
+    /**
+     * Devuelve la etiqueta visible de source.
+     */
     public function sourceLabel(?string $source): string
     {
         return $source ? ($this->sourceOptions()[$source] ?? $source) : __('mma.admin.common.not_available');
     }
 
+    /**
+     * Define la clase visual según el estado.
+     */
     public function statusBadge(?int $status): string
     {
         return [
@@ -239,6 +299,9 @@ class UserSubscriptionTable extends Component
         ][$status] ?? 'tw-badge-gray';
     }
 
+    /**
+     * Renderiza la tabla de suscripciones de usuario con filtros activos.
+     */
     public function render()
     {
         $subscriptions = UserSubscription::query()
@@ -247,13 +310,25 @@ class UserSubscriptionTable extends Component
                 'plan:id,name,slug,price,currency,billing_period,status',
             ])
             ->withCount('payments')
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($this->search !== '', function ($query) {
+                /**
+                 * Agrupa condiciones adicionales dentro de la consulta.
+                 */
                 $query->where(function ($subQuery) {
+                    /**
+                     * Agrega condiciones sobre la relacion consultada.
+                     */
                     $subQuery->whereHas('user', function ($userQuery) {
                         $userQuery->where('name', 'like', "%{$this->search}%")
                             ->orWhere('lastname', 'like', "%{$this->search}%")
                             ->orWhere('email', 'like', "%{$this->search}%")
                             ->orWhere('number_phone', 'like', "%{$this->search}%");
+                    /**
+                     * Agrega condiciones sobre la relacion consultada.
+                     */
                     })->orWhereHas('plan', function ($planQuery) {
                         $planQuery->where('name', 'like', "%{$this->search}%")
                             ->orWhere('slug', 'like', "%{$this->search}%");
@@ -283,6 +358,9 @@ class UserSubscriptionTable extends Component
         return view('livewire.admin.user-subscriptions.user-subscription-table', compact('subscriptions', 'plans', 'subscribers'));
     }
 
+    /**
+     * Define las reglas de validación del formulario.
+     */
     protected function rules(): array
     {
         return [
@@ -298,6 +376,9 @@ class UserSubscriptionTable extends Component
         ];
     }
 
+    /**
+     * Traduce los atributos usados por la validación.
+     */
     protected function attributes(): array
     {
         return [
@@ -313,6 +394,9 @@ class UserSubscriptionTable extends Component
         ];
     }
 
+    /**
+     * Restaura el formulario a sus valores iniciales.
+     */
     protected function resetForm(): void
     {
         $this->editingId = null;
@@ -330,6 +414,9 @@ class UserSubscriptionTable extends Component
         $this->resetErrorBag();
     }
 
+    /**
+     * Gestiona normalize subscription fields dentro de la tabla de suscripciones de usuario.
+     */
     protected function normalizeSubscriptionFields(array &$data, UserSubscription $subscription): void
     {
         foreach (['ends_at', 'trial_ends_at', 'renewal_at', 'source', 'metadata_note'] as $field) {
@@ -357,6 +444,9 @@ class UserSubscriptionTable extends Component
         }
     }
 
+    /**
+     * Gestiona validate date order dentro de la tabla de suscripciones de usuario.
+     */
     protected function validateDateOrder(array $data): bool
     {
         $startsAt = Carbon::parse($data['starts_at']);
@@ -376,6 +466,9 @@ class UserSubscriptionTable extends Component
         return true;
     }
 
+    /**
+     * Convierte fechas persistidas al formato de input local.
+     */
     protected function dateTimeLocal($dateTime): string
     {
         return $dateTime ? $dateTime->format('Y-m-d\TH:i') : '';

@@ -75,12 +75,21 @@
 
 @once
 <script>
+    /**
+     * Inicializa el comportamiento cuando el DOM esta listo.
+     */
     document.addEventListener('DOMContentLoaded', function () {
         var switchers = document.querySelectorAll('[data-locale-switcher]');
 
+        /**
+         * Procesa cada elemento de la coleccion visual.
+         */
         switchers.forEach(function (sw) {
             var toggle = sw.querySelector('[data-locale-toggle]');
             if (!toggle) return;
+            /**
+             * Gestiona el clic del elemento interactivo.
+             */
             toggle.addEventListener('click', function (event) {
                 event.stopPropagation();
                 var isOpen = sw.classList.toggle('is-open');
@@ -88,7 +97,13 @@
             });
         });
 
+        /**
+         * Gestiona los clics delegados de la vista.
+         */
         document.addEventListener('click', function () {
+            /**
+             * Procesa cada elemento de la coleccion visual.
+             */
             switchers.forEach(function (sw) {
                 sw.classList.remove('is-open');
                 var toggle = sw.querySelector('[data-locale-toggle]');

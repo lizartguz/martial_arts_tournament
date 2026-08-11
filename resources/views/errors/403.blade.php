@@ -17,6 +17,9 @@
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
 
     <script>
+        /**
+         * Inicializa este comportamiento inmediato del navegador.
+         */
         (function () {
             try {
                 var savedTheme = localStorage.getItem('darkMode');

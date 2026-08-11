@@ -40,6 +40,9 @@ class NotificationM extends Model
         'push_last_error_at' => 'datetime',
     ];
     
+    /**
+     * Relaciona usuario asociado.
+     */
     public function user(){        
         return $this->belongsTo(User::class, 'creator_user_id', 'id');
     }

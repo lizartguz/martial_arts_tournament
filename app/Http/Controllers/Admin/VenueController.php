@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Gate;
 class VenueController extends Controller
 {
     /**
-     * Muestra la gestión administrativa de sedes.
+     * Muestra la pantalla administrativa de sedes.
      */
     public function index()
     {

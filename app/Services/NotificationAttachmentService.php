@@ -18,11 +18,16 @@ class NotificationAttachmentService
         'image_2' => 'image_2',
     ];
 
+    /**
+     * Inyecta las dependencias requeridas por la clase.
+     */
     public function __construct(
         private readonly ImageUploadOptimizer $imageUploadOptimizer,
     ) {}
 
-    // Guarda un adjunto fuera del directorio publico de la aplicacion.
+    /**
+     * Ejecuta la operación store del servicio.
+     */
     public function store($image, string $prefix): string
     {
         return $this->imageUploadOptimizer->store(
@@ -34,7 +39,9 @@ class NotificationAttachmentService
         );
     }
 
-    // Elimina el archivo privado y cualquier copia publica heredada.
+    /**
+     * Elimina el registro seleccionado cuando está permitido.
+     */
     public function delete(?string $path): void
     {
         if (! $path) {
@@ -48,7 +55,9 @@ class NotificationAttachmentService
         }
     }
 
-    // Genera la ruta web protegida para un adjunto concreto.
+    /**
+     * Devuelve la URL pública de web.
+     */
     public function webUrl(NotificationM $notification, string $slot): ?string
     {
         return $this->pathForSlot($notification, $slot)
@@ -56,7 +65,9 @@ class NotificationAttachmentService
             : null;
     }
 
-    // Genera una URL firmada y temporal para clientes moviles autenticados por la API.
+    /**
+     * Devuelve la URL pública de temporary api.
+     */
     public function temporaryApiUrl(NotificationM $notification, string $slot, User $user): ?string
     {
         if (! $this->pathForSlot($notification, $slot)) {
@@ -74,7 +85,9 @@ class NotificationAttachmentService
         );
     }
 
-    // Entrega el archivo sin exponer su ubicacion real en el servidor.
+    /**
+     * Ejecuta la operación response del servicio.
+     */
     public function response(NotificationM $notification, string $slot): StreamedResponse|Response
     {
         $path = $this->pathForSlot($notification, $slot);
@@ -90,7 +103,9 @@ class NotificationAttachmentService
         ]);
     }
 
-    // Mueve un archivo heredado del disco publico al privado de forma idempotente.
+    /**
+     * Ejecuta la operación migrate public file del servicio.
+     */
     public function migratePublicFile(?string $path, bool $dryRun = false): string
     {
         if (! $path) {
@@ -141,6 +156,9 @@ class NotificationAttachmentService
         return 'migrated';
     }
 
+    /**
+     * Ejecuta la operación path for slot del servicio.
+     */
     public function pathForSlot(NotificationM $notification, string $slot): ?string
     {
         $column = self::SLOT_COLUMNS[$slot] ?? null;
@@ -149,6 +167,9 @@ class NotificationAttachmentService
         return $notification->{$column};
     }
 
+    /**
+     * Ejecuta la operación disk containing del servicio.
+     */
     private function diskContaining(string $path): ?Filesystem
     {
         foreach (['local', 'public'] as $disk) {
@@ -162,6 +183,9 @@ class NotificationAttachmentService
         return null;
     }
 
+    /**
+     * Ejecuta la operación delete public copy del servicio.
+     */
     private function deletePublicCopy(Filesystem $publicDisk, string $path): void
     {
         if (! $publicDisk->delete($path) || $publicDisk->exists($path)) {

@@ -7,16 +7,22 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Aplica los cambios definidos por la migración.
      */
     public function up(): void
     {
+        /**
+         * Define la estructura de la tabla cache.
+         */
         Schema::create('cache', function (Blueprint $table) {
             $table->string('key')->primary();
             $table->mediumText('value');
             $table->integer('expiration');
         });
 
+        /**
+         * Define la estructura de la tabla cache_locks.
+         */
         Schema::create('cache_locks', function (Blueprint $table) {
             $table->string('key')->primary();
             $table->string('owner');
@@ -25,7 +31,7 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Revierte los cambios definidos por la migración.
      */
     public function down(): void
     {

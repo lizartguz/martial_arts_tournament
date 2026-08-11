@@ -54,46 +54,73 @@ class EventTable extends Component
         'is_featured' => false,
     ];
 
+    /**
+     * Inicializa el componente de eventos.
+     */
     public function mount(): void
     {
         $this->form['timezone'] = (string) config('app.timezone', 'UTC');
     }
 
+    /**
+     * Reinicia la paginación al cambiar la búsqueda.
+     */
     public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el estado.
+     */
     public function updatingStatus(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar la sede.
+     */
     public function updatingVenueId(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el destacado.
+     */
     public function updatingFeatured(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar la fecha inicial.
+     */
     public function updatingDateFrom(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar la fecha final.
+     */
     public function updatingDateTo(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tamaño de página.
+     */
     public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Sincroniza el formulario al cambiar el nombre.
+     */
     public function updatedFormName(string $value): void
     {
         if (! $this->slugTouched) {
@@ -101,12 +128,18 @@ class EventTable extends Component
         }
     }
 
+    /**
+     * Sincroniza el formulario al cambiar el slug.
+     */
     public function updatedFormSlug(string $value): void
     {
         $this->slugTouched = true;
         $this->form['slug'] = Str::slug($value);
     }
 
+    /**
+     * Abre el formulario para crear un registro.
+     */
     public function create(): void
     {
         Gate::authorize('events.create');
@@ -115,6 +148,9 @@ class EventTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Carga el registro seleccionado para editarlo.
+     */
     public function edit(int $id): void
     {
         Gate::authorize('events.update');
@@ -144,6 +180,9 @@ class EventTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Valida y guarda los datos del formulario.
+     */
     public function save(ImageUploadOptimizer $images): void
     {
         Gate::authorize($this->editingId ? 'events.update' : 'events.create');
@@ -183,6 +222,9 @@ class EventTable extends Component
         $this->closeModal();
     }
 
+    /**
+     * Publica el registro seleccionado.
+     */
     public function publish(int $id): void
     {
         Gate::authorize('events.publish');
@@ -196,6 +238,9 @@ class EventTable extends Component
         $this->dispatch('successAlert', ['success' => __('mma.admin.events.messages.published')]);
     }
 
+    /**
+     * Prepara la confirmación de eliminación del registro.
+     */
     public function confirmDelete(int $id): void
     {
         Gate::authorize('events.delete');
@@ -217,6 +262,9 @@ class EventTable extends Component
         $this->showDeleteModal = true;
     }
 
+    /**
+     * Elimina el registro seleccionado cuando está permitido.
+     */
     public function delete(): void
     {
         Gate::authorize('events.delete');
@@ -246,12 +294,18 @@ class EventTable extends Component
         $this->dispatch('successAlert', ['success' => __('mma.admin.events.messages.deleted')]);
     }
 
+    /**
+     * Cierra el modal principal y limpia su estado.
+     */
     public function closeModal(): void
     {
         $this->showModal = false;
         $this->resetForm();
     }
 
+    /**
+     * Cierra el modal de eliminación.
+     */
     public function closeDeleteModal(): void
     {
         $this->showDeleteModal = false;
@@ -259,12 +313,18 @@ class EventTable extends Component
         $this->deleteName = '';
     }
 
+    /**
+     * Limpia filtros y reinicia la paginación.
+     */
     public function resetFilters(): void
     {
         $this->reset(['search', 'status', 'venueId', 'featured', 'dateFrom', 'dateTo']);
         $this->resetPage();
     }
 
+    /**
+     * Devuelve las opciones de estado permitidas.
+     */
     public function statusOptions(): array
     {
         return [
@@ -275,11 +335,17 @@ class EventTable extends Component
         ];
     }
 
+    /**
+     * Traduce el estado del registro.
+     */
     public function statusLabel(int $status): string
     {
         return $this->statusOptions()[$status] ?? (string) $status;
     }
 
+    /**
+     * Define la clase visual según el estado.
+     */
     public function statusBadge(int $status): string
     {
         return [
@@ -290,12 +356,21 @@ class EventTable extends Component
         ][$status] ?? 'tw-badge-gray';
     }
 
+    /**
+     * Renderiza la tabla de eventos con filtros activos.
+     */
     public function render()
     {
         $events = Event::query()
             ->with(['venue:id,name,city_id'])
             ->withCount(['fights', 'ticketLinks'])
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($this->search !== '', function ($query) {
+                /**
+                 * Agrupa condiciones adicionales dentro de la consulta.
+                 */
                 $query->where(function ($subQuery) {
                     $subQuery->where('name', 'like', "%{$this->search}%")
                         ->orWhere('slug', 'like', "%{$this->search}%")
@@ -320,6 +395,9 @@ class EventTable extends Component
         return view('livewire.admin.events.event-table', compact('events', 'venues'));
     }
 
+    /**
+     * Define las reglas de validación del formulario.
+     */
     protected function rules(): array
     {
         return [
@@ -346,6 +424,9 @@ class EventTable extends Component
         ];
     }
 
+    /**
+     * Traduce los atributos usados por la validación.
+     */
     protected function attributes(): array
     {
         return [
@@ -366,6 +447,9 @@ class EventTable extends Component
         ];
     }
 
+    /**
+     * Restaura el formulario a sus valores iniciales.
+     */
     protected function resetForm(): void
     {
         $this->editingId = null;
@@ -391,6 +475,9 @@ class EventTable extends Component
         $this->resetErrorBag();
     }
 
+    /**
+     * Guarda las imágenes enviadas desde el formulario.
+     */
     protected function storeImages(ImageUploadOptimizer $images, array &$validated, Event $event): void
     {
         if ($this->posterImage) {
@@ -404,6 +491,9 @@ class EventTable extends Component
         }
     }
 
+    /**
+     * Guarda una imagen pública optimizada.
+     */
     protected function storePublicImage(ImageUploadOptimizer $images, TemporaryUploadedFile $image, string $prefix): string
     {
         $config = config('uploads.public_images');
@@ -418,6 +508,9 @@ class EventTable extends Component
         return 'storage/'.$path;
     }
 
+    /**
+     * Elimina un archivo almacenado si existe.
+     */
     protected function deleteStoredImage(?string $path): void
     {
         if (! $path || ! str_starts_with($path, 'storage/')) {

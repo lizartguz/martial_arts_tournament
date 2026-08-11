@@ -7,10 +7,13 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Aplica los cambios definidos por la migración.
      */
     public function up(): void
     {
+        /**
+         * Define la estructura de la tabla sessions.
+         */
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->foreignId('user_id')->nullable()->index();
@@ -22,7 +25,7 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Revierte los cambios definidos por la migración.
      */
     public function down(): void
     {

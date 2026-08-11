@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Gate;
 
 class TicketLinkController extends Controller
 {
+    /**
+     * Muestra la pantalla administrativa de enlaces de tickets.
+     */
     public function index()
     {
         Gate::authorize('ticket_links.view');

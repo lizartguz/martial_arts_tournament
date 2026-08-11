@@ -58,6 +58,9 @@
         @if($showThemeToggle && ! request()->routeIs('register', 'public.station.feed'))
         <script>
             // Función para alternar modo oscuro
+            /**
+             * Alterna el modo oscuro de la vista invitada.
+             */
             function toggleDarkMode() {
                 const body = document.body;
                 const toggle = document.querySelector('.dark-mode-toggle i');
@@ -76,6 +79,9 @@
             }
 
             // Cargar preferencia guardada
+            /**
+             * Inicializa el comportamiento cuando el DOM esta listo.
+             */
             document.addEventListener("DOMContentLoaded", function () {
                 const darkMode = localStorage.getItem('darkMode');
                 const toggle = document.querySelector('.dark-mode-toggle i');

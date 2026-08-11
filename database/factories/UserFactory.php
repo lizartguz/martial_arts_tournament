@@ -20,7 +20,7 @@ class UserFactory extends Factory
     protected static ?string $password;
 
     /**
-     * Define the model's default state.
+     * Ejecuta la operación definition.
      *
      * @return array<string, mixed>
      */
@@ -40,7 +40,7 @@ class UserFactory extends Factory
     }
 
     /**
-     * Indicate that the model's email address should be unverified.
+     * Ejecuta la operación unverified.
      */
     public function unverified(): static
     {
@@ -50,7 +50,7 @@ class UserFactory extends Factory
     }
 
     /**
-     * Indicate that the user should have a personal team.
+     * Ejecuta la operación with personal team.
      */
     public function withPersonalTeam(?callable $callback = null): static
     {

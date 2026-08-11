@@ -10,13 +10,16 @@ use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class FileUploadService
 {
+    /**
+     * Inyecta las dependencias requeridas por la clase.
+     */
     public function __construct(
         private readonly ImageUploadOptimizer $imageUploadOptimizer
     ) {
     }
 
     /**
-     * Guarda un comprobante privado, optimizando imágenes y validando PDF.
+     * Guarda un comprobante privado y valida su tipo real.
      *
      * @param  TemporaryUploadedFile|UploadedFile  $file
      */
@@ -48,7 +51,7 @@ class FileUploadService
     }
 
     /**
-     * Reemplaza un comprobante privado conservando el anterior si el nuevo archivo falla.
+     * Reemplaza un comprobante privado sin perder el anterior si falla.
      *
      * @param  TemporaryUploadedFile|UploadedFile  $file
      */
@@ -65,6 +68,8 @@ class FileUploadService
     }
 
     /**
+     * Valida que el archivo respete el tamaño permitido.
+     *
      * @param  TemporaryUploadedFile|UploadedFile  $file
      */
     private function ensureAllowedSize($file, int $maxMegaBytes): void
@@ -78,6 +83,8 @@ class FileUploadService
     }
 
     /**
+     * Guarda documentos privados con un nombre seguro.
+     *
      * @param  TemporaryUploadedFile|UploadedFile  $file
      */
     private function storeDocument($file, string $directory, string $prefix, string $disk): string
@@ -94,6 +101,8 @@ class FileUploadService
     }
 
     /**
+     * Construye la metadata persistida junto al archivo.
+     *
      * @param  TemporaryUploadedFile|UploadedFile  $file
      */
     private function metadata($file, string $path, string $mimeType): array

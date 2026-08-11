@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Gate;
 
 class NewsController extends Controller
 {
+    /**
+     * Muestra la pantalla administrativa de noticias.
+     */
     public function index()
     {
         Gate::authorize('news.view');

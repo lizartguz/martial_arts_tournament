@@ -40,36 +40,57 @@ class TicketLinkTable extends Component
         'status' => 1,
     ];
 
+    /**
+     * Inicializa el componente de enlaces de tickets.
+     */
     public function mount(): void
     {
         Gate::authorize('ticket_links.view');
     }
 
+    /**
+     * Reinicia la paginación al cambiar la búsqueda.
+     */
     public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el evento.
+     */
     public function updatingEventId(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el canal de venta.
+     */
     public function updatingSaleChannel(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el estado.
+     */
     public function updatingStatus(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tamaño de página.
+     */
     public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Abre el formulario para crear un registro.
+     */
     public function create(): void
     {
         Gate::authorize('ticket_links.create');
@@ -78,6 +99,9 @@ class TicketLinkTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Carga el registro seleccionado para editarlo.
+     */
     public function edit(int $id): void
     {
         Gate::authorize('ticket_links.update');
@@ -103,6 +127,9 @@ class TicketLinkTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Valida y guarda los datos del formulario.
+     */
     public function save(): void
     {
         Gate::authorize($this->editingId ? 'ticket_links.update' : 'ticket_links.create');
@@ -130,6 +157,9 @@ class TicketLinkTable extends Component
         $this->closeModal();
     }
 
+    /**
+     * Prepara la confirmación de eliminación del registro.
+     */
     public function confirmDelete(int $id): void
     {
         Gate::authorize('ticket_links.delete');
@@ -141,6 +171,9 @@ class TicketLinkTable extends Component
         $this->showDeleteModal = true;
     }
 
+    /**
+     * Elimina el registro seleccionado cuando está permitido.
+     */
     public function delete(): void
     {
         Gate::authorize('ticket_links.delete');
@@ -155,12 +188,18 @@ class TicketLinkTable extends Component
         $this->dispatch('successAlert', ['success' => __('mma.admin.ticket_links.messages.deleted')]);
     }
 
+    /**
+     * Cierra el modal principal y limpia su estado.
+     */
     public function closeModal(): void
     {
         $this->showModal = false;
         $this->resetForm();
     }
 
+    /**
+     * Cierra el modal de eliminación.
+     */
     public function closeDeleteModal(): void
     {
         $this->showDeleteModal = false;
@@ -168,12 +207,18 @@ class TicketLinkTable extends Component
         $this->deleteName = '';
     }
 
+    /**
+     * Limpia filtros y reinicia la paginación.
+     */
     public function resetFilters(): void
     {
         $this->reset(['search', 'eventId', 'saleChannel', 'status']);
         $this->resetPage();
     }
 
+    /**
+     * Devuelve las opciones disponibles de sale channel.
+     */
     public function saleChannelOptions(): array
     {
         return [
@@ -186,16 +231,25 @@ class TicketLinkTable extends Component
         ];
     }
 
+    /**
+     * Devuelve las monedas habilitadas.
+     */
     public function currencyOptions(): array
     {
         return ['BOB' => 'BOB', 'USD' => 'USD'];
     }
 
+    /**
+     * Devuelve la etiqueta visible de sale channel.
+     */
     public function saleChannelLabel(?string $channel): string
     {
         return $channel ? ($this->saleChannelOptions()[$channel] ?? $channel) : __('mma.admin.common.not_available');
     }
 
+    /**
+     * Traduce el estado del registro.
+     */
     public function statusLabel(int $status): string
     {
         return $status === 1
@@ -203,15 +257,27 @@ class TicketLinkTable extends Component
             : __('mma.admin.common.inactive');
     }
 
+    /**
+     * Renderiza la tabla de enlaces de tickets con filtros activos.
+     */
     public function render()
     {
         $ticketLinks = TicketLink::query()
             ->with('event:id,name,slug,starts_at,status')
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($this->search !== '', function ($query) {
+                /**
+                 * Agrupa condiciones adicionales dentro de la consulta.
+                 */
                 $query->where(function ($subQuery) {
                     $subQuery->where('provider_name', 'like', "%{$this->search}%")
                         ->orWhere('label', 'like', "%{$this->search}%")
                         ->orWhere('url', 'like', "%{$this->search}%")
+                        /**
+                         * Agrega condiciones sobre la relacion consultada.
+                         */
                         ->orWhereHas('event', function ($eventQuery) {
                             $eventQuery->where('name', 'like', "%{$this->search}%")
                                 ->orWhere('slug', 'like', "%{$this->search}%");
@@ -233,6 +299,9 @@ class TicketLinkTable extends Component
         return view('livewire.admin.ticket-links.ticket-link-table', compact('ticketLinks', 'events'));
     }
 
+    /**
+     * Define las reglas de validación del formulario.
+     */
     protected function rules(): array
     {
         return [
@@ -250,6 +319,9 @@ class TicketLinkTable extends Component
         ];
     }
 
+    /**
+     * Traduce los atributos usados por la validación.
+     */
     protected function attributes(): array
     {
         return [
@@ -267,6 +339,9 @@ class TicketLinkTable extends Component
         ];
     }
 
+    /**
+     * Restaura el formulario a sus valores iniciales.
+     */
     protected function resetForm(): void
     {
         $this->editingId = null;
@@ -286,6 +361,9 @@ class TicketLinkTable extends Component
         $this->resetErrorBag();
     }
 
+    /**
+     * Gestiona normalize ticket link fields dentro de la tabla de enlaces de tickets.
+     */
     protected function normalizeTicketLinkFields(array &$data): void
     {
         foreach (['price_from', 'currency', 'starts_at', 'ends_at'] as $field) {
@@ -302,6 +380,9 @@ class TicketLinkTable extends Component
         $data['status'] = (int) $data['status'];
     }
 
+    /**
+     * Gestiona validate date window dentro de la tabla de enlaces de tickets.
+     */
     protected function validateDateWindow(array $data): bool
     {
         if (($data['starts_at'] ?? '') === '' || ($data['ends_at'] ?? '') === '') {
@@ -317,6 +398,9 @@ class TicketLinkTable extends Component
         return true;
     }
 
+    /**
+     * Convierte fechas persistidas al formato de input local.
+     */
     protected function dateTimeLocal($dateTime): string
     {
         return $dateTime ? $dateTime->format('Y-m-d\TH:i') : '';

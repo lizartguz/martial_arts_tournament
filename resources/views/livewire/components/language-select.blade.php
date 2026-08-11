@@ -48,6 +48,9 @@
         }
     })
 
+    /**
+     * Guarda y sincroniza el idioma seleccionado.
+     */
     function selectLanguage(locale) {
         localStorage.setItem('locale', locale);
         Livewire.dispatch('setLanguage', [locale]);

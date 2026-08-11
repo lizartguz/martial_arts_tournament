@@ -44,36 +44,57 @@ class FighterMediaTable extends Component
         'status' => 1,
     ];
 
+    /**
+     * Inicializa el componente de fighter media.
+     */
     public function mount(): void
     {
         Gate::authorize('fighter_media.view');
     }
 
+    /**
+     * Reinicia la paginación al cambiar la búsqueda.
+     */
     public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el peleador.
+     */
     public function updatingFighterId(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tipo de archivo.
+     */
     public function updatingFileType(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el estado.
+     */
     public function updatingStatus(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tamaño de página.
+     */
     public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Sincroniza el formulario al cambiar el tipo de archivo.
+     */
     public function updatedFormFileType(string $value): void
     {
         $this->mediaImage = null;
@@ -83,6 +104,9 @@ class FighterMediaTable extends Component
         }
     }
 
+    /**
+     * Abre el formulario para crear un registro.
+     */
     public function create(): void
     {
         Gate::authorize('fighter_media.create');
@@ -91,6 +115,9 @@ class FighterMediaTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Carga el registro seleccionado para editarlo.
+     */
     public function edit(int $id): void
     {
         Gate::authorize('fighter_media.update');
@@ -114,6 +141,9 @@ class FighterMediaTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Valida y guarda los datos del formulario.
+     */
     public function save(ImageUploadOptimizer $images): void
     {
         Gate::authorize($this->editingId ? 'fighter_media.update' : 'fighter_media.create');
@@ -142,6 +172,9 @@ class FighterMediaTable extends Component
         $this->closeModal();
     }
 
+    /**
+     * Prepara la confirmación de eliminación del registro.
+     */
     public function confirmDelete(int $id): void
     {
         Gate::authorize('fighter_media.delete');
@@ -153,6 +186,9 @@ class FighterMediaTable extends Component
         $this->showDeleteModal = true;
     }
 
+    /**
+     * Elimina el registro seleccionado cuando está permitido.
+     */
     public function delete(): void
     {
         Gate::authorize('fighter_media.delete');
@@ -169,12 +205,18 @@ class FighterMediaTable extends Component
         $this->dispatch('successAlert', ['success' => __('mma.admin.fighter_media.messages.deleted')]);
     }
 
+    /**
+     * Cierra el modal principal y limpia su estado.
+     */
     public function closeModal(): void
     {
         $this->showModal = false;
         $this->resetForm();
     }
 
+    /**
+     * Cierra el modal de eliminación.
+     */
     public function closeDeleteModal(): void
     {
         $this->showDeleteModal = false;
@@ -182,12 +224,18 @@ class FighterMediaTable extends Component
         $this->deleteName = '';
     }
 
+    /**
+     * Limpia filtros y reinicia la paginación.
+     */
     public function resetFilters(): void
     {
         $this->reset(['search', 'fighterId', 'fileType', 'status']);
         $this->resetPage();
     }
 
+    /**
+     * Devuelve las opciones disponibles de file type.
+     */
     public function fileTypeOptions(): array
     {
         return [
@@ -196,11 +244,17 @@ class FighterMediaTable extends Component
         ];
     }
 
+    /**
+     * Devuelve la etiqueta visible de file type.
+     */
     public function fileTypeLabel(?string $fileType): string
     {
         return $this->fileTypeOptions()[$fileType] ?? __('mma.admin.common.not_available');
     }
 
+    /**
+     * Traduce el estado del registro.
+     */
     public function statusLabel(int $status): string
     {
         return $status === 1
@@ -208,6 +262,9 @@ class FighterMediaTable extends Component
             : __('mma.admin.common.inactive');
     }
 
+    /**
+     * Gestiona fighter name dentro de la tabla de fighter media.
+     */
     public function fighterName(?Fighter $fighter): string
     {
         if (! $fighter) {
@@ -217,14 +274,26 @@ class FighterMediaTable extends Component
         return trim($fighter->first_name.' '.$fighter->last_name) ?: ($fighter->nickname ?? __('mma.admin.common.not_available'));
     }
 
+    /**
+     * Renderiza la tabla de fighter media con filtros activos.
+     */
     public function render()
     {
         $mediaItems = FighterMedia::query()
             ->with(['fighter:id,first_name,last_name,nickname,slug'])
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($this->search !== '', function ($query) {
+                /**
+                 * Agrupa condiciones adicionales dentro de la consulta.
+                 */
                 $query->where(function ($subQuery) {
                     $subQuery->where('title', 'like', "%{$this->search}%")
                         ->orWhere('description', 'like', "%{$this->search}%")
+                        /**
+                         * Agrega condiciones sobre la relacion consultada.
+                         */
                         ->orWhereHas('fighter', function ($fighterQuery) {
                             $fighterQuery->where('first_name', 'like', "%{$this->search}%")
                                 ->orWhere('last_name', 'like', "%{$this->search}%")
@@ -250,6 +319,9 @@ class FighterMediaTable extends Component
         return view('livewire.admin.fighter-media.fighter-media-table', compact('mediaItems', 'fighters'));
     }
 
+    /**
+     * Define las reglas de validación del formulario.
+     */
     protected function rules(): array
     {
         return [
@@ -265,6 +337,9 @@ class FighterMediaTable extends Component
         ];
     }
 
+    /**
+     * Traduce los atributos usados por la validación.
+     */
     protected function attributes(): array
     {
         return [
@@ -280,6 +355,9 @@ class FighterMediaTable extends Component
         ];
     }
 
+    /**
+     * Gestiona file path rules dentro de la tabla de fighter media.
+     */
     protected function filePathRules(): array
     {
         $rules = [$this->form['file_type'] === 'video' ? 'required' : 'nullable', 'string', 'max:255'];
@@ -291,6 +369,9 @@ class FighterMediaTable extends Component
         return $rules;
     }
 
+    /**
+     * Restaura el formulario a sus valores iniciales.
+     */
     protected function resetForm(): void
     {
         $this->editingId = null;
@@ -310,6 +391,9 @@ class FighterMediaTable extends Component
         $this->resetErrorBag();
     }
 
+    /**
+     * Convierte campos vacíos en valores nulos persistibles.
+     */
     protected function normalizeNullableFields(array &$validated): void
     {
         foreach (['file_path', 'title', 'description'] as $field) {
@@ -322,6 +406,9 @@ class FighterMediaTable extends Component
         $validated['status'] = (int) $validated['status'];
     }
 
+    /**
+     * Gestiona prepare file path dentro de la tabla de fighter media.
+     */
     protected function prepareFilePath(ImageUploadOptimizer $images, array &$validated, FighterMedia $media): bool
     {
         if ($validated['file_type'] === 'video') {
@@ -350,6 +437,9 @@ class FighterMediaTable extends Component
         return false;
     }
 
+    /**
+     * Guarda una imagen pública optimizada.
+     */
     protected function storePublicImage(ImageUploadOptimizer $images, TemporaryUploadedFile $image): string
     {
         $config = config('uploads.public_images');
@@ -364,6 +454,9 @@ class FighterMediaTable extends Component
         return 'storage/'.$path;
     }
 
+    /**
+     * Elimina un archivo almacenado si existe.
+     */
     protected function deleteStoredImage(?string $path): void
     {
         if (! $path || ! str_starts_with($path, 'storage/')) {

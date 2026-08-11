@@ -31,11 +31,17 @@ class LogViewer extends Component
         'emergency',
     ];
 
+    /**
+     * Inicializa el componente de log viewer.
+     */
     public function mount(): void
     {
         abort_unless(auth()->user()?->can('logs.view'), 403);
     }
 
+    /**
+     * Sincroniza el estado al cambiar .
+     */
     public function updated($property): void
     {
         if (in_array($property, ['search', 'level', 'fromDate', 'toDate', 'perPage'], true)) {
@@ -43,6 +49,9 @@ class LogViewer extends Component
         }
     }
 
+    /**
+     * Limpia filtros y reinicia la paginación.
+     */
     public function resetFilters(): void
     {
         $this->reset(['search', 'level', 'fromDate', 'toDate']);
@@ -50,6 +59,9 @@ class LogViewer extends Component
         $this->resetPage();
     }
 
+    /**
+     * Gestiona open entry dentro de la tabla de log viewer.
+     */
     public function openEntry(string $entryId): void
     {
         abort_unless(auth()->user()?->can('logs.view'), 403);
@@ -57,11 +69,17 @@ class LogViewer extends Component
         $this->selectedEntry = collect($this->filteredEntries())->firstWhere('id', $entryId);
     }
 
+    /**
+     * Gestiona close entry dentro de la tabla de log viewer.
+     */
     public function closeEntry(): void
     {
         $this->selectedEntry = null;
     }
 
+    /**
+     * Renderiza la tabla de log viewer con filtros activos.
+     */
     public function render(LogReaderService $reader)
     {
         abort_unless(auth()->user()?->can('logs.view'), 403);
@@ -77,10 +95,16 @@ class LogViewer extends Component
         ]);
     }
 
+    /**
+     * Gestiona filter entries dentro de la tabla de log viewer.
+     */
     protected function filterEntries(array $entries): array
     {
         $search = mb_strtolower(trim($this->search));
 
+        /**
+         * Filtra los registros segun los criterios activos.
+         */
         return array_values(array_filter($entries, function (array $entry) use ($search) {
             if ($this->level !== '' && $entry['level'] !== $this->level) {
                 return false;
@@ -112,6 +136,9 @@ class LogViewer extends Component
         }));
     }
 
+    /**
+     * Gestiona paginate dentro de la tabla de log viewer.
+     */
     protected function paginate(array $entries): LengthAwarePaginator
     {
         $page = LengthAwarePaginator::resolveCurrentPage();

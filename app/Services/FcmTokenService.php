@@ -17,6 +17,9 @@ class FcmTokenService
     private const BROWSER_MAX_LENGTH = 120;
 
     // Registra o actualiza un token móvil para el usuario indicado.
+    /**
+     * Registra mobile token for user para el usuario.
+     */
     public function registerMobileTokenForUser(int $userId, string $token, array $context = []): FcmToken
     {
         return $this->registerTokenForUser($userId, $token, [
@@ -29,6 +32,9 @@ class FcmTokenService
     }
 
     // Registra o actualiza un token de Web Push para el usuario autenticado.
+    /**
+     * Registra web token for user para el usuario.
+     */
     public function registerWebTokenForUser(User $user, string $token, array $context = []): FcmToken
     {
         return $this->registerTokenForUser($user->id, $token, [
@@ -41,6 +47,9 @@ class FcmTokenService
     }
 
     // Crea o reactiva un token FCM, reasignándolo al usuario actual si cambió de cuenta.
+    /**
+     * Registra token for user para el usuario.
+     */
     public function registerTokenForUser(int $userId, string $token, array $attributes): FcmToken
     {
         $now = Carbon::now('America/La_Paz');
@@ -73,6 +82,9 @@ class FcmTokenService
     }
 
     // Comprueba si un token web sigue activo y pertenece al usuario autenticado.
+    /**
+     * Indica si active web token for user.
+     */
     public function isActiveWebTokenForUser(User $user, string $token): bool
     {
         return FcmToken::query()
@@ -86,6 +98,9 @@ class FcmTokenService
     }
 
     // Ajusta metadatos descriptivos al tamaño real de sus columnas sin modificar el token FCM.
+    /**
+     * Ejecuta la operación limit nullable string del servicio.
+     */
     private function limitNullableString(mixed $value, int $maxLength): ?string
     {
         if ($value === null || trim((string) $value) === '') {
@@ -96,14 +111,23 @@ class FcmTokenService
     }
 
     // Devuelve los tokens activos filtrados por usuarios y canal de entrega.
+    /**
+     * Devuelve active tokens for users solicitado.
+     */
     public function getActiveTokensForUsers(?array $userIds, string $deliveryPlatform): Collection
     {
         return FcmToken::query()
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when(! empty($userIds), function ($query) use ($userIds) {
                 $query->whereIn('user_id', $userIds);
             })
             ->where('is_active', true)
             ->whereNull('invalidated_at')
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($deliveryPlatform !== 'all', function ($query) use ($deliveryPlatform) {
                 $query->where('platform', $deliveryPlatform);
             })
@@ -111,6 +135,9 @@ class FcmTokenService
     }
 
     // Marca un token como invalido cuando Firebase reporta que ya no se puede usar.
+    /**
+     * Invalida token by value cuando deja de ser usable.
+     */
     public function invalidateTokenByValue(string $token, ?string $message = null): void
     {
         $record = FcmToken::query()->where('token', $token)->first();
@@ -123,6 +150,9 @@ class FcmTokenService
     }
 
     // Desactiva un token sin tratarlo como error de Firebase, por ejemplo cuando el navegador se desuscribe.
+    /**
+     * Desactiva token by value solicitado.
+     */
     public function deactivateTokenByValue(string $token, ?string $message = null): void
     {
         $record = FcmToken::query()->where('token', $token)->first();
@@ -140,6 +170,9 @@ class FcmTokenService
     }
 
     // Marca un token como invalido sin borrarlo para poder auditar el error.
+    /**
+     * Invalida token cuando deja de ser usable.
+     */
     public function invalidateToken(FcmToken $token, ?string $message = null): void
     {
         $token->forceFill([
@@ -151,6 +184,9 @@ class FcmTokenService
     }
 
     // Registra que un token fue usado en un envío exitoso.
+    /**
+     * Marca token as sent en el registro.
+     */
     public function markTokenAsSent(FcmToken $token): void
     {
         $token->forceFill([
@@ -161,6 +197,9 @@ class FcmTokenService
     }
 
     // Registra un error temporal sin invalidar automáticamente el token.
+    /**
+     * Marca token with error en el registro.
+     */
     public function markTokenWithError(FcmToken $token, string $message): void
     {
         $token->forceFill([

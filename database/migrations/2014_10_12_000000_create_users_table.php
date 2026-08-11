@@ -7,10 +7,13 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Aplica los cambios definidos por la migración.
      */
     public function up(): void
     { 
+        /**
+         * Define la estructura de la tabla users.
+         */
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('username', 100)->nullable()->unique();
@@ -36,7 +39,7 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Revierte los cambios definidos por la migración.
      */
     public function down(): void
     {

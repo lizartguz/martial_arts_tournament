@@ -46,41 +46,65 @@ class EventMediaTable extends Component
         'status' => 1,
     ];
 
+    /**
+     * Inicializa el componente de multimedia de eventos.
+     */
     public function mount(): void
     {
         Gate::authorize('event_media.view');
     }
 
+    /**
+     * Reinicia la paginación al cambiar la búsqueda.
+     */
     public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el evento.
+     */
     public function updatingEventId(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tipo de archivo.
+     */
     public function updatingFileType(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar la categoría.
+     */
     public function updatingCategory(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el estado.
+     */
     public function updatingStatus(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tamaño de página.
+     */
     public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Sincroniza el formulario al cambiar el tipo de archivo.
+     */
     public function updatedFormFileType(string $value): void
     {
         $this->mediaImage = null;
@@ -90,6 +114,9 @@ class EventMediaTable extends Component
         }
     }
 
+    /**
+     * Abre el formulario para crear un registro.
+     */
     public function create(): void
     {
         Gate::authorize('event_media.create');
@@ -98,6 +125,9 @@ class EventMediaTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Carga el registro seleccionado para editarlo.
+     */
     public function edit(int $id): void
     {
         Gate::authorize('event_media.update');
@@ -122,6 +152,9 @@ class EventMediaTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Valida y guarda los datos del formulario.
+     */
     public function save(ImageUploadOptimizer $images): void
     {
         Gate::authorize($this->editingId ? 'event_media.update' : 'event_media.create');
@@ -150,6 +183,9 @@ class EventMediaTable extends Component
         $this->closeModal();
     }
 
+    /**
+     * Prepara la confirmación de eliminación del registro.
+     */
     public function confirmDelete(int $id): void
     {
         Gate::authorize('event_media.delete');
@@ -161,6 +197,9 @@ class EventMediaTable extends Component
         $this->showDeleteModal = true;
     }
 
+    /**
+     * Elimina el registro seleccionado cuando está permitido.
+     */
     public function delete(): void
     {
         Gate::authorize('event_media.delete');
@@ -177,12 +216,18 @@ class EventMediaTable extends Component
         $this->dispatch('successAlert', ['success' => __('mma.admin.event_media.messages.deleted')]);
     }
 
+    /**
+     * Cierra el modal principal y limpia su estado.
+     */
     public function closeModal(): void
     {
         $this->showModal = false;
         $this->resetForm();
     }
 
+    /**
+     * Cierra el modal de eliminación.
+     */
     public function closeDeleteModal(): void
     {
         $this->showDeleteModal = false;
@@ -190,12 +235,18 @@ class EventMediaTable extends Component
         $this->deleteName = '';
     }
 
+    /**
+     * Limpia filtros y reinicia la paginación.
+     */
     public function resetFilters(): void
     {
         $this->reset(['search', 'eventId', 'fileType', 'category', 'status']);
         $this->resetPage();
     }
 
+    /**
+     * Devuelve las opciones disponibles de file type.
+     */
     public function fileTypeOptions(): array
     {
         return [
@@ -204,6 +255,9 @@ class EventMediaTable extends Component
         ];
     }
 
+    /**
+     * Devuelve las opciones disponibles de category.
+     */
     public function categoryOptions(): array
     {
         return [
@@ -217,16 +271,25 @@ class EventMediaTable extends Component
         ];
     }
 
+    /**
+     * Devuelve la etiqueta visible de file type.
+     */
     public function fileTypeLabel(?string $fileType): string
     {
         return $this->fileTypeOptions()[$fileType] ?? __('mma.admin.common.not_available');
     }
 
+    /**
+     * Devuelve la etiqueta visible de category.
+     */
     public function categoryLabel(?string $category): string
     {
         return $category ? ($this->categoryOptions()[$category] ?? $category) : __('mma.admin.common.not_available');
     }
 
+    /**
+     * Traduce el estado del registro.
+     */
     public function statusLabel(int $status): string
     {
         return $status === 1
@@ -234,11 +297,20 @@ class EventMediaTable extends Component
             : __('mma.admin.common.inactive');
     }
 
+    /**
+     * Renderiza la tabla de multimedia de eventos con filtros activos.
+     */
     public function render()
     {
         $mediaItems = EventMedia::query()
             ->with(['event:id,name,starts_at'])
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($this->search !== '', function ($query) {
+                /**
+                 * Agrupa condiciones adicionales dentro de la consulta.
+                 */
                 $query->where(function ($subQuery) {
                     $subQuery->where('title', 'like', "%{$this->search}%")
                         ->orWhere('description', 'like', "%{$this->search}%")
@@ -262,6 +334,9 @@ class EventMediaTable extends Component
         return view('livewire.admin.event-media.event-media-table', compact('mediaItems', 'events'));
     }
 
+    /**
+     * Define las reglas de validación del formulario.
+     */
     protected function rules(): array
     {
         return [
@@ -278,6 +353,9 @@ class EventMediaTable extends Component
         ];
     }
 
+    /**
+     * Traduce los atributos usados por la validación.
+     */
     protected function attributes(): array
     {
         return [
@@ -294,6 +372,9 @@ class EventMediaTable extends Component
         ];
     }
 
+    /**
+     * Gestiona file path rules dentro de la tabla de multimedia de eventos.
+     */
     protected function filePathRules(): array
     {
         $rules = [$this->form['file_type'] === 'video' ? 'required' : 'nullable', 'string', 'max:255'];
@@ -305,6 +386,9 @@ class EventMediaTable extends Component
         return $rules;
     }
 
+    /**
+     * Restaura el formulario a sus valores iniciales.
+     */
     protected function resetForm(): void
     {
         $this->editingId = null;
@@ -325,6 +409,9 @@ class EventMediaTable extends Component
         $this->resetErrorBag();
     }
 
+    /**
+     * Convierte campos vacíos en valores nulos persistibles.
+     */
     protected function normalizeNullableFields(array &$validated): void
     {
         foreach (['file_path', 'category', 'title', 'description'] as $field) {
@@ -337,6 +424,9 @@ class EventMediaTable extends Component
         $validated['status'] = (int) $validated['status'];
     }
 
+    /**
+     * Gestiona prepare file path dentro de la tabla de multimedia de eventos.
+     */
     protected function prepareFilePath(ImageUploadOptimizer $images, array &$validated, EventMedia $media): bool
     {
         if ($validated['file_type'] === 'video') {
@@ -365,6 +455,9 @@ class EventMediaTable extends Component
         return false;
     }
 
+    /**
+     * Guarda una imagen pública optimizada.
+     */
     protected function storePublicImage(ImageUploadOptimizer $images, TemporaryUploadedFile $image): string
     {
         $config = config('uploads.public_images');
@@ -379,6 +472,9 @@ class EventMediaTable extends Component
         return 'storage/'.$path;
     }
 
+    /**
+     * Elimina un archivo almacenado si existe.
+     */
     protected function deleteStoredImage(?string $path): void
     {
         if (! $path || ! str_starts_with($path, 'storage/')) {

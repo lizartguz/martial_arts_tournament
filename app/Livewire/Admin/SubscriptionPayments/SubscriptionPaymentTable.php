@@ -49,41 +49,65 @@ class SubscriptionPaymentTable extends Component
         'notes' => '',
     ];
 
+    /**
+     * Inicializa el componente de pagos de suscripción.
+     */
     public function mount(): void
     {
         Gate::authorize('subscription_payments.view');
     }
 
+    /**
+     * Reinicia la paginación al cambiar la búsqueda.
+     */
     public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el estado.
+     */
     public function updatingStatus(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el método de pago.
+     */
     public function updatingPaymentMethod(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar la fecha inicial.
+     */
     public function updatingDateFrom(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar la fecha final.
+     */
     public function updatingDateTo(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tamaño de página.
+     */
     public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Sincroniza el formulario al cambiar user subscription id.
+     */
     public function updatedFormUserSubscriptionId($value): void
     {
         if (! $value) {
@@ -106,6 +130,9 @@ class SubscriptionPaymentTable extends Component
         }
     }
 
+    /**
+     * Abre el formulario para crear un registro.
+     */
     public function create(): void
     {
         Gate::authorize('subscription_payments.upload_proof');
@@ -114,6 +141,9 @@ class SubscriptionPaymentTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Carga el registro seleccionado para editarlo.
+     */
     public function edit(int $id): void
     {
         Gate::authorize('subscription_payments.upload_proof');
@@ -140,6 +170,9 @@ class SubscriptionPaymentTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Valida y guarda los datos del formulario.
+     */
     public function save(FileUploadService $uploads): void
     {
         Gate::authorize('subscription_payments.upload_proof');
@@ -184,6 +217,9 @@ class SubscriptionPaymentTable extends Component
         $this->closeModal();
     }
 
+    /**
+     * Gestiona confirm payment dentro de la tabla de pagos de suscripción.
+     */
     public function confirmPayment(int $id): void
     {
         Gate::authorize('subscription_payments.confirm');
@@ -197,6 +233,9 @@ class SubscriptionPaymentTable extends Component
         $this->showConfirmModal = true;
     }
 
+    /**
+     * Marca as paid en el registro.
+     */
     public function markAsPaid(): void
     {
         Gate::authorize('subscription_payments.confirm');
@@ -214,6 +253,9 @@ class SubscriptionPaymentTable extends Component
         $this->dispatch('successAlert', ['success' => __('mma.admin.subscription_payments.messages.confirmed')]);
     }
 
+    /**
+     * Valida si el usuario puede cel payment.
+     */
     public function cancelPayment(int $id): void
     {
         Gate::authorize('subscription_payments.cancel');
@@ -227,6 +269,9 @@ class SubscriptionPaymentTable extends Component
         $this->showCancelModal = true;
     }
 
+    /**
+     * Marca as failed en el registro.
+     */
     public function markAsFailed(): void
     {
         Gate::authorize('subscription_payments.cancel');
@@ -243,12 +288,18 @@ class SubscriptionPaymentTable extends Component
         $this->dispatch('successAlert', ['success' => __('mma.admin.subscription_payments.messages.cancelled')]);
     }
 
+    /**
+     * Cierra el modal principal y limpia su estado.
+     */
     public function closeModal(): void
     {
         $this->showModal = false;
         $this->resetForm();
     }
 
+    /**
+     * Cierra el modal de confirmación.
+     */
     public function closeConfirmModal(): void
     {
         $this->showConfirmModal = false;
@@ -256,6 +307,9 @@ class SubscriptionPaymentTable extends Component
         $this->actionName = '';
     }
 
+    /**
+     * Cierra el modal de anulación.
+     */
     public function closeCancelModal(): void
     {
         $this->showCancelModal = false;
@@ -263,12 +317,18 @@ class SubscriptionPaymentTable extends Component
         $this->actionName = '';
     }
 
+    /**
+     * Limpia filtros y reinicia la paginación.
+     */
     public function resetFilters(): void
     {
         $this->reset(['search', 'status', 'paymentMethod', 'dateFrom', 'dateTo']);
         $this->resetPage();
     }
 
+    /**
+     * Devuelve las opciones de estado permitidas.
+     */
     public function statusOptions(): array
     {
         return [
@@ -280,6 +340,9 @@ class SubscriptionPaymentTable extends Component
         ];
     }
 
+    /**
+     * Devuelve los métodos de pago permitidos.
+     */
     public function paymentMethodOptions(): array
     {
         return [
@@ -292,16 +355,25 @@ class SubscriptionPaymentTable extends Component
         ];
     }
 
+    /**
+     * Devuelve las monedas habilitadas.
+     */
     public function currencyOptions(): array
     {
         return ['BOB' => 'BOB', 'USD' => 'USD'];
     }
 
+    /**
+     * Traduce el estado del registro.
+     */
     public function statusLabel(int $status): string
     {
         return $this->statusOptions()[$status] ?? (string) $status;
     }
 
+    /**
+     * Define la clase visual según el estado.
+     */
     public function statusBadge(int $status): string
     {
         return [
@@ -313,11 +385,17 @@ class SubscriptionPaymentTable extends Component
         ][$status] ?? 'tw-badge-gray';
     }
 
+    /**
+     * Devuelve la etiqueta visible de payment method.
+     */
     public function paymentMethodLabel(?string $method): string
     {
         return $method ? ($this->paymentMethodOptions()[$method] ?? $method) : __('mma.admin.common.not_available');
     }
 
+    /**
+     * Formatea el tamaño del archivo para mostrarlo en pantalla.
+     */
     public function fileSizeLabel(?int $bytes): string
     {
         if (! $bytes) {
@@ -329,6 +407,9 @@ class SubscriptionPaymentTable extends Component
             : number_format($bytes / 1024, 1).' KB';
     }
 
+    /**
+     * Renderiza la tabla de pagos de suscripción con filtros activos.
+     */
     public function render()
     {
         $payments = SubscriptionPayment::query()
@@ -337,16 +418,28 @@ class SubscriptionPaymentTable extends Component
                 'subscription:id,user_id,subscription_plan_id,starts_at,ends_at,status',
                 'subscription.plan:id,name,slug',
             ])
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($this->search !== '', function ($query) {
+                /**
+                 * Agrupa condiciones adicionales dentro de la consulta.
+                 */
                 $query->where(function ($subQuery) {
                     $subQuery->where('provider_transaction_id', 'like', "%{$this->search}%")
                         ->orWhere('provider', 'like', "%{$this->search}%")
+                        /**
+                         * Agrega condiciones sobre la relacion consultada.
+                         */
                         ->orWhereHas('user', function ($userQuery) {
                             $userQuery->where('name', 'like', "%{$this->search}%")
                                 ->orWhere('lastname', 'like', "%{$this->search}%")
                                 ->orWhere('email', 'like', "%{$this->search}%")
                                 ->orWhere('number_phone', 'like', "%{$this->search}%");
                         })
+                        /**
+                         * Agrega condiciones sobre la relacion consultada.
+                         */
                         ->orWhereHas('subscription.plan', function ($planQuery) {
                             $planQuery->where('name', 'like', "%{$this->search}%")
                                 ->orWhere('slug', 'like', "%{$this->search}%");
@@ -375,6 +468,9 @@ class SubscriptionPaymentTable extends Component
         return view('livewire.admin.subscription-payments.subscription-payment-table', compact('payments', 'subscribers', 'subscriptions'));
     }
 
+    /**
+     * Define las reglas de validación del formulario.
+     */
     protected function rules(): array
     {
         return [
@@ -394,6 +490,9 @@ class SubscriptionPaymentTable extends Component
         ];
     }
 
+    /**
+     * Traduce los atributos usados por la validación.
+     */
     protected function attributes(): array
     {
         return [
@@ -413,6 +512,9 @@ class SubscriptionPaymentTable extends Component
         ];
     }
 
+    /**
+     * Restaura el formulario a sus valores iniciales.
+     */
     protected function resetForm(): void
     {
         $this->editingId = null;
@@ -434,6 +536,9 @@ class SubscriptionPaymentTable extends Component
         $this->resetErrorBag();
     }
 
+    /**
+     * Normaliza campos opcionales y tipos antes de guardar.
+     */
     protected function normalizePaymentFields(array &$data): void
     {
         foreach (['user_subscription_id', 'provider', 'provider_transaction_id', 'payment_url', 'paid_at', 'expires_at', 'notes'] as $field) {
@@ -450,6 +555,9 @@ class SubscriptionPaymentTable extends Component
         $data['expires_at'] = $data['expires_at'] ? Carbon::parse($data['expires_at']) : null;
     }
 
+    /**
+     * Valida que la suscripción pertenezca al suscriptor.
+     */
     protected function validateSubscriptionBelongsToUser(array $data): bool
     {
         if (blank($data['user_subscription_id'] ?? null)) {
@@ -470,6 +578,9 @@ class SubscriptionPaymentTable extends Component
         return true;
     }
 
+    /**
+     * Reemplaza el comprobante y actualiza su metadata.
+     */
     protected function replaceProof(SubscriptionPayment $payment, FileUploadService $uploads): void
     {
         $stored = $uploads->replacePaymentProof($payment, $this->proofFile, 'subscription-payment');
@@ -478,6 +589,9 @@ class SubscriptionPaymentTable extends Component
         $payment->payment_proof_size = $stored['size'];
     }
 
+    /**
+     * Genera el nombre mostrado en acciones de confirmación.
+     */
     protected function paymentActionName(SubscriptionPayment $payment): string
     {
         $name = trim(($payment->user?->name ?? '').' '.($payment->user?->lastname ?? ''));
@@ -486,6 +600,9 @@ class SubscriptionPaymentTable extends Component
         return $name.' - '.$payment->currency.' '.number_format((float) $payment->amount, 2);
     }
 
+    /**
+     * Convierte fechas persistidas al formato de input local.
+     */
     protected function dateTimeLocal($dateTime): string
     {
         return $dateTime ? $dateTime->format('Y-m-d\TH:i') : '';

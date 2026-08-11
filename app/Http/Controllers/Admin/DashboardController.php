@@ -11,7 +11,7 @@ use App\Models\SubscriptionPayment;
 class DashboardController extends Controller
 {
     /**
-     * Muestra indicadores iniciales del panel administrativo.
+     * Muestra la pantalla administrativa de dashboard.
      */
     public function index()
     {

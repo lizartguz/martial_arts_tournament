@@ -11,11 +11,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 class FirebaseWebPushController extends Controller
 {
+    /**
+     * Inyecta las dependencias requeridas por la clase.
+     */
     public function __construct(
         private readonly FcmTokenService $fcmTokenService,
     ) {}
 
-    // Entrega el service worker de Firebase desde Laravel para mantener la configuración centralizada.
+    /**
+     * Entrega el service worker de Firebase con la configuración vigente.
+     */
     public function serviceWorker(): Response
     {
         return response()
@@ -27,7 +32,9 @@ class FirebaseWebPushController extends Controller
             ->header('Expires', '0');
     }
 
-    // Guarda o reactiva el token web del navegador autenticado.
+    /**
+     * Registra o actualiza el token web push del usuario.
+     */
     public function storeToken(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -61,7 +68,9 @@ class FirebaseWebPushController extends Controller
         ]);
     }
 
-    // Confirma si el token actual del navegador pertenece al usuario sin devolver su valor.
+    /**
+     * Consulta si el token web push sigue activo para el usuario.
+     */
     public function tokenStatus(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -77,7 +86,9 @@ class FirebaseWebPushController extends Controller
         ]);
     }
 
-    // Desactiva el token cuando el usuario revoca permisos o el navegador deja de usarlo.
+    /**
+     * Desactiva el token web push enviado por el usuario.
+     */
     public function destroyToken(Request $request): JsonResponse
     {
         $validated = $request->validate([

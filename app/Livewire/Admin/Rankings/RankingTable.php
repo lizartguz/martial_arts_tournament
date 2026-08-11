@@ -34,36 +34,57 @@ class RankingTable extends Component
         'status' => 1,
     ];
 
+    /**
+     * Inicializa el componente de rankings.
+     */
     public function mount(): void
     {
         Gate::authorize('rankings.view');
     }
 
+    /**
+     * Reinicia la paginación al cambiar la búsqueda.
+     */
     public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el género.
+     */
     public function updatingGender(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar la categoría de peso.
+     */
     public function updatingWeightClassId(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el estado.
+     */
     public function updatingStatus(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tamaño de página.
+     */
     public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Sincroniza el formulario al cambiar la categoría de peso.
+     */
     public function updatedFormWeightClassId($value): void
     {
         $weightClass = $value ? WeightClass::query()->find((int) $value) : null;
@@ -75,11 +96,17 @@ class RankingTable extends Component
         $this->form['fighter_id'] = null;
     }
 
+    /**
+     * Sincroniza el formulario al cambiar el género.
+     */
     public function updatedFormGender($value): void
     {
         $this->form['fighter_id'] = null;
     }
 
+    /**
+     * Abre el formulario para crear un registro.
+     */
     public function create(): void
     {
         Gate::authorize('rankings.update');
@@ -88,6 +115,9 @@ class RankingTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Carga el registro seleccionado para editarlo.
+     */
     public function edit(int $id): void
     {
         Gate::authorize('rankings.update');
@@ -110,6 +140,9 @@ class RankingTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Valida y guarda los datos del formulario.
+     */
     public function save(): void
     {
         Gate::authorize('rankings.update');
@@ -137,23 +170,35 @@ class RankingTable extends Component
         $this->closeModal();
     }
 
+    /**
+     * Cierra el modal principal y limpia su estado.
+     */
     public function closeModal(): void
     {
         $this->showModal = false;
         $this->resetForm();
     }
 
+    /**
+     * Limpia filtros y reinicia la paginación.
+     */
     public function resetFilters(): void
     {
         $this->reset(['search', 'gender', 'weightClassId', 'status']);
         $this->resetPage();
     }
 
+    /**
+     * Traduce el género del registro.
+     */
     public function genderLabel(string $gender): string
     {
         return __("mma.admin.weight_classes.gender.{$gender}");
     }
 
+    /**
+     * Traduce el estado del registro.
+     */
     public function statusLabel(int $status): string
     {
         return $status === 1
@@ -161,6 +206,9 @@ class RankingTable extends Component
             : __('mma.admin.common.inactive');
     }
 
+    /**
+     * Devuelve la etiqueta visible de movement.
+     */
     public function movementLabel(?int $previousPosition, int $position): string
     {
         if (! $previousPosition || $previousPosition === $position) {
@@ -172,6 +220,9 @@ class RankingTable extends Component
             : __('mma.admin.rankings.movement.down', ['places' => $position - $previousPosition]);
     }
 
+    /**
+     * Gestiona fighter name dentro de la tabla de rankings.
+     */
     public function fighterName(?Fighter $fighter): string
     {
         if (! $fighter) {
@@ -185,6 +236,9 @@ class RankingTable extends Component
             : $name;
     }
 
+    /**
+     * Gestiona fighter record dentro de la tabla de rankings.
+     */
     public function fighterRecord(?Fighter $fighter): string
     {
         if (! $fighter) {
@@ -199,6 +253,9 @@ class RankingTable extends Component
         ]);
     }
 
+    /**
+     * Renderiza la tabla de rankings con filtros activos.
+     */
     public function render()
     {
         $rankings = FighterRanking::query()
@@ -207,7 +264,13 @@ class RankingTable extends Component
                 'fighter:id,first_name,last_name,nickname,gender,weight_class_id,fighter_team_id,wins,losses,draws,no_contests,status',
                 'fighter.team:id,name',
             ])
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($this->search !== '', function ($query) {
+                /**
+                 * Agrupa condiciones adicionales dentro de la consulta.
+                 */
                 $query->where(function ($subQuery) {
                     $subQuery->whereHas('fighter', fn ($fighterQuery) => $this->applyFighterSearch($fighterQuery))
                         ->orWhereHas('weightClass', fn ($classQuery) => $classQuery->where('name', 'like', "%{$this->search}%"));
@@ -242,6 +305,9 @@ class RankingTable extends Component
         return view('livewire.admin.rankings.ranking-table', compact('rankings', 'weightClasses', 'fighters'));
     }
 
+    /**
+     * Define las reglas de validación del formulario.
+     */
     protected function rules(): array
     {
         return [
@@ -265,6 +331,9 @@ class RankingTable extends Component
         ];
     }
 
+    /**
+     * Traduce los atributos usados por la validación.
+     */
     protected function attributes(): array
     {
         return [
@@ -279,6 +348,9 @@ class RankingTable extends Component
         ];
     }
 
+    /**
+     * Restaura el formulario a sus valores iniciales.
+     */
     protected function resetForm(): void
     {
         $this->editingId = null;
@@ -295,6 +367,9 @@ class RankingTable extends Component
         $this->resetErrorBag();
     }
 
+    /**
+     * Convierte campos vacíos en valores nulos persistibles.
+     */
     protected function normalizeNullableFields(array &$validated): void
     {
         foreach (['previous_position', 'ranked_at'] as $field) {
@@ -312,6 +387,9 @@ class RankingTable extends Component
         $validated['is_champion'] = (bool) ($validated['is_champion'] ?? false);
     }
 
+    /**
+     * Gestiona validate business rules dentro de la tabla de rankings.
+     */
     protected function validateBusinessRules(array $validated): bool
     {
         $fighter = Fighter::query()->findOrFail($validated['fighter_id']);
@@ -338,6 +416,9 @@ class RankingTable extends Component
         return true;
     }
 
+    /**
+     * Gestiona active position is taken dentro de la tabla de rankings.
+     */
     protected function activePositionIsTaken(array $validated): bool
     {
         return FighterRanking::query()
@@ -349,6 +430,9 @@ class RankingTable extends Component
             ->exists();
     }
 
+    /**
+     * Gestiona apply fighter search dentro de la tabla de rankings.
+     */
     protected function applyFighterSearch($query): void
     {
         $query->where('first_name', 'like', "%{$this->search}%")

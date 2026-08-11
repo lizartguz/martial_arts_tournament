@@ -10,6 +10,9 @@ Route::get('/notifications/{notification}/images/{slot}/{user}', [NotificationIm
     ->middleware('signed')
     ->name('api.notifications.images.show');
 
+/**
+ * Agrupa rutas bajo un prefijo comun.
+ */
 Route::prefix('v1')->name('api.v1.')->group(function () {
     Route::get('/events', [PublicEventController::class, 'index'])->name('events.index');
     Route::get('/events/{event:slug}', [PublicEventController::class, 'show'])->name('events.show');
@@ -17,6 +20,9 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         ->middleware('throttle:10,1')
         ->name('purchase-requests.store');
 
+    /**
+     * Agrupa rutas que comparten middleware de acceso.
+     */
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/me', [SubscriberProfileController::class, 'show'])->name('me.show');
     });

@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class PublicEventController extends Controller
 {
     /**
-     * Lista eventos publicados visibles para landing o clientes externos.
+     * Muestra la pantalla principal del módulo.
      */
     public function index(Request $request)
     {
@@ -41,7 +41,7 @@ class PublicEventController extends Controller
     }
 
     /**
-     * Muestra un evento publicado por slug con cartelera y enlaces activos.
+     * Muestra el recurso solicitado cuando el usuario tiene acceso.
      */
     public function show(Event $event)
     {
@@ -130,6 +130,9 @@ class PublicEventController extends Controller
         ]);
     }
 
+    /**
+     * Resume los datos públicas del evento para la API.
+     */
     private function eventSummary(Event $event): array
     {
         return [
@@ -153,6 +156,9 @@ class PublicEventController extends Controller
         ];
     }
 
+    /**
+     * Resume los datos públicas del peleador para la API.
+     */
     private function fighterSummary($fighter): ?array
     {
         if (! $fighter) {

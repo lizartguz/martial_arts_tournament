@@ -20,7 +20,7 @@ use Illuminate\Validation\ValidationException;
 class LandingController extends Controller
 {
     /**
-     * Muestra una landing publica inicial con eventos publicados y peleadores destacados.
+     * Muestra la pantalla principal del módulo.
      */
     public function index(SystemSettingsService $settings)
     {
@@ -49,7 +49,7 @@ class LandingController extends Controller
     }
 
     /**
-     * Muestra el detalle publico de un evento publicado, con navegacion y tickets.
+     * Gestiona la acción event del módulo landing.
      */
     public function event(Event $event, SystemSettingsService $settings)
     {
@@ -70,6 +70,9 @@ class LandingController extends Controller
         $previousEvent = Event::query()
             ->published()
             ->whereNotNull('starts_at')
+            /**
+             * Agrupa condiciones adicionales dentro de la consulta.
+             */
             ->where(function ($query) use ($event) {
                 $query->where('starts_at', '<', $event->starts_at)
                     ->orWhere(fn ($sub) => $sub->where('starts_at', $event->starts_at)->where('id', '<', $event->id));
@@ -81,6 +84,9 @@ class LandingController extends Controller
         $nextEvent = Event::query()
             ->published()
             ->whereNotNull('starts_at')
+            /**
+             * Agrupa condiciones adicionales dentro de la consulta.
+             */
             ->where(function ($query) use ($event) {
                 $query->where('starts_at', '>', $event->starts_at)
                     ->orWhere(fn ($sub) => $sub->where('starts_at', $event->starts_at)->where('id', '>', $event->id));
@@ -93,7 +99,7 @@ class LandingController extends Controller
     }
 
     /**
-     * Lista peleadores activos para la landing publica.
+     * Gestiona la acción fighters del módulo landing.
      */
     public function fighters(SystemSettingsService $settings)
     {
@@ -108,7 +114,7 @@ class LandingController extends Controller
     }
 
     /**
-     * Muestra el perfil publico de un peleador activo.
+     * Gestiona la acción fighter del módulo landing.
      */
     public function fighter(Fighter $fighter, SystemSettingsService $settings)
     {
@@ -135,7 +141,7 @@ class LandingController extends Controller
     }
 
     /**
-     * Lista noticias publicadas para la landing publica.
+     * Gestiona la acción news del módulo landing.
      */
     public function news(SystemSettingsService $settings)
     {
@@ -148,7 +154,7 @@ class LandingController extends Controller
     }
 
     /**
-     * Muestra el detalle publico de una noticia publicada.
+     * Gestiona la acción news show del módulo landing.
      */
     public function newsShow(NewsPost $newsPost, SystemSettingsService $settings)
     {
@@ -158,7 +164,7 @@ class LandingController extends Controller
     }
 
     /**
-     * Muestra los planes de suscripcion activos disponibles al publico.
+     * Gestiona la acción subscription del módulo landing.
      */
     public function subscription(SystemSettingsService $settings)
     {
@@ -173,7 +179,7 @@ class LandingController extends Controller
     }
 
     /**
-     * Muestra el formulario publico de contacto/compra, opcionalmente preseleccionado.
+     * Gestiona la acción contact del módulo landing.
      */
     public function contact(Request $request, SystemSettingsService $settings)
     {
@@ -199,7 +205,7 @@ class LandingController extends Controller
     }
 
     /**
-     * Registra una solicitud publica de contacto, compra o validacion manual.
+     * Gestiona la acción submit contact del módulo landing.
      */
     public function submitContact(Request $request, FileUploadService $files): RedirectResponse
     {

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Gate;
 class UserController extends Controller
 {
     /**
-     * Muestra la gestión administrativa de usuarios y roles asignados.
+     * Muestra la pantalla administrativa de usuarios.
      */
     public function index()
     {

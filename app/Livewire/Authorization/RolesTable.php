@@ -29,7 +29,7 @@ class RolesTable extends Component
     ];
 
     /**
-     * Reinicia la paginacion al cambiar el texto de busqueda.
+     * Reinicia la paginación al cambiar la búsqueda.
      */
     public function updatingSearch(): void
     {
@@ -37,7 +37,7 @@ class RolesTable extends Component
     }
 
     /**
-     * Reinicia la paginacion al cambiar la cantidad por pagina.
+     * Reinicia la paginación al cambiar el tamaño de página.
      */
     public function updatingPerPage(): void
     {
@@ -45,7 +45,7 @@ class RolesTable extends Component
     }
 
     /**
-     * Carga un rol existente para editar nombre y permisos.
+     * Carga el registro seleccionado para editarlo.
      */
     public function edit(int $roleId): void
     {
@@ -68,7 +68,7 @@ class RolesTable extends Component
     }
 
     /**
-     * Guarda un rol nuevo o actualiza uno existente con sus permisos.
+     * Valida y guarda los datos del formulario.
      */
     public function save(): void
     {
@@ -115,7 +115,7 @@ class RolesTable extends Component
     }
 
     /**
-     * Cierra el modal principal y limpia el formulario.
+     * Cierra el modal principal y limpia su estado.
      */
     public function closeModal(): void
     {
@@ -124,7 +124,7 @@ class RolesTable extends Component
     }
 
     /**
-     * Obtiene roles visibles con conteos para la tabla.
+     * Devuelve roles property solicitado.
      */
     public function getRolesProperty()
     {
@@ -148,7 +148,7 @@ class RolesTable extends Component
     }
 
     /**
-     * Obtiene todos los permisos disponibles para asignarlos a roles.
+     * Devuelve all permissions property solicitado.
      */
     public function getAllPermissionsProperty()
     {
@@ -159,7 +159,7 @@ class RolesTable extends Component
     }
 
     /**
-     * Devuelve el nombre visible del rol en el idioma activo.
+     * Devuelve la etiqueta visible de role.
      */
     public function roleLabel(string $roleName): string
     {
@@ -172,7 +172,7 @@ class RolesTable extends Component
     }
 
     /**
-     * Devuelve el nombre visible del permiso sin exponer el identificador tecnico.
+     * Devuelve la etiqueta visible de permission.
      */
     public function permissionLabel(string $permissionName): string
     {
@@ -192,7 +192,7 @@ class RolesTable extends Component
     }
 
     /**
-     * Indica si el permiso puede marcarse o desmarcarse por el usuario actual.
+     * Valida si el usuario puede toggle permission.
      */
     public function canTogglePermission(string $permissionName): bool
     {
@@ -200,7 +200,7 @@ class RolesTable extends Component
     }
 
     /**
-     * Renderiza la tabla de roles con permisos disponibles.
+     * Renderiza la tabla de roles con filtros activos.
      */
     public function render()
     {
@@ -211,7 +211,7 @@ class RolesTable extends Component
     }
 
     /**
-     * Restaura el estado inicial del formulario de rol.
+     * Restaura el formulario a sus valores iniciales.
      */
     protected function resetForm(): void
     {
@@ -224,7 +224,7 @@ class RolesTable extends Component
     }
 
     /**
-     * Verifica que el usuario tenga el permiso requerido.
+     * Gestiona authorize action dentro de la tabla de roles.
      */
     protected function authorizeAction(string $permission): void
     {
@@ -235,7 +235,7 @@ class RolesTable extends Component
     }
 
     /**
-     * Devuelve el servicio de jerarquia de autorizacion.
+     * Gestiona hierarchy dentro de la tabla de roles.
      */
     protected function hierarchy(): AuthorizationHierarchyService
     {
@@ -243,7 +243,7 @@ class RolesTable extends Component
     }
 
     /**
-     * Devuelve el servicio de auditoria de autorizacion.
+     * Gestiona audit dentro de la tabla de roles.
      */
     protected function audit(): AuthorizationAuditLogger
     {
@@ -251,7 +251,7 @@ class RolesTable extends Component
     }
 
     /**
-     * Mantiene intactos los permisos protegidos cuando el actor no puede editarlos.
+     * Gestiona permissions allowed for sync dentro de la tabla de roles.
      */
     protected function permissionsAllowedForSync(array $currentPermissions, array $requestedPermissions): array
     {
@@ -267,6 +267,9 @@ class RolesTable extends Component
         return array_values(array_unique(array_merge($currentProtected, $requestedAllowed)));
     }
 
+    /**
+     * Gestiona split permission name dentro de la tabla de roles.
+     */
     protected function splitPermissionName(string $permissionName): array
     {
         $parts = explode('.', $permissionName);

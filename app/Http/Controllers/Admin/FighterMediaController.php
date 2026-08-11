@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Gate;
 class FighterMediaController extends Controller
 {
     /**
-     * Muestra la gestión administrativa de multimedia de peleadores.
+     * Muestra la pantalla administrativa de fighter media.
      */
     public function index()
     {

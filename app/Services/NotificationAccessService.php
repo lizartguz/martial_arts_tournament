@@ -9,12 +9,18 @@ use Illuminate\Support\Carbon;
 class NotificationAccessService
 {
     // Determina si el usuario puede administrar todos los avisos de marketing.
+    /**
+     * Valida si el usuario puede manage.
+     */
     public function canManage(User $user): bool
     {
         return $user->can('notifications.view');
     }
 
     // Valida que el aviso este disponible y que el usuario sea uno de sus destinatarios.
+    /**
+     * Valida si el usuario puede view.
+     */
     public function canView(User $user, NotificationM $notification): bool
     {
         if ((int) $user->state !== 1) {

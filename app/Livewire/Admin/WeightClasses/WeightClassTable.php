@@ -37,31 +37,49 @@ class WeightClassTable extends Component
         'status' => 1,
     ];
 
+    /**
+     * Inicializa el componente de categorías de peso.
+     */
     public function mount(): void
     {
         Gate::authorize('weight_classes.view');
     }
 
+    /**
+     * Reinicia la paginación al cambiar la búsqueda.
+     */
     public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el género.
+     */
     public function updatingGender(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el estado.
+     */
     public function updatingStatus(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tamaño de página.
+     */
     public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Sincroniza el formulario al cambiar el nombre.
+     */
     public function updatedFormName(string $value): void
     {
         if (! $this->slugTouched) {
@@ -69,12 +87,18 @@ class WeightClassTable extends Component
         }
     }
 
+    /**
+     * Sincroniza el formulario al cambiar el slug.
+     */
     public function updatedFormSlug(string $value): void
     {
         $this->slugTouched = true;
         $this->form['slug'] = Str::slug($value);
     }
 
+    /**
+     * Abre el formulario para crear un registro.
+     */
     public function create(): void
     {
         Gate::authorize('weight_classes.create');
@@ -83,6 +107,9 @@ class WeightClassTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Carga el registro seleccionado para editarlo.
+     */
     public function edit(int $id): void
     {
         Gate::authorize('weight_classes.update');
@@ -106,6 +133,9 @@ class WeightClassTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Valida y guarda los datos del formulario.
+     */
     public function save(): void
     {
         Gate::authorize($this->editingId ? 'weight_classes.update' : 'weight_classes.create');
@@ -132,6 +162,9 @@ class WeightClassTable extends Component
         $this->closeModal();
     }
 
+    /**
+     * Prepara la confirmación de eliminación del registro.
+     */
     public function confirmDelete(int $id): void
     {
         Gate::authorize('weight_classes.delete');
@@ -153,6 +186,9 @@ class WeightClassTable extends Component
         $this->showDeleteModal = true;
     }
 
+    /**
+     * Elimina el registro seleccionado cuando está permitido.
+     */
     public function delete(): void
     {
         Gate::authorize('weight_classes.delete');
@@ -179,12 +215,18 @@ class WeightClassTable extends Component
         $this->dispatch('successAlert', ['success' => __('mma.admin.weight_classes.messages.deleted')]);
     }
 
+    /**
+     * Cierra el modal principal y limpia su estado.
+     */
     public function closeModal(): void
     {
         $this->showModal = false;
         $this->resetForm();
     }
 
+    /**
+     * Cierra el modal de eliminación.
+     */
     public function closeDeleteModal(): void
     {
         $this->showDeleteModal = false;
@@ -192,17 +234,26 @@ class WeightClassTable extends Component
         $this->deleteName = '';
     }
 
+    /**
+     * Limpia filtros y reinicia la paginación.
+     */
     public function resetFilters(): void
     {
         $this->reset(['search', 'gender', 'status']);
         $this->resetPage();
     }
 
+    /**
+     * Traduce el género del registro.
+     */
     public function genderLabel(string $gender): string
     {
         return __("mma.admin.weight_classes.gender.{$gender}");
     }
 
+    /**
+     * Traduce el estado del registro.
+     */
     public function statusLabel(int $status): string
     {
         return $status === 1
@@ -210,11 +261,20 @@ class WeightClassTable extends Component
             : __('mma.admin.common.inactive');
     }
 
+    /**
+     * Renderiza la tabla de categorías de peso con filtros activos.
+     */
     public function render()
     {
         $weightClasses = WeightClass::query()
             ->withCount(['fighters', 'fights'])
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($this->search !== '', function ($query) {
+                /**
+                 * Agrupa condiciones adicionales dentro de la consulta.
+                 */
                 $query->where(function ($subQuery) {
                     $subQuery->where('name', 'like', "%{$this->search}%")
                         ->orWhere('slug', 'like', "%{$this->search}%");
@@ -229,6 +289,9 @@ class WeightClassTable extends Component
         return view('livewire.admin.weight-classes.weight-class-table', compact('weightClasses'));
     }
 
+    /**
+     * Define las reglas de validación del formulario.
+     */
     protected function rules(): array
     {
         return [
@@ -249,6 +312,9 @@ class WeightClassTable extends Component
         ];
     }
 
+    /**
+     * Traduce los atributos usados por la validación.
+     */
     protected function attributes(): array
     {
         return [
@@ -263,6 +329,9 @@ class WeightClassTable extends Component
         ];
     }
 
+    /**
+     * Restaura el formulario a sus valores iniciales.
+     */
     protected function resetForm(): void
     {
         $this->editingId = null;

@@ -63,57 +63,90 @@ class FighterTable extends Component
         'status' => 1,
     ];
 
+    /**
+     * Inicializa el componente de peleadores.
+     */
     public function mount(): void
     {
         Gate::authorize('fighters.view');
     }
 
+    /**
+     * Reinicia la paginación al cambiar la búsqueda.
+     */
     public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el género.
+     */
     public function updatingGender(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el estado.
+     */
     public function updatingStatus(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar la categoría de peso.
+     */
     public function updatingWeightClassId(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el equipo.
+     */
     public function updatingTeamId(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tamaño de página.
+     */
     public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Sincroniza el formulario al cambiar el nombre.
+     */
     public function updatedFormFirstName(): void
     {
         $this->syncSlugFromName();
     }
 
+    /**
+     * Sincroniza el formulario al cambiar el apellido.
+     */
     public function updatedFormLastName(): void
     {
         $this->syncSlugFromName();
     }
 
+    /**
+     * Sincroniza el formulario al cambiar el slug.
+     */
     public function updatedFormSlug(string $value): void
     {
         $this->slugTouched = true;
         $this->form['slug'] = Str::slug($value);
     }
 
+    /**
+     * Abre el formulario para crear un registro.
+     */
     public function create(): void
     {
         Gate::authorize('fighters.create');
@@ -122,6 +155,9 @@ class FighterTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Carga el registro seleccionado para editarlo.
+     */
     public function edit(int $id): void
     {
         Gate::authorize('fighters.update');
@@ -158,6 +194,9 @@ class FighterTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Valida y guarda los datos del formulario.
+     */
     public function save(ImageUploadOptimizer $images): void
     {
         Gate::authorize($this->editingId ? 'fighters.update' : 'fighters.create');
@@ -189,6 +228,9 @@ class FighterTable extends Component
         $this->closeModal();
     }
 
+    /**
+     * Prepara la confirmación de eliminación del registro.
+     */
     public function confirmDelete(int $id): void
     {
         Gate::authorize('fighters.delete');
@@ -210,6 +252,9 @@ class FighterTable extends Component
         $this->showDeleteModal = true;
     }
 
+    /**
+     * Elimina el registro seleccionado cuando está permitido.
+     */
     public function delete(): void
     {
         Gate::authorize('fighters.delete');
@@ -239,12 +284,18 @@ class FighterTable extends Component
         $this->dispatch('successAlert', ['success' => __('mma.admin.fighters.messages.deleted')]);
     }
 
+    /**
+     * Cierra el modal principal y limpia su estado.
+     */
     public function closeModal(): void
     {
         $this->showModal = false;
         $this->resetForm();
     }
 
+    /**
+     * Cierra el modal de eliminación.
+     */
     public function closeDeleteModal(): void
     {
         $this->showDeleteModal = false;
@@ -252,12 +303,18 @@ class FighterTable extends Component
         $this->deleteName = '';
     }
 
+    /**
+     * Limpia filtros y reinicia la paginación.
+     */
     public function resetFilters(): void
     {
         $this->reset(['search', 'gender', 'status', 'weightClassId', 'teamId']);
         $this->resetPage();
     }
 
+    /**
+     * Devuelve las opciones de género permitidas.
+     */
     public function genderOptions(): array
     {
         return [
@@ -266,6 +323,9 @@ class FighterTable extends Component
         ];
     }
 
+    /**
+     * Devuelve las opciones disponibles de stance.
+     */
     public function stanceOptions(): array
     {
         return [
@@ -275,16 +335,25 @@ class FighterTable extends Component
         ];
     }
 
+    /**
+     * Traduce el género del registro.
+     */
     public function genderLabel(?string $gender): string
     {
         return $this->genderOptions()[$gender] ?? __('mma.admin.common.not_available');
     }
 
+    /**
+     * Devuelve la etiqueta visible de stance.
+     */
     public function stanceLabel(?string $stance): string
     {
         return $this->stanceOptions()[$stance] ?? __('mma.admin.common.not_available');
     }
 
+    /**
+     * Traduce el estado del registro.
+     */
     public function statusLabel(int $status): string
     {
         return $status === 1
@@ -292,6 +361,9 @@ class FighterTable extends Component
             : __('mma.admin.common.inactive');
     }
 
+    /**
+     * Renderiza la tabla de peleadores con filtros activos.
+     */
     public function render()
     {
         $fighters = Fighter::query()
@@ -302,7 +374,13 @@ class FighterTable extends Component
                 'weightClass:id,name,gender',
             ])
             ->withCount(['redCornerFights', 'blueCornerFights'])
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($this->search !== '', function ($query) {
+                /**
+                 * Agrupa condiciones adicionales dentro de la consulta.
+                 */
                 $query->where(function ($subQuery) {
                     $subQuery->where('first_name', 'like', "%{$this->search}%")
                         ->orWhere('last_name', 'like', "%{$this->search}%")
@@ -332,6 +410,9 @@ class FighterTable extends Component
         return view('livewire.admin.fighters.fighter-table', compact('fighters', 'countries', 'cities', 'teams', 'weightClasses'));
     }
 
+    /**
+     * Define las reglas de validación del formulario.
+     */
     protected function rules(): array
     {
         return [
@@ -365,6 +446,9 @@ class FighterTable extends Component
         ];
     }
 
+    /**
+     * Traduce los atributos usados por la validación.
+     */
     protected function attributes(): array
     {
         return [
@@ -392,6 +476,9 @@ class FighterTable extends Component
         ];
     }
 
+    /**
+     * Restaura el formulario a sus valores iniciales.
+     */
     protected function resetForm(): void
     {
         $this->editingId = null;
@@ -424,6 +511,9 @@ class FighterTable extends Component
         $this->resetErrorBag();
     }
 
+    /**
+     * Sincroniza el slug a partir del nombre visible.
+     */
     protected function syncSlugFromName(): void
     {
         if ($this->slugTouched) {
@@ -433,6 +523,9 @@ class FighterTable extends Component
         $this->form['slug'] = Str::slug(trim($this->form['first_name'].' '.$this->form['last_name']));
     }
 
+    /**
+     * Convierte campos vacíos en valores nulos persistibles.
+     */
     protected function normalizeNullableFields(array &$validated): void
     {
         foreach (['last_name', 'nickname', 'country_id', 'city_id', 'fighter_team_id', 'weight_class_id', 'birthdate', 'height_cm', 'reach_cm', 'stance', 'bio'] as $field) {
@@ -442,6 +535,9 @@ class FighterTable extends Component
         }
     }
 
+    /**
+     * Guarda las imágenes enviadas desde el formulario.
+     */
     protected function storeImages(ImageUploadOptimizer $images, array &$validated, Fighter $fighter): void
     {
         if ($this->profileImage) {
@@ -455,6 +551,9 @@ class FighterTable extends Component
         }
     }
 
+    /**
+     * Guarda una imagen pública optimizada.
+     */
     protected function storePublicImage(ImageUploadOptimizer $images, TemporaryUploadedFile $image, string $prefix): string
     {
         $config = config('uploads.public_images');
@@ -469,6 +568,9 @@ class FighterTable extends Component
         return 'storage/'.$path;
     }
 
+    /**
+     * Elimina un archivo almacenado si existe.
+     */
     protected function deleteStoredImage(?string $path): void
     {
         if (! $path || ! str_starts_with($path, 'storage/')) {

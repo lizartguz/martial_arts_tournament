@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 
 abstract class Controller
 {
-    // Registra o actualiza el token FCM móvil reportado por la app nativa.
+    /**
+     * Sincroniza el token FCM móvil enviado por el cliente.
+     */
     protected function syncMobileFcmToken(Request $request, int $userId): void
     {
         $token = trim((string) $request->input('fcmToken', ''));

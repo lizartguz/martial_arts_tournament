@@ -11,12 +11,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class NotificationImageController extends Controller
 {
+    /**
+     * Inyecta las dependencias requeridas por la clase.
+     */
     public function __construct(
         private readonly NotificationAccessService $notificationAccessService,
         private readonly NotificationAttachmentService $notificationAttachmentService,
     ) {}
 
-    // Entrega una imagen solo cuando la sesion web tiene acceso al aviso.
+    /**
+     * Muestra el recurso solicitado cuando el usuario tiene acceso.
+     */
     public function show(Request $request, NotificationM $notification, string $slot): Response
     {
         abort_unless(
@@ -27,7 +32,9 @@ class NotificationImageController extends Controller
         return $this->notificationAttachmentService->response($notification, $slot);
     }
 
-    // Entrega una imagen movil mediante una URL firmada, temporal y vinculada al destinatario.
+    /**
+     * Entrega el recurso firmado para clientes API.
+     */
     public function showApi(
         NotificationM $notification,
         string $slot,

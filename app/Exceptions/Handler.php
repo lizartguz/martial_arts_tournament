@@ -19,10 +19,13 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * Register the exception handling callbacks for the application.
+     * Registra servicios compartidos en el contenedor.
      */
     public function register(): void
     {
+        /**
+         * Registra el manejo de reporte para esta excepcion.
+         */
         $this->reportable(function (Throwable $e) {
             //
         });

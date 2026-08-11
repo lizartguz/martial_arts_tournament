@@ -14,11 +14,16 @@ use Throwable;
 
 class PushNotificationService
 {
+    /**
+     * Inyecta las dependencias requeridas por la clase.
+     */
     public function __construct(
         private readonly FcmTokenService $fcmTokenService,
     ) {}
 
-    // Envía una notificación a los usuarios indicados usando el canal configurado.
+    /**
+     * Envía una notificación push a los usuarios indicados.
+     */
     public function sendToUsers(?array $userIds, string $deliveryPlatform, string $title, string $body, array $options = []): array
     {
         $tokens = $this->fcmTokenService->getActiveTokensForUsers($userIds, $deliveryPlatform);
@@ -26,7 +31,9 @@ class PushNotificationService
         return $this->sendToTokenRecords($tokens, $title, $body, $options);
     }
 
-    // Envía una notificación push usando la configuración guardada en un aviso de marketing.
+    /**
+     * Envía el aviso push usando la configuración del registro.
+     */
     public function sendNotificationRecord(NotificationM $notification): array
     {
         $metadata = is_array($notification->metadata) ? $notification->metadata : [];
@@ -74,7 +81,9 @@ class PushNotificationService
         return $result;
     }
 
-    // Envía los avisos activos cuya programación ya venció y que aún no se dispararon por push.
+    /**
+     * Envía avisos programados que ya están listos.
+     */
     public function dispatchPendingNotifications(?int $limit = null): array
     {
         $summary = [
@@ -91,6 +100,9 @@ class PushNotificationService
             ->whereNull('push_sent_at')
             ->whereNull('push_last_error_at')
             ->whereDate('deadline', '>=', $now->toDateString())
+            /**
+             * Agrupa condiciones adicionales dentro de la consulta.
+             */
             ->where(function ($builder) use ($now) {
                 $builder->whereNull('scheduled_at')
                     ->orWhere('scheduled_at', '<=', $now);
@@ -102,6 +114,9 @@ class PushNotificationService
             $query->limit($limit);
         }
 
+        /**
+         * Procesa cada elemento recuperado por la consulta.
+         */
         $query->get()->each(function (NotificationM $notification) use (&$summary) {
             $summary['processed']++;
             $summary['notification_ids'][] = $notification->id;
@@ -118,7 +133,9 @@ class PushNotificationService
         return $summary;
     }
 
-    // Envía a una colección de tokens FCM y procesa errores conocidos de Firebase.
+    /**
+     * Envía mensajes a tokens FCM y registra el resultado.
+     */
     public function sendToTokenRecords(Collection $tokens, string $title, string $body, array $options = []): array
     {
         $summary = [
@@ -176,9 +193,14 @@ class PushNotificationService
         return $summary;
     }
 
-    // Obtiene y cachea el access token OAuth necesario para usar FCM HTTP v1.
+    /**
+     * Obtiene y cachea el token OAuth requerido por Firebase.
+     */
     private function getAccessToken(): string
     {
+        /**
+         * Calcula y almacena el valor cuando no existe en cache.
+         */
         return Cache::remember('firebase.messaging.access_token', now()->addMinutes(45), function () {
             $serviceAccountFile = $this->resolveServiceAccountFile();
 
@@ -208,7 +230,9 @@ class PushNotificationService
         });
     }
 
-    // Resuelve y valida la credencial privada sin exponer rutas internas al usuario.
+    /**
+     * Resuelve y valida el archivo privado de credenciales.
+     */
     private function resolveServiceAccountFile(): string
     {
         $configuredPath = trim((string) config('services.firebase.sdk'));
@@ -239,7 +263,9 @@ class PushNotificationService
         return $serviceAccountFile;
     }
 
-    // Detecta rutas absolutas de Linux, Windows y recursos compartidos de red.
+    /**
+     * Indica si la ruta recibida es absoluta.
+     */
     private function isAbsolutePath(string $path): bool
     {
         return str_starts_with($path, '/')
@@ -247,7 +273,9 @@ class PushNotificationService
             || preg_match('/^[A-Za-z]:[\\\\\/]/', $path) === 1;
     }
 
-    // Construye el payload común para Android y Web Push.
+    /**
+     * Construye el payload común para Firebase Cloud Messaging.
+     */
     private function buildPayload(string $token, string $title, string $body, ?string $link, ?string $image, array $data): array
     {
         $stringData = collect($data)
@@ -285,7 +313,9 @@ class PushNotificationService
         ];
     }
 
-    // Extrae un mensaje legible desde la respuesta de error de Firebase.
+    /**
+     * Extrae un mensaje legible desde el error de Firebase.
+     */
     private function extractFirebaseErrorMessage(?array $response): string
     {
         return $response['error']['message']
@@ -293,7 +323,9 @@ class PushNotificationService
             ?? 'Firebase devolvió un error desconocido';
     }
 
-    // Determina si el token debe invalidarse según la respuesta de Firebase.
+    /**
+     * Determina si Firebase exige invalidar el token.
+     */
     private function shouldInvalidateToken(?array $response): bool
     {
         $errorCode = $response['error']['details'][0]['errorCode'] ?? null;

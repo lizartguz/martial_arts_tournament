@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Gate;
 
 class RankingController extends Controller
 {
+    /**
+     * Muestra la pantalla administrativa de rankings.
+     */
     public function index()
     {
         Gate::authorize('rankings.view');

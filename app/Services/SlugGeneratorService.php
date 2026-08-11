@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 class SlugGeneratorService
 {
     /**
-     * Genera un slug único para una tabla, respetando el registro ignorado al editar.
+     * Ejecuta la operación unique for table del servicio.
      */
     public function uniqueForTable(string $table, string $value, string $column = 'slug', ?int $ignoreId = null): string
     {
@@ -26,7 +26,7 @@ class SlugGeneratorService
     }
 
     /**
-     * Genera un slug único usando la tabla asociada al modelo.
+     * Ejecuta la operación unique for model del servicio.
      */
     public function uniqueForModel(Model|string $model, string $value, string $column = 'slug', ?int $ignoreId = null): string
     {
@@ -35,6 +35,9 @@ class SlugGeneratorService
         return $this->uniqueForTable($table, $value, $column, $ignoreId);
     }
 
+    /**
+     * Verifica si el valor ya existe en la tabla indicada.
+     */
     private function exists(string $table, string $column, string $slug, ?int $ignoreId): bool
     {
         return DB::table($table)

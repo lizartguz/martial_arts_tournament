@@ -29,31 +29,49 @@ class SubscriberTable extends Component
         'state' => 1,
     ];
 
+    /**
+     * Inicializa el componente de suscriptores.
+     */
     public function mount(): void
     {
         Gate::authorize('subscribers.view');
     }
 
+    /**
+     * Reinicia la paginación al cambiar la búsqueda.
+     */
     public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el estado.
+     */
     public function updatingState(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el estado de suscripción.
+     */
     public function updatingSubscriptionStatus(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tamaño de página.
+     */
     public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Carga el registro seleccionado para editarlo.
+     */
     public function edit(int $id): void
     {
         Gate::authorize('subscribers.update');
@@ -74,6 +92,9 @@ class SubscriberTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Valida y guarda los datos del formulario.
+     */
     public function save(): void
     {
         Gate::authorize('subscribers.update');
@@ -89,18 +110,27 @@ class SubscriberTable extends Component
         $this->closeModal();
     }
 
+    /**
+     * Cierra el modal principal y limpia su estado.
+     */
     public function closeModal(): void
     {
         $this->showModal = false;
         $this->resetForm();
     }
 
+    /**
+     * Limpia filtros y reinicia la paginación.
+     */
     public function resetFilters(): void
     {
         $this->reset(['search', 'state', 'subscriptionStatus']);
         $this->resetPage();
     }
 
+    /**
+     * Devuelve la etiqueta visible de state.
+     */
     public function stateLabel(int $state): string
     {
         return $state === 1
@@ -108,6 +138,9 @@ class SubscriberTable extends Component
             : __('mma.admin.common.inactive');
     }
 
+    /**
+     * Devuelve las opciones disponibles de subscription status.
+     */
     public function subscriptionStatusOptions(): array
     {
         return [
@@ -119,6 +152,9 @@ class SubscriberTable extends Component
         ];
     }
 
+    /**
+     * Devuelve la etiqueta visible de subscription status.
+     */
     public function subscriptionStatusLabel(?int $status): string
     {
         return $status === null
@@ -126,6 +162,9 @@ class SubscriberTable extends Component
             : ($this->subscriptionStatusOptions()[$status] ?? (string) $status);
     }
 
+    /**
+     * Devuelve la clase visual de subscription status.
+     */
     public function subscriptionStatusBadge(?int $status): string
     {
         return [
@@ -138,13 +177,22 @@ class SubscriberTable extends Component
         ][$status] ?? 'tw-badge-gray';
     }
 
+    /**
+     * Renderiza la tabla de suscriptores con filtros activos.
+     */
     public function render()
     {
         $subscribers = User::query()
             ->role('subscriber')
             ->with(['latestSubscription.plan:id,name,slug'])
             ->withCount(['userSubscriptions', 'subscriptionPayments', 'purchaseRequests'])
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($this->search !== '', function ($query) {
+                /**
+                 * Agrupa condiciones adicionales dentro de la consulta.
+                 */
                 $query->where(function ($subQuery) {
                     $subQuery->where('name', 'like', "%{$this->search}%")
                         ->orWhere('lastname', 'like', "%{$this->search}%")
@@ -164,6 +212,9 @@ class SubscriberTable extends Component
         return view('livewire.admin.subscribers.subscriber-table', compact('subscribers'));
     }
 
+    /**
+     * Define las reglas de validación del formulario.
+     */
     protected function rules(): array
     {
         return [
@@ -176,6 +227,9 @@ class SubscriberTable extends Component
         ];
     }
 
+    /**
+     * Traduce los atributos usados por la validación.
+     */
     protected function attributes(): array
     {
         return [
@@ -188,6 +242,9 @@ class SubscriberTable extends Component
         ];
     }
 
+    /**
+     * Restaura el formulario a sus valores iniciales.
+     */
     protected function resetForm(): void
     {
         $this->editingId = null;
@@ -202,6 +259,9 @@ class SubscriberTable extends Component
         $this->resetErrorBag();
     }
 
+    /**
+     * Convierte campos vacíos en valores nulos persistibles.
+     */
     protected function normalizeNullableFields(array &$validated): void
     {
         foreach (['lastname', 'number_phone', 'identity_document'] as $field) {

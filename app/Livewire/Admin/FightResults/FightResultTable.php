@@ -36,36 +36,57 @@ class FightResultTable extends Component
         'official_notes' => '',
     ];
 
+    /**
+     * Inicializa el componente de resultados de combates.
+     */
     public function mount(): void
     {
         Gate::authorize('fight_results.view');
     }
 
+    /**
+     * Reinicia la paginación al cambiar la búsqueda.
+     */
     public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el evento.
+     */
     public function updatingEventId(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tipo de resultado.
+     */
     public function updatingResultType(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el estado del resultado.
+     */
     public function updatingResultState(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tamaño de página.
+     */
     public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Sincroniza el formulario al cambiar el tipo de resultado.
+     */
     public function updatedFormResultType(string $value): void
     {
         if (in_array($value, $this->winnerlessResultTypes(), true)) {
@@ -73,6 +94,9 @@ class FightResultTable extends Component
         }
     }
 
+    /**
+     * Gestiona manage dentro de la tabla de resultados de combates.
+     */
     public function manage(int $fightId): void
     {
         Gate::authorize('fight_results.update');
@@ -100,6 +124,9 @@ class FightResultTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Valida y guarda los datos del formulario.
+     */
     public function save(): void
     {
         Gate::authorize('fight_results.update');
@@ -143,18 +170,27 @@ class FightResultTable extends Component
         $this->closeModal();
     }
 
+    /**
+     * Cierra el modal principal y limpia su estado.
+     */
     public function closeModal(): void
     {
         $this->showModal = false;
         $this->resetForm();
     }
 
+    /**
+     * Limpia filtros y reinicia la paginación.
+     */
     public function resetFilters(): void
     {
         $this->reset(['search', 'eventId', 'resultType', 'resultState']);
         $this->resetPage();
     }
 
+    /**
+     * Devuelve las opciones disponibles de result type.
+     */
     public function resultTypeOptions(): array
     {
         return [
@@ -167,6 +203,9 @@ class FightResultTable extends Component
         ];
     }
 
+    /**
+     * Devuelve las opciones disponibles de result state.
+     */
     public function resultStateOptions(): array
     {
         return [
@@ -175,11 +214,17 @@ class FightResultTable extends Component
         ];
     }
 
+    /**
+     * Devuelve la etiqueta visible de result type.
+     */
     public function resultTypeLabel(?string $resultType): string
     {
         return $resultType ? ($this->resultTypeOptions()[$resultType] ?? $resultType) : __('mma.admin.fight_results.pending');
     }
 
+    /**
+     * Devuelve la clase visual de result.
+     */
     public function resultBadge(?string $resultType): string
     {
         return [
@@ -192,6 +237,9 @@ class FightResultTable extends Component
         ][$resultType] ?? 'tw-badge-gray';
     }
 
+    /**
+     * Gestiona fighter name dentro de la tabla de resultados de combates.
+     */
     public function fighterName(?Fighter $fighter): string
     {
         if (! $fighter) {
@@ -205,6 +253,9 @@ class FightResultTable extends Component
             : $name;
     }
 
+    /**
+     * Renderiza la tabla de resultados de combates con filtros activos.
+     */
     public function render()
     {
         $fights = Fight::query()
@@ -215,7 +266,13 @@ class FightResultTable extends Component
                 'result:id,fight_id,winner_fighter_id,result_type,method,round,time',
                 'result.winner:id,first_name,last_name,nickname',
             ])
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($this->search !== '', function ($query) {
+                /**
+                 * Agrupa condiciones adicionales dentro de la consulta.
+                 */
                 $query->where(function ($subQuery) {
                     $subQuery->where('title', 'like', "%{$this->search}%")
                         ->orWhereHas('event', fn ($eventQuery) => $eventQuery->where('name', 'like', "%{$this->search}%"))
@@ -240,6 +297,9 @@ class FightResultTable extends Component
         return view('livewire.admin.fight-results.fight-result-table', compact('fights', 'events'));
     }
 
+    /**
+     * Define las reglas de validación del formulario.
+     */
     protected function rules(): array
     {
         return [
@@ -252,6 +312,9 @@ class FightResultTable extends Component
         ];
     }
 
+    /**
+     * Traduce los atributos usados por la validación.
+     */
     protected function attributes(): array
     {
         return [
@@ -264,6 +327,9 @@ class FightResultTable extends Component
         ];
     }
 
+    /**
+     * Restaura el formulario a sus valores iniciales.
+     */
     protected function resetForm(): void
     {
         $this->selectedFightId = null;
@@ -281,6 +347,9 @@ class FightResultTable extends Component
         $this->resetErrorBag();
     }
 
+    /**
+     * Convierte campos vacíos en valores nulos persistibles.
+     */
     protected function normalizeNullableFields(array &$validated): void
     {
         foreach (['winner_fighter_id', 'method', 'round', 'time', 'official_notes'] as $field) {
@@ -298,6 +367,9 @@ class FightResultTable extends Component
         }
     }
 
+    /**
+     * Gestiona validate business rules dentro de la tabla de resultados de combates.
+     */
     protected function validateBusinessRules(Fight $fight, array &$validated): bool
     {
         if (in_array($validated['result_type'], $this->winnerlessResultTypes(), true)) {
@@ -326,6 +398,9 @@ class FightResultTable extends Component
         return $this->validateRoundLimit($fight, $validated);
     }
 
+    /**
+     * Gestiona validate round limit dentro de la tabla de resultados de combates.
+     */
     protected function validateRoundLimit(Fight $fight, array $validated): bool
     {
         if ($validated['round'] !== null && $validated['round'] > $fight->rounds) {
@@ -337,11 +412,17 @@ class FightResultTable extends Component
         return true;
     }
 
+    /**
+     * Gestiona winnerless result types dentro de la tabla de resultados de combates.
+     */
     protected function winnerlessResultTypes(): array
     {
         return ['draw', 'no_contest'];
     }
 
+    /**
+     * Gestiona find fight for modal dentro de la tabla de resultados de combates.
+     */
     protected function findFightForModal(int $fightId): Fight
     {
         return Fight::query()
@@ -354,6 +435,9 @@ class FightResultTable extends Component
             ->findOrFail($fightId);
     }
 
+    /**
+     * Devuelve las opciones disponibles de build winner.
+     */
     protected function buildWinnerOptions(Fight $fight): array
     {
         return collect([
@@ -362,6 +446,9 @@ class FightResultTable extends Component
         ])->filter(fn (array $option) => $option['id'] !== null)->values()->all();
     }
 
+    /**
+     * Gestiona apply fighter search dentro de la tabla de resultados de combates.
+     */
     protected function applyFighterSearch($query): void
     {
         $query->where('first_name', 'like', "%{$this->search}%")
@@ -369,6 +456,9 @@ class FightResultTable extends Component
             ->orWhere('nickname', 'like', "%{$this->search}%");
     }
 
+    /**
+     * Gestiona fight name dentro de la tabla de resultados de combates.
+     */
     protected function fightName(Fight $fight): string
     {
         return $fight->title ?: $this->fighterName($fight->cornerRed).' vs '.$this->fighterName($fight->cornerBlue);

@@ -81,22 +81,34 @@ class NotificationsPush extends Component
 
     protected $listeners = ['deleteNotif'];
 
+    /**
+     * Inicializa el componente de notificaciones push.
+     */
     public function mount()
     {
         abort_unless(Auth::user()?->can('notifications.view'), 403);
         $this->loadRoleOptions();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el título de búsqueda.
+     */
     public function updatingSearchTitle()
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tamaño de página.
+     */
     public function updatingPerPage()
     {
         $this->resetPage();
     }
 
+    /**
+     * Gestiona visible add dentro de la tabla de notificaciones push.
+     */
     public function visibleAdd()
     {
         $this->clearVariable();
@@ -106,11 +118,17 @@ class NotificationsPush extends Component
         $this->refreshUserSearchResults();
     }
 
+    /**
+     * Gestiona no visible add dentro de la tabla de notificaciones push.
+     */
     public function noVisibleAdd()
     {
         $this->clearVariable();
     }
 
+    /**
+     * Gestiona edit notif dentro de la tabla de notificaciones push.
+     */
     public function editNotif($id)
     {
         $notification = NotificationM::find($id);
@@ -145,24 +163,33 @@ class NotificationsPush extends Component
         $this->formUpdate = true;
     }
 
-    // Recalcula las coincidencias cada vez que cambia el texto de busqueda.
+    /**
+     * Sincroniza el estado al cambiar user search.
+     */
     public function updatedUserSearch()
     {
         $this->refreshUserSearchResults();
     }
 
-    // Aplica el filtro por rol sin recargar todos los usuarios en memoria.
+    /**
+     * Sincroniza el estado al cambiar role filter.
+     */
     public function updatedRoleFilter()
     {
         $this->refreshUserSearchResults();
     }
 
-    // Agrega un usuario al listado destino evitando duplicados.
+    /**
+     * Gestiona add selected user dentro de la tabla de notificaciones push.
+     */
     public function addSelectedUser(int $userId)
     {
         $userExists = User::query()
             ->where('state', 1)
             ->whereKey($userId)
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($this->roleFilter !== '', function ($query) {
                 $query->role($this->roleFilter);
             })
@@ -185,7 +212,9 @@ class NotificationsPush extends Component
         $this->refreshUserSearchResults();
     }
 
-    // Quita un usuario de la segmentacion del aviso.
+    /**
+     * Gestiona remove selected user dentro de la tabla de notificaciones push.
+     */
     public function removeSelectedUser(int $userId)
     {
         $this->selectedUserIds = collect($this->selectedUserIds)
@@ -197,21 +226,33 @@ class NotificationsPush extends Component
         $this->refreshUserSearchResults();
     }
 
+    /**
+     * Sincroniza el estado al cambiar image a u.
+     */
     public function updatedImageAU()
     {
         $this->validateUploadedImage('imageAU');
     }
 
+    /**
+     * Sincroniza el estado al cambiar image1 a u.
+     */
     public function updatedImage1AU()
     {
         $this->validateUploadedImage('image1AU');
     }
 
+    /**
+     * Sincroniza el estado al cambiar image2 a u.
+     */
     public function updatedImage2AU()
     {
         $this->validateUploadedImage('image2AU');
     }
 
+    /**
+     * Gestiona save notification dentro de la tabla de notificaciones push.
+     */
     public function saveNotification()
     {
         $this->debugNotificationLog('saveNotification llamado');
@@ -421,6 +462,9 @@ class NotificationsPush extends Component
         }
     }
 
+    /**
+     * Gestiona delete notif dentro de la tabla de notificaciones push.
+     */
     public function deleteNotif($payload)
     {
         $id = is_array($payload) ? ($payload['id'] ?? null) : $payload;
@@ -439,6 +483,9 @@ class NotificationsPush extends Component
         }
     }
 
+    /**
+     * Gestiona change status dentro de la tabla de notificaciones push.
+     */
     public function changeStatus($id, $estadoActual)
     {
         try {
@@ -457,7 +504,9 @@ class NotificationsPush extends Component
         }
     }
 
-    // Reenvia un aviso existente y bloquea solicitudes simultaneas para evitar envios duplicados.
+    /**
+     * Gestiona resend push dentro de la tabla de notificaciones push.
+     */
     public function resendPush(int $id): void
     {
         $lock = Cache::lock("notification-push-resend:{$id}", 300);
@@ -534,6 +583,9 @@ class NotificationsPush extends Component
         }
     }
 
+    /**
+     * Gestiona clear variable dentro de la tabla de notificaciones push.
+     */
     public function clearVariable()
     {
         $this->reset([
@@ -563,6 +615,9 @@ class NotificationsPush extends Component
         $this->resetValidation();
     }
 
+    /**
+     * Devuelve la URL pública de get image.
+     */
     public function getImageUrl(string $slot): ?string
     {
         if (! $this->idAU) {
@@ -576,16 +631,25 @@ class NotificationsPush extends Component
             : null;
     }
 
+    /**
+     * Elimina un archivo almacenado si existe.
+     */
     private function deleteStoredImage($path)
     {
         app(NotificationAttachmentService::class)->delete($path);
     }
 
+    /**
+     * Gestiona store optimized image dentro de la tabla de notificaciones push.
+     */
     private function storeOptimizedImage($image, string $prefix): string
     {
         return app(NotificationAttachmentService::class)->store($image, $prefix);
     }
 
+    /**
+     * Gestiona validate uploaded image dentro de la tabla de notificaciones push.
+     */
     private function validateUploadedImage(string $property): void
     {
         try {
@@ -604,6 +668,9 @@ class NotificationsPush extends Component
         }
     }
 
+    /**
+     * Gestiona image validation rules dentro de la tabla de notificaciones push.
+     */
     private function imageValidationRules(): array
     {
         $rules = ['nullable', 'file', 'mimes:jpeg,jpg,png,gif,webp', 'mimetypes:image/jpeg,image/png,image/gif,image/webp', 'max:10240'];
@@ -615,6 +682,9 @@ class NotificationsPush extends Component
         ];
     }
 
+    /**
+     * Devuelve mensajes personalizados de validación.
+     */
     private function validationMessages(): array
     {
         return [
@@ -636,6 +706,9 @@ class NotificationsPush extends Component
         ];
     }
 
+    /**
+     * Gestiona notification log context dentro de la tabla de notificaciones push.
+     */
     private function notificationLogContext(): array
     {
         return [
@@ -662,6 +735,9 @@ class NotificationsPush extends Component
         ];
     }
 
+    /**
+     * Gestiona uploaded image size dentro de la tabla de notificaciones push.
+     */
     private function uploadedImageSize($image): ?int
     {
         if (! $image || ! method_exists($image, 'getSize')) {
@@ -675,6 +751,9 @@ class NotificationsPush extends Component
         }
     }
 
+    /**
+     * Gestiona debug notification log dentro de la tabla de notificaciones push.
+     */
     private function debugNotificationLog(string $message, array $extra = []): void
     {
         try {
@@ -692,7 +771,9 @@ class NotificationsPush extends Component
         }
     }
 
-    // Carga una sola vez los roles disponibles para filtrar usuarios destino.
+    /**
+     * Devuelve las opciones disponibles de load role.
+     */
     private function loadRoleOptions(): void
     {
         $this->roleOptions = Role::query()
@@ -705,7 +786,9 @@ class NotificationsPush extends Component
             ->all();
     }
 
-    // Busca usuarios por coincidencias y limita el resultado para evitar listas masivas.
+    /**
+     * Actualiza user search results según el estado actual.
+     */
     private function refreshUserSearchResults(): void
     {
         $term = trim((string) $this->userSearch);
@@ -724,10 +807,19 @@ class NotificationsPush extends Component
         $users = User::query()
             ->with('roles:id,name')
             ->where('state', 1)
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($this->roleFilter !== '', function ($query) {
                 $query->role($this->roleFilter);
             })
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($term !== '', function ($query) use ($term) {
+                /**
+                 * Agrupa condiciones adicionales dentro de la consulta.
+                 */
                 $query->where(function ($subQuery) use ($term) {
                     $likeTerm = '%'.$term.'%';
                     $subQuery->where('name', 'LIKE', $likeTerm)
@@ -736,6 +828,9 @@ class NotificationsPush extends Component
                         ->orWhere('username', 'LIKE', $likeTerm);
                 });
             })
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when(! empty($normalizedSelectedIds), function ($query) use ($normalizedSelectedIds) {
                 $query->whereNotIn('id', $normalizedSelectedIds);
             })
@@ -743,6 +838,9 @@ class NotificationsPush extends Component
             ->limit(12)
             ->get(['id', 'name', 'lastname', 'email', 'username']);
 
+        /**
+         * Transforma cada elemento en el formato requerido.
+         */
         $this->userSearchResults = $users->map(function ($user) {
             return [
                 'id' => $user->id,
@@ -754,7 +852,9 @@ class NotificationsPush extends Component
         })->all();
     }
 
-    // Prepara la visualizacion de los usuarios ya seleccionados al crear o editar un aviso.
+    /**
+     * Actualiza selected users preview según el estado actual.
+     */
     private function refreshSelectedUsersPreview(): void
     {
         $selectedIds = collect($this->selectedUserIds)
@@ -774,11 +874,17 @@ class NotificationsPush extends Component
             ->with('roles:id,name')
             ->whereIn('id', $selectedIds)
             ->get(['id', 'name', 'lastname', 'email', 'username'])
+            /**
+             * Ordena los elementos segun la prioridad definida.
+             */
             ->sortBy(function ($user) use ($selectedIds) {
                 return array_search($user->id, $selectedIds, true);
             })
             ->values();
 
+        /**
+         * Transforma cada elemento en el formato requerido.
+         */
         $this->selectedUsersPreview = $users->map(function ($user) {
             return [
                 'id' => $user->id,
@@ -789,7 +895,9 @@ class NotificationsPush extends Component
         })->all();
     }
 
-    // Homogeneiza el texto mostrado para un usuario en resultados y badges.
+    /**
+     * Devuelve la etiqueta visible de format user.
+     */
     private function formatUserLabel(User $user): string
     {
         $fullName = trim(($user->name ?? '').' '.($user->lastname ?? ''));
@@ -799,7 +907,9 @@ class NotificationsPush extends Component
             : ($user->username ?: $user->email ?: 'Usuario #'.$user->id);
     }
 
-    // Determina si el aviso ya está listo para disparar un push inmediato o programado vencido.
+    /**
+     * Determina si corresponde send push now.
+     */
     private function shouldSendPushNow(NotificationM $notification): bool
     {
         $now = Carbon::now('America/La_Paz');
@@ -810,18 +920,30 @@ class NotificationsPush extends Component
             && (! $notification->deadline || $notification->deadline->gte($now->toDateString()));
     }
 
+    /**
+     * Gestiona result data dentro de la tabla de notificaciones push.
+     */
     private function resultData()
     {
         $searchTitle = trim((string) $this->searchTitle);
 
         return NotificationM::query()
             ->with('user')
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($searchTitle !== '', function ($query) use ($searchTitle) {
+                /**
+                 * Agrupa condiciones adicionales dentro de la consulta.
+                 */
                 $query->where(function ($subQuery) use ($searchTitle) {
                     $subQuery->where('title', 'LIKE', '%'.$searchTitle.'%')
                         ->orWhere('description', 'LIKE', '%'.$searchTitle.'%');
                 });
             })
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($this->stateChange !== 'all', function ($query) {
                 $query->where('state', (int) $this->stateChange);
             })
@@ -829,6 +951,9 @@ class NotificationsPush extends Component
             ->paginate($this->perPage);
     }
 
+    /**
+     * Renderiza la tabla de notificaciones push con filtros activos.
+     */
     public function render()
     {
         return view('livewire.notifications-push.notifications-push', [

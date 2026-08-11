@@ -18,12 +18,18 @@ class MmaDemoSeeder extends Seeder
         'frontend/images/senvatec-sensor-network.png',
     ];
 
+    /**
+     * Ejecuta la carga de datos definida por el seeder.
+     */
     public function run(): void
     {
         if (app()->environment('production')) {
             return;
         }
 
+        /**
+         * Ejecuta las operaciones dentro de una transaccion.
+         */
         DB::transaction(function () {
             $rootId = User::query()->where('email', 'sarteaga@root.dev')->value('id');
             $cityIds = DB::table('cities')->pluck('id', 'name')->all();
@@ -44,6 +50,9 @@ class MmaDemoSeeder extends Seeder
         });
     }
 
+    /**
+     * Carga datos iniciales de venues.
+     */
     private function seedVenues(array $cityIds, ?int $rootId): array
     {
         $venues = [
@@ -76,6 +85,9 @@ class MmaDemoSeeder extends Seeder
         return $ids;
     }
 
+    /**
+     * Carga datos iniciales de teams.
+     */
     private function seedTeams(array $cityIds, ?int $rootId): array
     {
         $teams = [
@@ -112,6 +124,9 @@ class MmaDemoSeeder extends Seeder
         return $ids;
     }
 
+    /**
+     * Carga datos iniciales de fighters.
+     */
     private function seedFighters(?int $countryId, array $cityIds, array $teamIds, ?int $rootId): array
     {
         $names = [
@@ -190,6 +205,9 @@ class MmaDemoSeeder extends Seeder
         return $ids;
     }
 
+    /**
+     * Carga datos iniciales de events.
+     */
     private function seedEvents(array $venueIds, ?int $rootId): array
     {
         $events = [
@@ -234,6 +252,9 @@ class MmaDemoSeeder extends Seeder
         return $ids;
     }
 
+    /**
+     * Carga datos iniciales de fights.
+     */
     private function seedFights(array $eventIds, array $fighterIds, ?int $rootId): void
     {
         $weightClassIds = DB::table('weight_classes')->pluck('id')->values()->all();
@@ -269,6 +290,9 @@ class MmaDemoSeeder extends Seeder
         }
     }
 
+    /**
+     * Carga datos iniciales de rankings.
+     */
     private function seedRankings(array $fighterIds, ?int $rootId): void
     {
         $classes = DB::table('weight_classes')->get();
@@ -298,6 +322,9 @@ class MmaDemoSeeder extends Seeder
         }
     }
 
+    /**
+     * Carga datos iniciales de plans.
+     */
     private function seedPlans(?int $rootId): array
     {
         $plans = [
@@ -335,6 +362,9 @@ class MmaDemoSeeder extends Seeder
         return $ids;
     }
 
+    /**
+     * Carga datos iniciales de subscribers.
+     */
     private function seedSubscribers(): array
     {
         $ids = [];
@@ -357,6 +387,9 @@ class MmaDemoSeeder extends Seeder
         return $ids;
     }
 
+    /**
+     * Carga datos iniciales de subscriptions.
+     */
     private function seedSubscriptions(array $subscriberIds, array $planIds, ?int $rootId): array
     {
         $ids = [];
@@ -387,6 +420,9 @@ class MmaDemoSeeder extends Seeder
         return $ids;
     }
 
+    /**
+     * Carga datos iniciales de payments.
+     */
     private function seedPayments(array $subscriptionIds, array $subscriberIds): void
     {
         foreach ($subscriptionIds as $index => $subscriptionId) {
@@ -415,6 +451,9 @@ class MmaDemoSeeder extends Seeder
         }
     }
 
+    /**
+     * Carga datos iniciales de purchase requests.
+     */
     private function seedPurchaseRequests(array $eventIds, array $planIds, array $subscriberIds, ?int $rootId): void
     {
         for ($i = 1; $i <= 15; $i++) {
@@ -448,6 +487,9 @@ class MmaDemoSeeder extends Seeder
         }
     }
 
+    /**
+     * Carga datos iniciales de ticket links.
+     */
     private function seedTicketLinks(array $eventIds): void
     {
         foreach ($eventIds as $index => $eventId) {

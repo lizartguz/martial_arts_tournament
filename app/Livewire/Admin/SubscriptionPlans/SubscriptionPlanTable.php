@@ -40,31 +40,49 @@ class SubscriptionPlanTable extends Component
         'status' => 1,
     ];
 
+    /**
+     * Inicializa el componente de planes de suscripción.
+     */
     public function mount(): void
     {
         Gate::authorize('subscription_plans.view');
     }
 
+    /**
+     * Reinicia la paginación al cambiar la búsqueda.
+     */
     public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el período de cobro.
+     */
     public function updatingBillingPeriod(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el estado.
+     */
     public function updatingStatus(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tamaño de página.
+     */
     public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Sincroniza el formulario al cambiar el nombre.
+     */
     public function updatedFormName(string $value): void
     {
         if (! $this->slugTouched) {
@@ -72,12 +90,18 @@ class SubscriptionPlanTable extends Component
         }
     }
 
+    /**
+     * Sincroniza el formulario al cambiar el slug.
+     */
     public function updatedFormSlug(string $value): void
     {
         $this->slugTouched = true;
         $this->form['slug'] = Str::slug($value);
     }
 
+    /**
+     * Abre el formulario para crear un registro.
+     */
     public function create(): void
     {
         Gate::authorize('subscription_plans.create');
@@ -86,6 +110,9 @@ class SubscriptionPlanTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Carga el registro seleccionado para editarlo.
+     */
     public function edit(int $id): void
     {
         Gate::authorize('subscription_plans.update');
@@ -129,6 +156,9 @@ class SubscriptionPlanTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Valida y guarda los datos del formulario.
+     */
     public function save(): void
     {
         Gate::authorize($this->editingId ? 'subscription_plans.update' : 'subscription_plans.create');
@@ -160,6 +190,9 @@ class SubscriptionPlanTable extends Component
         $this->closeModal();
     }
 
+    /**
+     * Prepara la confirmación de eliminación del registro.
+     */
     public function confirmDelete(int $id): void
     {
         Gate::authorize('subscription_plans.delete');
@@ -171,6 +204,9 @@ class SubscriptionPlanTable extends Component
         $this->showDeleteModal = true;
     }
 
+    /**
+     * Elimina el registro seleccionado cuando está permitido.
+     */
     public function delete(): void
     {
         Gate::authorize('subscription_plans.delete');
@@ -195,6 +231,9 @@ class SubscriptionPlanTable extends Component
         $this->dispatch('successAlert', ['success' => __('mma.admin.subscription_plans.messages.deleted')]);
     }
 
+    /**
+     * Agrega una fila vacía de beneficio al plan.
+     */
     public function addFeatureRow(): void
     {
         $this->featureRows[] = [
@@ -208,18 +247,27 @@ class SubscriptionPlanTable extends Component
         ];
     }
 
+    /**
+     * Quita una fila de beneficio del plan.
+     */
     public function removeFeatureRow(int $index): void
     {
         unset($this->featureRows[$index]);
         $this->featureRows = array_values($this->featureRows);
     }
 
+    /**
+     * Cierra el modal principal y limpia su estado.
+     */
     public function closeModal(): void
     {
         $this->showModal = false;
         $this->resetForm();
     }
 
+    /**
+     * Cierra el modal de eliminación.
+     */
     public function closeDeleteModal(): void
     {
         $this->showDeleteModal = false;
@@ -227,12 +275,18 @@ class SubscriptionPlanTable extends Component
         $this->deleteName = '';
     }
 
+    /**
+     * Limpia filtros y reinicia la paginación.
+     */
     public function resetFilters(): void
     {
         $this->reset(['search', 'billingPeriod', 'status']);
         $this->resetPage();
     }
 
+    /**
+     * Devuelve las opciones disponibles de billing period.
+     */
     public function billingPeriodOptions(): array
     {
         return [
@@ -244,16 +298,25 @@ class SubscriptionPlanTable extends Component
         ];
     }
 
+    /**
+     * Devuelve las monedas habilitadas.
+     */
     public function currencyOptions(): array
     {
         return ['BOB' => 'BOB', 'USD' => 'USD'];
     }
 
+    /**
+     * Devuelve la etiqueta visible de billing period.
+     */
     public function billingPeriodLabel(?string $period): string
     {
         return $period ? ($this->billingPeriodOptions()[$period] ?? $period) : __('mma.admin.common.not_available');
     }
 
+    /**
+     * Traduce el estado del registro.
+     */
     public function statusLabel(int $status): string
     {
         return $status === 1
@@ -261,11 +324,20 @@ class SubscriptionPlanTable extends Component
             : __('mma.admin.common.inactive');
     }
 
+    /**
+     * Renderiza la tabla de planes de suscripción con filtros activos.
+     */
     public function render()
     {
         $plans = SubscriptionPlan::query()
             ->withCount(['planFeatures', 'userSubscriptions', 'purchaseRequests'])
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($this->search !== '', function ($query) {
+                /**
+                 * Agrupa condiciones adicionales dentro de la consulta.
+                 */
                 $query->where(function ($subQuery) {
                     $subQuery->where('name', 'like', "%{$this->search}%")
                         ->orWhere('slug', 'like', "%{$this->search}%")
@@ -281,6 +353,9 @@ class SubscriptionPlanTable extends Component
         return view('livewire.admin.subscription-plans.subscription-plan-table', compact('plans'));
     }
 
+    /**
+     * Define las reglas de validación del formulario.
+     */
     protected function rules(): array
     {
         return [
@@ -311,6 +386,9 @@ class SubscriptionPlanTable extends Component
         ];
     }
 
+    /**
+     * Traduce los atributos usados por la validación.
+     */
     protected function attributes(): array
     {
         return [
@@ -333,6 +411,9 @@ class SubscriptionPlanTable extends Component
         ];
     }
 
+    /**
+     * Restaura el formulario a sus valores iniciales.
+     */
     protected function resetForm(): void
     {
         $this->editingId = null;
@@ -354,6 +435,9 @@ class SubscriptionPlanTable extends Component
         $this->resetErrorBag();
     }
 
+    /**
+     * Normaliza campos del plan antes de persistirlo.
+     */
     protected function normalizePlanFields(array &$planData, array $features): void
     {
         foreach (['description', 'duration_days'] as $field) {
@@ -376,6 +460,9 @@ class SubscriptionPlanTable extends Component
         $planData['updated_by'] = auth()->id();
     }
 
+    /**
+     * Normaliza beneficios antes de guardarlos en el plan.
+     */
     protected function normalizedFeatures(): array
     {
         return collect($this->featureRows)
@@ -393,6 +480,9 @@ class SubscriptionPlanTable extends Component
             ->all();
     }
 
+    /**
+     * Sincroniza beneficios visibles con el arreglo persistido.
+     */
     protected function syncFeatures(SubscriptionPlan $plan, array $features): void
     {
         $keptIds = [];

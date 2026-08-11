@@ -6,8 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Aplica los cambios definidos por la migración.
+     */
     public function up(): void
     {
+        /**
+         * Define la estructura de la tabla system_settings.
+         */
         Schema::create('system_settings', function (Blueprint $table) {
             $table->id();
             $table->string('product_name', 150)->default('Combate Real');
@@ -26,6 +32,9 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        /**
+         * Define la estructura de la tabla countries.
+         */
         Schema::create('countries', function (Blueprint $table) {
             $table->id();
             $table->string('name', 120);
@@ -35,6 +44,9 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        /**
+         * Define la estructura de la tabla cities.
+         */
         Schema::create('cities', function (Blueprint $table) {
             $table->id();
             $table->foreignId('country_id')->constrained()->cascadeOnDelete();
@@ -46,6 +58,9 @@ return new class extends Migration
             $table->index(['country_id', 'status']);
         });
 
+        /**
+         * Define la estructura de la tabla weight_classes.
+         */
         Schema::create('weight_classes', function (Blueprint $table) {
             $table->id();
             $table->string('name', 120);
@@ -63,6 +78,9 @@ return new class extends Migration
             $table->index(['display_order', 'status']);
         });
 
+        /**
+         * Define la estructura de la tabla venues.
+         */
         Schema::create('venues', function (Blueprint $table) {
             $table->id();
             $table->string('name', 180);
@@ -84,6 +102,9 @@ return new class extends Migration
             $table->index(['city_id', 'status']);
         });
 
+        /**
+         * Define la estructura de la tabla fighter_teams.
+         */
         Schema::create('fighter_teams', function (Blueprint $table) {
             $table->id();
             $table->string('name', 180);
@@ -102,6 +123,9 @@ return new class extends Migration
             $table->index(['city_id', 'status']);
         });
 
+        /**
+         * Define la estructura de la tabla fighters.
+         */
         Schema::create('fighters', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
@@ -136,6 +160,9 @@ return new class extends Migration
             $table->index(['fighter_team_id', 'status']);
         });
 
+        /**
+         * Define la estructura de la tabla fighter_stats.
+         */
         Schema::create('fighter_stats', function (Blueprint $table) {
             $table->id();
             $table->foreignId('fighter_id')->constrained()->cascadeOnDelete();
@@ -150,6 +177,9 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        /**
+         * Define la estructura de la tabla fighter_rankings.
+         */
         Schema::create('fighter_rankings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('weight_class_id')->constrained()->cascadeOnDelete();
@@ -168,6 +198,9 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Revierte los cambios definidos por la migración.
+     */
     public function down(): void
     {
         Schema::dropIfExists('fighter_rankings');

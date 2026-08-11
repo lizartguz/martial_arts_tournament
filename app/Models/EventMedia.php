@@ -16,11 +16,17 @@ class EventMedia extends Model
         'status' => 'integer',
     ];
 
+    /**
+     * Relaciona evento asociado.
+     */
     public function event()
     {
         return $this->belongsTo(Event::class);
     }
 
+    /**
+     * Relaciona usuario creador.
+     */
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');

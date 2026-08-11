@@ -89,6 +89,9 @@
 @once
 <script>
     if (!window.twSelect) {
+        /**
+         * Inicializa el selector personalizado de la interfaz.
+         */
         window.twSelect = function (config) {
             return {
                 multiple: !!config.multiple,

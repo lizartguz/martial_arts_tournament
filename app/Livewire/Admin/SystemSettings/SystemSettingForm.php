@@ -36,6 +36,9 @@ class SystemSettingForm extends Component
         ],
     ];
 
+    /**
+     * Inicializa el componente de system setting form.
+     */
     public function mount(): void
     {
         Gate::authorize('system_settings.view');
@@ -62,6 +65,9 @@ class SystemSettingForm extends Component
         ];
     }
 
+    /**
+     * Valida y guarda los datos del formulario.
+     */
     public function save(ImageUploadOptimizer $images): void
     {
         Gate::authorize('system_settings.update');
@@ -83,11 +89,17 @@ class SystemSettingForm extends Component
         $this->dispatch('successAlert', ['success' => __('mma.admin.system_settings.messages.updated')]);
     }
 
+    /**
+     * Renderiza la tabla de system setting form con filtros activos.
+     */
     public function render()
     {
         return view('livewire.admin.system-settings.system-setting-form');
     }
 
+    /**
+     * Define las reglas de validación del formulario.
+     */
     protected function rules(): array
     {
         return [
@@ -109,6 +121,9 @@ class SystemSettingForm extends Component
         ];
     }
 
+    /**
+     * Traduce los atributos usados por la validación.
+     */
     protected function attributes(): array
     {
         return [
@@ -130,6 +145,9 @@ class SystemSettingForm extends Component
         ];
     }
 
+    /**
+     * Carga la configuración general del sistema.
+     */
     protected function settings(): SystemSetting
     {
         return SystemSetting::query()->firstOrCreate(
@@ -144,6 +162,9 @@ class SystemSettingForm extends Component
         );
     }
 
+    /**
+     * Convierte campos vacíos en valores nulos persistibles.
+     */
     protected function normalizeNullableFields(array &$validated): void
     {
         foreach (['contact_email', 'contact_phone', 'whatsapp_phone', 'short_description', 'seo_title', 'seo_description'] as $field) {
@@ -161,6 +182,9 @@ class SystemSettingForm extends Component
         $validated['landing_show_rankings'] = (bool) $validated['landing_show_rankings'];
     }
 
+    /**
+     * Guarda las imágenes enviadas desde el formulario.
+     */
     protected function storeImages(ImageUploadOptimizer $images, array &$validated, SystemSetting $settings): void
     {
         if ($this->logoImage) {
@@ -174,6 +198,9 @@ class SystemSettingForm extends Component
         }
     }
 
+    /**
+     * Gestiona store image dentro de la tabla de system setting form.
+     */
     protected function storeImage(ImageUploadOptimizer $images, TemporaryUploadedFile $image, string $prefix): string
     {
         $config = config('uploads.public_images');
@@ -188,6 +215,9 @@ class SystemSettingForm extends Component
         return 'storage/'.$path;
     }
 
+    /**
+     * Elimina un archivo almacenado si existe.
+     */
     protected function deleteStoredImage(?string $path): void
     {
         if (! $path || ! str_starts_with($path, 'storage/')) {

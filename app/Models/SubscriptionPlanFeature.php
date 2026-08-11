@@ -13,6 +13,9 @@ class SubscriptionPlanFeature extends Model
         'status' => 'integer',
     ];
 
+    /**
+     * Relaciona plan asociado.
+     */
     public function plan()
     {
         return $this->belongsTo(SubscriptionPlan::class, 'subscription_plan_id');

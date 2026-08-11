@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ForceJsonResponse
 {
     /**
-     * Indica a Laravel que las rutas API deben responder como JSON.
+     * Ejecuta la operación principal del comando.
      */
     public function handle(Request $request, Closure $next): Response
     {

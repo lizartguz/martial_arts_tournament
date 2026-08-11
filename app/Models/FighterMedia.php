@@ -16,6 +16,9 @@ class FighterMedia extends Model
         'display_order' => 'integer',
     ];
 
+    /**
+     * Relaciona peleador asociado.
+     */
     public function fighter()
     {
         return $this->belongsTo(Fighter::class);

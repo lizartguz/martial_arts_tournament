@@ -11,7 +11,7 @@ class LogReaderService
     protected string $logPath;
 
     /**
-     * Define la ruta del archivo de log que sera gestionado.
+     * Inyecta las dependencias requeridas por la clase.
      */
     public function __construct(?string $logPath = null)
     {
@@ -19,7 +19,7 @@ class LogReaderService
     }
 
     /**
-     * Obtiene informacion basica del archivo de log.
+     * Construye la metadata persistida junto al archivo.
      */
     public function metadata(): array
     {
@@ -45,7 +45,7 @@ class LogReaderService
     }
 
     /**
-     * Lee y agrupa las entradas recientes del log de Laravel.
+     * Ejecuta la operación entries del servicio.
      */
     public function entries(int $maxLines = self::DEFAULT_MAX_LINES): array
     {
@@ -93,7 +93,7 @@ class LogReaderService
     }
 
     /**
-     * Filtra entradas por texto, nivel y rango de fechas.
+     * Ejecuta la operación filter entries del servicio.
      */
     public function filterEntries(array $entries, array $filters): array
     {
@@ -102,6 +102,9 @@ class LogReaderService
         $fromDate = $filters['from_date'] ?? null;
         $toDate = $filters['to_date'] ?? null;
 
+        /**
+         * Filtra los registros segun los criterios activos.
+         */
         return array_values(array_filter($entries, function (array $entry) use ($search, $level, $fromDate, $toDate) {
             if ($level !== '' && $entry['level'] !== $level) {
                 return false;
@@ -128,7 +131,7 @@ class LogReaderService
     }
 
     /**
-     * Limpia completamente el contenido del archivo de log.
+     * Ejecuta la operación clear del servicio.
      */
     public function clear(): void
     {
@@ -142,7 +145,7 @@ class LogReaderService
     }
 
     /**
-     * Elimina una entrada especifica del log manteniendo las demas.
+     * Ejecuta la operación delete entry del servicio.
      */
     public function deleteEntry(string $entryId): bool
     {
@@ -175,7 +178,7 @@ class LogReaderService
     }
 
     /**
-     * Lee las ultimas lineas del archivo sin cargarlo completo en memoria.
+     * Ejecuta la operación tail lines del servicio.
      */
     protected function tailLines(int $maxLines): array
     {
@@ -221,7 +224,7 @@ class LogReaderService
     }
 
     /**
-     * Separa el mensaje principal del contexto JSON cuando existe.
+     * Ejecuta la operación parse message del servicio.
      */
     protected function parseMessage(string $message): array
     {
@@ -250,7 +253,7 @@ class LogReaderService
     }
 
     /**
-     * Normaliza una entrada agrupada y genera su identificador estable.
+     * Ejecuta la operación finalize entry del servicio.
      */
     protected function finalizeEntry(array $entry): array
     {
@@ -262,7 +265,7 @@ class LogReaderService
     }
 
     /**
-     * Convierte bytes a una unidad legible para la interfaz.
+     * Formatea bytes para mostrarlo en pantalla.
      */
     protected function formatBytes(int $bytes): string
     {

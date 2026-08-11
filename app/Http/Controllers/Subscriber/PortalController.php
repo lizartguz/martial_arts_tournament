@@ -14,6 +14,9 @@ use Illuminate\Validation\ValidationException;
 
 class PortalController extends Controller
 {
+    /**
+     * Gestiona la acción dashboard del módulo portal.
+     */
     public function dashboard(Request $request)
     {
         Gate::authorize('subscriber.dashboard.view');
@@ -39,6 +42,9 @@ class PortalController extends Controller
         ]);
     }
 
+    /**
+     * Gestiona la acción purchases del módulo portal.
+     */
     public function purchases(Request $request)
     {
         Gate::authorize('subscriber.purchases.view');
@@ -57,6 +63,9 @@ class PortalController extends Controller
         ]);
     }
 
+    /**
+     * Gestiona la acción payment detail del módulo portal.
+     */
     public function paymentDetail(Request $request, SubscriptionPayment $payment)
     {
         Gate::authorize('subscriber.purchases.view');
@@ -67,6 +76,9 @@ class PortalController extends Controller
         ]);
     }
 
+    /**
+     * Gestiona la acción upload payment proof del módulo portal.
+     */
     public function uploadPaymentProof(Request $request, SubscriptionPayment $payment, FileUploadService $files)
     {
         Gate::authorize('subscriber.purchases.view');
@@ -104,6 +116,9 @@ class PortalController extends Controller
             ->with('success', __('mma.subscriber_portal.purchases.proof_uploaded'));
     }
 
+    /**
+     * Gestiona la acción request detail del módulo portal.
+     */
     public function requestDetail(Request $request, PurchaseRequest $purchaseRequest)
     {
         Gate::authorize('subscriber.purchases.view');
@@ -114,6 +129,9 @@ class PortalController extends Controller
         ]);
     }
 
+    /**
+     * Gestiona la acción upload request proof del módulo portal.
+     */
     public function uploadRequestProof(Request $request, PurchaseRequest $purchaseRequest, FileUploadService $files)
     {
         Gate::authorize('subscriber.purchases.view');
@@ -151,6 +169,9 @@ class PortalController extends Controller
             ->with('success', __('mma.subscriber_portal.purchases.proof_uploaded'));
     }
 
+    /**
+     * Gestiona la acción events del módulo portal.
+     */
     public function events(Request $request)
     {
         Gate::authorize('subscriber.events.view');
@@ -161,6 +182,9 @@ class PortalController extends Controller
         ]);
     }
 
+    /**
+     * Gestiona la acción subscription del módulo portal.
+     */
     public function subscription(Request $request)
     {
         Gate::authorize('subscriber.subscription.view');
@@ -180,6 +204,9 @@ class PortalController extends Controller
         ]);
     }
 
+    /**
+     * Gestiona la acción profile del módulo portal.
+     */
     public function profile(Request $request)
     {
         Gate::authorize('subscriber.profile.view');
@@ -187,6 +214,9 @@ class PortalController extends Controller
         return view('subscriber.profile', ['user' => $request->user()]);
     }
 
+    /**
+     * Gestiona la acción update profile del módulo portal.
+     */
     public function updateProfile(Request $request)
     {
         Gate::authorize('subscriber.profile.update');
@@ -217,6 +247,9 @@ class PortalController extends Controller
             ->with('success', __('mma.subscriber_portal.profile.updated'));
     }
 
+    /**
+     * Consulta eventos publicados vinculados a compras del suscriptor.
+     */
     protected function accessibleEvents(int $userId)
     {
         return Event::query()

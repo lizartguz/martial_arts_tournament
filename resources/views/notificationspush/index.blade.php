@@ -58,6 +58,9 @@
 <script>
     window.notificationI18n = @json($notificationI18n);
 
+    /**
+     * Gestiona el envio del formulario en la vista.
+     */
     document.addEventListener('submit', function (event) {
         const form = event.target.closest('.notification-action-form');
         if (!form || form.dataset.confirmed === 'true') {
@@ -82,6 +85,9 @@
         });
     });
 
+    /**
+     * Gestiona los clics delegados de la vista.
+     */
     document.addEventListener('click', function (event) {
         const trigger = event.target.closest('.notification-gallery-trigger');
         if (!trigger) {
@@ -124,6 +130,9 @@
             button.type = 'button';
             button.className = 'notification-gallery-item' + (index === 0 ? ' is-active' : '');
             button.innerHTML = '<img src="' + image + '" alt="' + window.notificationI18n.attachment_alt.replace(':number', index + 1) + '">';
+            /**
+             * Gestiona el clic del elemento interactivo.
+             */
             button.addEventListener('click', function () {
                 feature.src = image;
                 stack.querySelectorAll('.notification-gallery-item').forEach((item) => item.classList.remove('is-active'));
@@ -137,6 +146,9 @@
 
     if (!window.__notificationImagePreviewBooted) {
         window.__notificationImagePreviewBooted = true;
+        /**
+         * Gestiona los cambios de campos en la vista.
+         */
         document.addEventListener('change', function (event) {
             const input = event.target.closest('[data-notification-image-input]');
             if (!input || !input.files || !input.files[0]) {

@@ -31,7 +31,7 @@ class PermissionsTable extends Component
     ];
 
     /**
-     * Reinicia la paginacion al cambiar el texto de busqueda.
+     * Reinicia la paginación al cambiar la búsqueda.
      */
     public function updatingSearch(): void
     {
@@ -39,7 +39,7 @@ class PermissionsTable extends Component
     }
 
     /**
-     * Reinicia la paginacion al cambiar la cantidad por pagina.
+     * Reinicia la paginación al cambiar el tamaño de página.
      */
     public function updatingPerPage(): void
     {
@@ -47,7 +47,7 @@ class PermissionsTable extends Component
     }
 
     /**
-     * Prepara el formulario para crear un nuevo permiso.
+     * Abre el formulario para crear un registro.
      */
     public function create(): void
     {
@@ -57,7 +57,7 @@ class PermissionsTable extends Component
     }
 
     /**
-     * Carga un permiso existente para editarlo.
+     * Carga el registro seleccionado para editarlo.
      */
     public function edit(int $permissionId): void
     {
@@ -80,7 +80,7 @@ class PermissionsTable extends Component
     }
 
     /**
-     * Guarda un permiso nuevo o actualiza el permiso editado.
+     * Valida y guarda los datos del formulario.
      */
     public function save(): void
     {
@@ -134,7 +134,7 @@ class PermissionsTable extends Component
     }
 
     /**
-     * Abre la confirmacion para eliminar un permiso permitido.
+     * Prepara la confirmación de eliminación del registro.
      */
     public function confirmDelete(int $permissionId): void
     {
@@ -156,7 +156,7 @@ class PermissionsTable extends Component
     }
 
     /**
-     * Elimina el permiso seleccionado y registra la auditoria.
+     * Elimina el registro seleccionado cuando está permitido.
      */
     public function delete(): void
     {
@@ -190,7 +190,7 @@ class PermissionsTable extends Component
     }
 
     /**
-     * Cierra el modal principal y limpia el formulario.
+     * Cierra el modal principal y limpia su estado.
      */
     public function closeModal(): void
     {
@@ -199,7 +199,7 @@ class PermissionsTable extends Component
     }
 
     /**
-     * Cierra el modal de eliminacion y limpia la seleccion pendiente.
+     * Cierra el modal de eliminación.
      */
     public function closeDeleteModal(): void
     {
@@ -209,7 +209,7 @@ class PermissionsTable extends Component
     }
 
     /**
-     * Obtiene permisos con conteos para mostrarlos en la tabla.
+     * Devuelve permissions property solicitado.
      */
     public function getPermissionsProperty()
     {
@@ -231,7 +231,7 @@ class PermissionsTable extends Component
     }
 
     /**
-     * Renderiza la tabla de permisos.
+     * Renderiza la tabla de permissions con filtros activos.
      */
     public function render()
     {
@@ -241,7 +241,7 @@ class PermissionsTable extends Component
     }
 
     /**
-     * Restaura el estado inicial del formulario de permiso.
+     * Restaura el formulario a sus valores iniciales.
      */
     protected function resetForm(): void
     {
@@ -251,7 +251,7 @@ class PermissionsTable extends Component
     }
 
     /**
-     * Verifica que el usuario tenga el permiso requerido.
+     * Gestiona authorize action dentro de la tabla de permissions.
      */
     protected function authorizeAction(string $permission): void
     {
@@ -262,7 +262,7 @@ class PermissionsTable extends Component
     }
 
     /**
-     * Devuelve el servicio de jerarquia de autorizacion.
+     * Gestiona hierarchy dentro de la tabla de permissions.
      */
     protected function hierarchy(): AuthorizationHierarchyService
     {
@@ -270,7 +270,7 @@ class PermissionsTable extends Component
     }
 
     /**
-     * Devuelve el servicio de auditoria de autorizacion.
+     * Gestiona audit dentro de la tabla de permissions.
      */
     protected function audit(): AuthorizationAuditLogger
     {

@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Gate;
 
 class SubscriberController extends Controller
 {
+    /**
+     * Muestra la pantalla administrativa de suscriptores.
+     */
     public function index()
     {
         Gate::authorize('subscribers.view');

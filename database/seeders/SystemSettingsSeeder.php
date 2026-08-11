@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Hash;
 
 class SystemSettingsSeeder extends Seeder
 {
+    /**
+     * Ejecuta la carga de datos definida por el seeder.
+     */
     public function run(): void
     {
         DB::table('system_settings')->updateOrInsert(
@@ -42,6 +45,9 @@ class SystemSettingsSeeder extends Seeder
         $this->seedRootUser();
     }
 
+    /**
+     * Carga datos iniciales de locations.
+     */
     private function seedLocations(): void
     {
         DB::table('countries')->updateOrInsert(
@@ -59,6 +65,9 @@ class SystemSettingsSeeder extends Seeder
         }
     }
 
+    /**
+     * Carga datos iniciales de weight classes.
+     */
     private function seedWeightClasses(): void
     {
         $classes = [
@@ -90,6 +99,9 @@ class SystemSettingsSeeder extends Seeder
         }
     }
 
+    /**
+     * Carga datos iniciales de root user.
+     */
     private function seedRootUser(): void
     {
         $user = User::query()->updateOrCreate(

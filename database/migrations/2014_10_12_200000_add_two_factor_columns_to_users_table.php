@@ -8,10 +8,13 @@ use Laravel\Fortify\Fortify;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Aplica los cambios definidos por la migración.
      */
     public function up(): void
     {
+        /**
+         * Actualiza la estructura de la tabla users.
+         */
         Schema::table('users', function (Blueprint $table) {
             $table->text('two_factor_secret')
                 ->after('password')
@@ -30,10 +33,13 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Revierte los cambios definidos por la migración.
      */
     public function down(): void
     {
+        /**
+         * Actualiza la estructura de la tabla users.
+         */
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn(array_merge([
                 'two_factor_secret',

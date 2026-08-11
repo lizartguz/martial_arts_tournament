@@ -12,6 +12,9 @@ class MigrateNotificationImagesToPrivate extends Command
 
     protected $description = 'Mueve los adjuntos de avisos desde el disco publico al almacenamiento privado';
 
+    /**
+     * Ejecuta la operación principal del comando.
+     */
     public function handle(NotificationAttachmentService $notificationAttachmentService): int
     {
         $summary = [
@@ -24,6 +27,9 @@ class MigrateNotificationImagesToPrivate extends Command
         NotificationM::query()
             ->select(['id', ...array_values(NotificationAttachmentService::SLOT_COLUMNS)])
             ->orderBy('id')
+            /**
+             * Procesa los registros por lotes controlados.
+             */
             ->chunkById(100, function ($notifications) use ($notificationAttachmentService, &$summary) {
                 foreach ($notifications as $notification) {
                     foreach (NotificationAttachmentService::SLOT_COLUMNS as $column) {

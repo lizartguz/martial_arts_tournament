@@ -19,36 +19,57 @@ class Event extends Model
         'status' => 'integer',
     ];
 
+    /**
+     * Define la clave usada para resolver rutas públicas.
+     */
     public function getRouteKeyName(): string
     {
         return 'slug';
     }
 
+    /**
+     * Devuelve información asociada a venue.
+     */
     public function venue()
     {
         return $this->belongsTo(Venue::class);
     }
 
+    /**
+     * Relaciona combates asociados.
+     */
     public function fights()
     {
         return $this->hasMany(Fight::class);
     }
 
+    /**
+     * Relaciona enlaces de tickets asociados.
+     */
     public function ticketLinks()
     {
         return $this->hasMany(TicketLink::class);
     }
 
+    /**
+     * Relaciona solicitudes de compra asociadas.
+     */
     public function purchaseRequests()
     {
         return $this->hasMany(PurchaseRequest::class);
     }
 
+    /**
+     * Relaciona archivos multimedia asociados.
+     */
     public function media()
     {
         return $this->hasMany(EventMedia::class);
     }
 
+    /**
+     * Relaciona sponsors asociados.
+     */
     public function sponsors()
     {
         return $this->belongsToMany(Sponsor::class, 'event_sponsor')
@@ -56,16 +77,25 @@ class Event extends Model
             ->withTimestamps();
     }
 
+    /**
+     * Filtra registros visibles públicamente.
+     */
     public function scopePublished($query)
     {
         return $query->where('status', 1);
     }
 
+    /**
+     * Devuelve la URL pública del póster.
+     */
     public function posterUrl(): ?string
     {
         return $this->poster_image ? asset($this->poster_image) : null;
     }
 
+    /**
+     * Devuelve la URL pública del banner.
+     */
     public function bannerUrl(): ?string
     {
         return $this->banner_image ? asset($this->banner_image) : null;

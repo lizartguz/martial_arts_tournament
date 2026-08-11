@@ -44,31 +44,49 @@ class FighterTeamTable extends Component
         'status' => 1,
     ];
 
+    /**
+     * Inicializa el componente de equipos de peleadores.
+     */
     public function mount(): void
     {
         Gate::authorize('fighter_teams.view');
     }
 
+    /**
+     * Reinicia la paginación al cambiar la búsqueda.
+     */
     public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el estado.
+     */
     public function updatingStatus(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar la ciudad.
+     */
     public function updatingCityId(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tamaño de página.
+     */
     public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Sincroniza el formulario al cambiar el nombre.
+     */
     public function updatedFormName(string $value): void
     {
         if (! $this->slugTouched) {
@@ -76,12 +94,18 @@ class FighterTeamTable extends Component
         }
     }
 
+    /**
+     * Sincroniza el formulario al cambiar el slug.
+     */
     public function updatedFormSlug(string $value): void
     {
         $this->slugTouched = true;
         $this->form['slug'] = Str::slug($value);
     }
 
+    /**
+     * Abre el formulario para crear un registro.
+     */
     public function create(): void
     {
         Gate::authorize('fighter_teams.create');
@@ -90,6 +114,9 @@ class FighterTeamTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Carga el registro seleccionado para editarlo.
+     */
     public function edit(int $id): void
     {
         Gate::authorize('fighter_teams.update');
@@ -113,6 +140,9 @@ class FighterTeamTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Valida y guarda los datos del formulario.
+     */
     public function save(ImageUploadOptimizer $images): void
     {
         Gate::authorize($this->editingId ? 'fighter_teams.update' : 'fighter_teams.create');
@@ -143,6 +173,9 @@ class FighterTeamTable extends Component
         $this->closeModal();
     }
 
+    /**
+     * Prepara la confirmación de eliminación del registro.
+     */
     public function confirmDelete(int $id): void
     {
         Gate::authorize('fighter_teams.delete');
@@ -164,6 +197,9 @@ class FighterTeamTable extends Component
         $this->showDeleteModal = true;
     }
 
+    /**
+     * Elimina el registro seleccionado cuando está permitido.
+     */
     public function delete(): void
     {
         Gate::authorize('fighter_teams.delete');
@@ -192,12 +228,18 @@ class FighterTeamTable extends Component
         $this->dispatch('successAlert', ['success' => __('mma.admin.fighter_teams.messages.deleted')]);
     }
 
+    /**
+     * Cierra el modal principal y limpia su estado.
+     */
     public function closeModal(): void
     {
         $this->showModal = false;
         $this->resetForm();
     }
 
+    /**
+     * Cierra el modal de eliminación.
+     */
     public function closeDeleteModal(): void
     {
         $this->showDeleteModal = false;
@@ -205,12 +247,18 @@ class FighterTeamTable extends Component
         $this->deleteName = '';
     }
 
+    /**
+     * Limpia filtros y reinicia la paginación.
+     */
     public function resetFilters(): void
     {
         $this->reset(['search', 'status', 'cityId']);
         $this->resetPage();
     }
 
+    /**
+     * Traduce el estado del registro.
+     */
     public function statusLabel(int $status): string
     {
         return $status === 1
@@ -218,12 +266,21 @@ class FighterTeamTable extends Component
             : __('mma.admin.common.inactive');
     }
 
+    /**
+     * Renderiza la tabla de equipos de peleadores con filtros activos.
+     */
     public function render()
     {
         $fighterTeams = FighterTeam::query()
             ->with(['city:id,name,country_id', 'city.country:id,name'])
             ->withCount('fighters')
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($this->search !== '', function ($query) {
+                /**
+                 * Agrupa condiciones adicionales dentro de la consulta.
+                 */
                 $query->where(function ($subQuery) {
                     $subQuery->where('name', 'like', "%{$this->search}%")
                         ->orWhere('slug', 'like', "%{$this->search}%")
@@ -246,6 +303,9 @@ class FighterTeamTable extends Component
         return view('livewire.admin.fighter-teams.fighter-team-table', compact('fighterTeams', 'cities'));
     }
 
+    /**
+     * Define las reglas de validación del formulario.
+     */
     protected function rules(): array
     {
         return [
@@ -266,6 +326,9 @@ class FighterTeamTable extends Component
         ];
     }
 
+    /**
+     * Traduce los atributos usados por la validación.
+     */
     protected function attributes(): array
     {
         return [
@@ -280,6 +343,9 @@ class FighterTeamTable extends Component
         ];
     }
 
+    /**
+     * Restaura el formulario a sus valores iniciales.
+     */
     protected function resetForm(): void
     {
         $this->editingId = null;
@@ -298,6 +364,9 @@ class FighterTeamTable extends Component
         $this->resetErrorBag();
     }
 
+    /**
+     * Convierte campos vacíos en valores nulos persistibles.
+     */
     protected function normalizeNullableFields(array &$validated): void
     {
         foreach (['city_id', 'coach_name', 'contact_phone', 'description'] as $field) {
@@ -307,6 +376,9 @@ class FighterTeamTable extends Component
         }
     }
 
+    /**
+     * Gestiona store logo dentro de la tabla de equipos de peleadores.
+     */
     protected function storeLogo(ImageUploadOptimizer $images, array &$validated, FighterTeam $team): void
     {
         if (! $this->logoImage) {
@@ -326,6 +398,9 @@ class FighterTeamTable extends Component
         $this->deleteStoredImage($team->logo_path);
     }
 
+    /**
+     * Elimina un archivo almacenado si existe.
+     */
     protected function deleteStoredImage(?string $path): void
     {
         if (! $path || ! str_starts_with($path, 'storage/')) {

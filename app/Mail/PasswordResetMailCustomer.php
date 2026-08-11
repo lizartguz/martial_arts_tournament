@@ -17,7 +17,7 @@ class PasswordResetMailCustomer extends Mailable
     public $email;  // Nueva variable para el correo
 
     /**
-     * Create a new message instance.
+     * Inyecta las dependencias requeridas por la clase.
      */
     public function __construct($name, $email) // Aceptamos el correo en el constructor
     {
@@ -26,7 +26,7 @@ class PasswordResetMailCustomer extends Mailable
     }
 
     /**
-     * Get the message envelope.
+     * Ejecuta la operación envelope.
      */
     public function envelope(): Envelope
     {
@@ -36,7 +36,7 @@ class PasswordResetMailCustomer extends Mailable
     }
 
     /**
-     * Get the message content definition.
+     * Ejecuta la operación content.
      */
     public function content(): Content
     {
@@ -50,7 +50,7 @@ class PasswordResetMailCustomer extends Mailable
     }
 
     /**
-     * Get the attachments for the message.
+     * Ejecuta la operación attachments.
      */
     public function attachments(): array
     {

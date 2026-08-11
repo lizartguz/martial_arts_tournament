@@ -19,16 +19,25 @@ class WeightClass extends Model
         'status' => 'integer',
     ];
 
+    /**
+     * Relaciona peleadores asociados.
+     */
     public function fighters()
     {
         return $this->hasMany(Fighter::class);
     }
 
+    /**
+     * Relaciona combates asociados.
+     */
     public function fights()
     {
         return $this->hasMany(Fight::class);
     }
 
+    /**
+     * Relaciona rankings asociados.
+     */
     public function rankings()
     {
         return $this->hasMany(FighterRanking::class);

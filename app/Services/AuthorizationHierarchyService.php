@@ -8,7 +8,7 @@ use Spatie\Permission\Models\Role;
 class AuthorizationHierarchyService
 {
     /**
-     * Obtiene los roles considerados super administradores.
+     * Ejecuta la operación super roles del servicio.
      */
     public function superRoles(): array
     {
@@ -16,7 +16,7 @@ class AuthorizationHierarchyService
     }
 
     /**
-     * Obtiene permisos protegidos contra edicion por usuarios no superiores.
+     * Ejecuta la operación protected permissions del servicio.
      */
     public function protectedPermissions(): array
     {
@@ -24,7 +24,7 @@ class AuthorizationHierarchyService
     }
 
     /**
-     * Devuelve el nivel jerarquico configurado para un rol.
+     * Ejecuta la operación role rank del servicio.
      */
     public function roleRank(string $roleName): int
     {
@@ -32,7 +32,7 @@ class AuthorizationHierarchyService
     }
 
     /**
-     * Calcula el mayor nivel jerarquico de los roles del usuario.
+     * Ejecuta la operación user rank del servicio.
      */
     public function userRank(?User $user): int
     {
@@ -47,7 +47,7 @@ class AuthorizationHierarchyService
     }
 
     /**
-     * Indica si el usuario pertenece a un rol superior protegido.
+     * Indica si super user.
      */
     public function isSuperUser(?User $user): bool
     {
@@ -55,7 +55,7 @@ class AuthorizationHierarchyService
     }
 
     /**
-     * Indica si el nombre de rol esta reservado para super administracion.
+     * Indica si protected role name.
      */
     public function isProtectedRoleName(string $roleName): bool
     {
@@ -63,7 +63,7 @@ class AuthorizationHierarchyService
     }
 
     /**
-     * Valida si un usuario puede ver un rol segun la jerarquia.
+     * Valida si el usuario puede view role name.
      */
     public function canViewRoleName(?User $actor, string $roleName): bool
     {
@@ -80,7 +80,7 @@ class AuthorizationHierarchyService
     }
 
     /**
-     * Valida si un usuario puede administrar un rol visible para su nivel.
+     * Valida si el usuario puede manage role name.
      */
     public function canManageRoleName(?User $actor, string $roleName): bool
     {
@@ -97,7 +97,7 @@ class AuthorizationHierarchyService
     }
 
     /**
-     * Valida si un permiso puede editarse sin romper reglas protegidas.
+     * Valida si el usuario puede manage permission name.
      */
     public function canManagePermissionName(?User $actor, string $permissionName): bool
     {
@@ -113,7 +113,7 @@ class AuthorizationHierarchyService
     }
 
     /**
-     * Valida si un usuario puede ver a otro usuario segun sus roles.
+     * Valida si el usuario puede view user.
      */
     public function canViewUser(?User $actor, ?User $target): bool
     {
@@ -136,7 +136,7 @@ class AuthorizationHierarchyService
     }
 
     /**
-     * Valida si un usuario puede modificar a otro usuario visible.
+     * Valida si el usuario puede manage user.
      */
     public function canManageUser(?User $actor, ?User $target): bool
     {
@@ -159,7 +159,7 @@ class AuthorizationHierarchyService
     }
 
     /**
-     * Lista roles que deben ocultarse para el usuario actual.
+     * Ejecuta la operación hidden role names for del servicio.
      */
     public function hiddenRoleNamesFor(?User $actor): array
     {
@@ -177,7 +177,7 @@ class AuthorizationHierarchyService
     }
 
     /**
-     * Lista roles visibles para asignacion o edicion.
+     * Ejecuta la operación visible role names for del servicio.
      */
     public function visibleRoleNamesFor(?User $actor): array
     {
@@ -193,7 +193,7 @@ class AuthorizationHierarchyService
     }
 
     /**
-     * Filtra roles solicitados dejando solo los permitidos al usuario.
+     * Ejecuta la operación filter allowed role names del servicio.
      */
     public function filterAllowedRoleNames(?User $actor, array $roleNames): array
     {

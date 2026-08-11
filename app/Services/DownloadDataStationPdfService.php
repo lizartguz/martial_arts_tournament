@@ -16,7 +16,7 @@ class DownloadDataStationPdfService
     protected const ABBREVIATED_HEADER_THRESHOLD = 12;
 
     /**
-     * Genera un PDF tabular por paginas sin construir HTML masivo en memoria.
+     * Ejecuta la operación generate del servicio.
      */
     public function generate(string $path, array $heads, iterable $rows, array $metadata, string $paperSize): int
     {
@@ -46,7 +46,7 @@ class DownloadDataStationPdfService
     }
 
     /**
-     * Configura la instancia TCPDF base para reportes horizontales.
+     * Ejecuta la operación create pdf del servicio.
      */
     protected function createPdf(string $paperSize, string $title): TCPDF
     {
@@ -65,7 +65,7 @@ class DownloadDataStationPdfService
     }
 
     /**
-     * Escribe el encabezado informativo del reporte en la primera pagina.
+     * Ejecuta la operación write report header del servicio.
      */
     protected function writeReportHeader(TCPDF $pdf, array $metadata): void
     {
@@ -82,7 +82,7 @@ class DownloadDataStationPdfService
     }
 
     /**
-     * Calcula anchos proporcionales para todas las columnas visibles.
+     * Devuelve column widths solicitado.
      */
     protected function getColumnWidths(TCPDF $pdf, array $heads): array
     {
@@ -99,7 +99,7 @@ class DownloadDataStationPdfService
     }
 
     /**
-     * Repite los encabezados de tabla cada vez que se crea una pagina.
+     * Ejecuta la operación write table header del servicio.
      */
     protected function writeTableHeader(TCPDF $pdf, array $heads, array $columnWidths): void
     {
@@ -117,7 +117,7 @@ class DownloadDataStationPdfService
     }
 
     /**
-     * Escribe una fila de datos de forma compacta y controlada.
+     * Ejecuta la operación write data row del servicio.
      */
     protected function writeDataRow(TCPDF $pdf, array $heads, array $row, array $columnWidths, bool $fill): void
     {
@@ -141,7 +141,7 @@ class DownloadDataStationPdfService
     }
 
     /**
-     * Determina si la siguiente fila debe iniciar en una pagina nueva.
+     * Determina si corresponde add page.
      */
     protected function shouldAddPage(TCPDF $pdf): bool
     {
@@ -149,7 +149,7 @@ class DownloadDataStationPdfService
     }
 
     /**
-     * Ajusta valores especiales de celda para mejorar la lectura en PDF.
+     * Formatea cell value para mostrarlo en pantalla.
      */
     protected function formatCellValue(string $key, string $value): string
     {
@@ -161,7 +161,7 @@ class DownloadDataStationPdfService
     }
 
     /**
-     * Recorta texto para mantener estable la tabla en PDFs con muchas columnas.
+     * Ejecuta la operación short text del servicio.
      */
     protected function shortText(string $text, float $columnWidth): string
     {
@@ -176,7 +176,7 @@ class DownloadDataStationPdfService
     }
 
     /**
-     * Devuelve el texto de encabezado usando abreviatura cuando hay muchas columnas.
+     * Devuelve la etiqueta visible de get header.
      */
     protected function getHeaderLabel(string $key, array $head, int $columnCount): string
     {
@@ -191,7 +191,7 @@ class DownloadDataStationPdfService
     }
 
     /**
-     * Ajusta el tamano de fuente del encabezado segun cantidad de columnas.
+     * Devuelve header font size solicitado.
      */
     protected function getHeaderFontSize(array $heads): float
     {

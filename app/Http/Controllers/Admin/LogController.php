@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 
 class LogController extends Controller
 {
+    /**
+     * Muestra la pantalla administrativa de logs.
+     */
     public function index()
     {
         abort_unless(auth()->user()?->can('logs.view'), 403);
@@ -14,6 +17,9 @@ class LogController extends Controller
         return view('admin.logs.index');
     }
 
+    /**
+     * Descarga el archivo solicitado por el usuario.
+     */
     public function download(Request $request)
     {
         abort_unless($request->user()?->can('logs.download'), 403);

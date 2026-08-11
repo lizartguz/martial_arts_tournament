@@ -16,16 +16,25 @@ class FighterRanking extends Model
         'status' => 'integer',
     ];
 
+    /**
+     * Relaciona peleador asociado.
+     */
     public function fighter()
     {
         return $this->belongsTo(Fighter::class);
     }
 
+    /**
+     * Relaciona categoría de peso asociada.
+     */
     public function weightClass()
     {
         return $this->belongsTo(WeightClass::class);
     }
 
+    /**
+     * Relaciona usuario creador.
+     */
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');

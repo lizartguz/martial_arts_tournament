@@ -15,13 +15,16 @@ class Kernel extends ConsoleKernel
     protected $commands = [
        
     ];
+    /**
+     * Registra tareas programadas de consola.
+     */
     protected function schedule(Schedule $schedule): void
     {
        
     }
 
     /**
-     * Register the commands for the application.
+     * Carga los comandos disponibles para Artisan.
      */
     protected function commands(): void
     {

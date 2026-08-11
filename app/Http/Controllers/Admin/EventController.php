@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Gate;
 
 class EventController extends Controller
 {
+    /**
+     * Muestra la pantalla administrativa de eventos.
+     */
     public function index()
     {
         Gate::authorize('events.view');

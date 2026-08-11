@@ -76,31 +76,49 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
+    /**
+     * Envía la notificación personalizada para restablecer contraseña.
+     */
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPasswordNotification($token));
     }
 
+    /**
+     * Relaciona suscripciones de usuarios asociadas.
+     */
     public function userSubscriptions()
     {
         return $this->hasMany(UserSubscription::class);
     }
 
+    /**
+     * Relaciona suscripción más reciente del usuario.
+     */
     public function latestSubscription()
     {
         return $this->hasOne(UserSubscription::class)->latestOfMany();
     }
 
+    /**
+     * Relaciona pagos de suscripción asociados.
+     */
     public function subscriptionPayments()
     {
         return $this->hasMany(SubscriptionPayment::class);
     }
 
+    /**
+     * Relaciona solicitudes de compra asociadas.
+     */
     public function purchaseRequests()
     {
         return $this->hasMany(PurchaseRequest::class);
     }
 
+    /**
+     * Relaciona tokens FCM asociados.
+     */
     public function fcmTokens()
     {
         return $this->hasMany(FcmToken::class, 'user_id', 'id');

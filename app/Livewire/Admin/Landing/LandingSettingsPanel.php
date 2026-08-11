@@ -17,6 +17,9 @@ class LandingSettingsPanel extends Component
         'landing_show_rankings' => false,
     ];
 
+    /**
+     * Inicializa el componente de landing settings panel.
+     */
     public function mount(): void
     {
         Gate::authorize('landing.update');
@@ -31,6 +34,9 @@ class LandingSettingsPanel extends Component
         ];
     }
 
+    /**
+     * Valida y guarda los datos del formulario.
+     */
     public function save(): void
     {
         Gate::authorize('landing.update');
@@ -45,6 +51,9 @@ class LandingSettingsPanel extends Component
         $this->dispatch('successAlert', ['success' => __('mma.admin.landing.messages.updated')]);
     }
 
+    /**
+     * Renderiza la tabla de landing settings panel con filtros activos.
+     */
     public function render()
     {
         return view('livewire.admin.landing.landing-settings-panel', [
@@ -53,6 +62,9 @@ class LandingSettingsPanel extends Component
         ]);
     }
 
+    /**
+     * Define las reglas de validación del formulario.
+     */
     protected function rules(): array
     {
         return [
@@ -64,6 +76,9 @@ class LandingSettingsPanel extends Component
         ];
     }
 
+    /**
+     * Traduce los atributos usados por la validación.
+     */
     protected function attributes(): array
     {
         return [
@@ -75,6 +90,9 @@ class LandingSettingsPanel extends Component
         ];
     }
 
+    /**
+     * Carga la configuración general del sistema.
+     */
     protected function settings(): SystemSetting
     {
         return SystemSetting::query()->firstOrCreate(
@@ -89,6 +107,9 @@ class LandingSettingsPanel extends Component
         );
     }
 
+    /**
+     * Convierte campos vacíos en valores nulos persistibles.
+     */
     protected function normalizeNullableFields(array &$validated): void
     {
         foreach (['short_description', 'seo_title', 'seo_description'] as $field) {
@@ -100,6 +121,9 @@ class LandingSettingsPanel extends Component
         $validated['landing_show_rankings'] = (bool) $validated['landing_show_rankings'];
     }
 
+    /**
+     * Gestiona landing stats dentro de la tabla de landing settings panel.
+     */
     protected function landingStats(): array
     {
         return [
@@ -109,6 +133,9 @@ class LandingSettingsPanel extends Component
         ];
     }
 
+    /**
+     * Gestiona latest events dentro de la tabla de landing settings panel.
+     */
     protected function latestEvents()
     {
         return Event::query()

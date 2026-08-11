@@ -36,51 +36,81 @@ class PurchaseRequestTable extends Component
         'notes' => '',
     ];
 
+    /**
+     * Inicializa el componente de solicitudes de compra.
+     */
     public function mount(): void
     {
         Gate::authorize('purchase_requests.view');
     }
 
+    /**
+     * Reinicia la paginación al cambiar la búsqueda.
+     */
     public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el estado.
+     */
     public function updatingStatus(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tipo de solicitud.
+     */
     public function updatingRequestType(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el canal preferido.
+     */
     public function updatingPreferredChannel(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el responsable.
+     */
     public function updatingAssignedTo(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar la fecha inicial.
+     */
     public function updatingDateFrom(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar la fecha final.
+     */
     public function updatingDateTo(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tamaño de página.
+     */
     public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Gestiona manage dentro de la tabla de solicitudes de compra.
+     */
     public function manage(int $id): void
     {
         Gate::authorize('purchase_requests.update');
@@ -114,6 +144,9 @@ class PurchaseRequestTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Valida y guarda los datos del formulario.
+     */
     public function save(): void
     {
         Gate::authorize('purchase_requests.update');
@@ -143,6 +176,9 @@ class PurchaseRequestTable extends Component
         $this->closeModal();
     }
 
+    /**
+     * Gestiona assign to me dentro de la tabla de solicitudes de compra.
+     */
     public function assignToMe(int $id): void
     {
         Gate::authorize('purchase_requests.assign');
@@ -154,6 +190,9 @@ class PurchaseRequestTable extends Component
         $this->dispatch('successAlert', ['success' => __('mma.admin.purchase_requests.messages.assigned')]);
     }
 
+    /**
+     * Gestiona close request dentro de la tabla de solicitudes de compra.
+     */
     public function closeRequest(int $id): void
     {
         Gate::authorize('purchase_requests.close');
@@ -167,6 +206,9 @@ class PurchaseRequestTable extends Component
         $this->dispatch('successAlert', ['success' => __('mma.admin.purchase_requests.messages.closed')]);
     }
 
+    /**
+     * Prepara la confirmación de eliminación del registro.
+     */
     public function confirmDelete(int $id): void
     {
         Gate::authorize('purchase_requests.delete');
@@ -177,6 +219,9 @@ class PurchaseRequestTable extends Component
         $this->showDeleteModal = true;
     }
 
+    /**
+     * Elimina el registro seleccionado cuando está permitido.
+     */
     public function delete(): void
     {
         Gate::authorize('purchase_requests.delete');
@@ -198,12 +243,18 @@ class PurchaseRequestTable extends Component
         $this->dispatch('successAlert', ['success' => __('mma.admin.purchase_requests.messages.deleted')]);
     }
 
+    /**
+     * Cierra el modal principal y limpia su estado.
+     */
     public function closeModal(): void
     {
         $this->showModal = false;
         $this->resetForm();
     }
 
+    /**
+     * Cierra el modal de eliminación.
+     */
     public function closeDeleteModal(): void
     {
         $this->showDeleteModal = false;
@@ -211,12 +262,18 @@ class PurchaseRequestTable extends Component
         $this->deleteName = '';
     }
 
+    /**
+     * Limpia filtros y reinicia la paginación.
+     */
     public function resetFilters(): void
     {
         $this->reset(['search', 'status', 'requestType', 'preferredChannel', 'assignedTo', 'dateFrom', 'dateTo']);
         $this->resetPage();
     }
 
+    /**
+     * Devuelve las opciones de estado permitidas.
+     */
     public function statusOptions(): array
     {
         return [
@@ -229,6 +286,9 @@ class PurchaseRequestTable extends Component
         ];
     }
 
+    /**
+     * Devuelve los tipos de solicitud permitidos.
+     */
     public function requestTypeOptions(): array
     {
         return [
@@ -239,6 +299,9 @@ class PurchaseRequestTable extends Component
         ];
     }
 
+    /**
+     * Devuelve las opciones disponibles de channel.
+     */
     public function channelOptions(): array
     {
         return [
@@ -248,11 +311,17 @@ class PurchaseRequestTable extends Component
         ];
     }
 
+    /**
+     * Traduce el estado del registro.
+     */
     public function statusLabel(int $status): string
     {
         return $this->statusOptions()[$status] ?? (string) $status;
     }
 
+    /**
+     * Define la clase visual según el estado.
+     */
     public function statusBadge(int $status): string
     {
         return [
@@ -265,16 +334,25 @@ class PurchaseRequestTable extends Component
         ][$status] ?? 'tw-badge-gray';
     }
 
+    /**
+     * Devuelve la etiqueta visible de request type.
+     */
     public function requestTypeLabel(?string $requestType): string
     {
         return $this->requestTypeOptions()[$requestType] ?? __('mma.admin.common.not_available');
     }
 
+    /**
+     * Devuelve la etiqueta visible de channel.
+     */
     public function channelLabel(?string $channel): string
     {
         return $this->channelOptions()[$channel] ?? __('mma.admin.common.not_available');
     }
 
+    /**
+     * Formatea el tamaño del archivo para mostrarlo en pantalla.
+     */
     public function fileSizeLabel(?int $bytes): string
     {
         if (! $bytes) {
@@ -286,6 +364,9 @@ class PurchaseRequestTable extends Component
             : number_format($bytes / 1024, 1).' KB';
     }
 
+    /**
+     * Renderiza la tabla de solicitudes de compra con filtros activos.
+     */
     public function render()
     {
         $purchaseRequests = PurchaseRequest::query()
@@ -295,7 +376,13 @@ class PurchaseRequestTable extends Component
                 'assignedUser:id,name,lastname,email',
                 'user:id,name,lastname,email',
             ])
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($this->search !== '', function ($query) {
+                /**
+                 * Agrupa condiciones adicionales dentro de la consulta.
+                 */
                 $query->where(function ($subQuery) {
                     $subQuery->where('uuid', 'like', "%{$this->search}%")
                         ->orWhere('contact_name', 'like', "%{$this->search}%")
@@ -325,6 +412,9 @@ class PurchaseRequestTable extends Component
         return view('livewire.admin.purchase-requests.purchase-request-table', compact('purchaseRequests', 'assignableUsers'));
     }
 
+    /**
+     * Define las reglas de validación del formulario.
+     */
     protected function rules(): array
     {
         return [
@@ -334,6 +424,9 @@ class PurchaseRequestTable extends Component
         ];
     }
 
+    /**
+     * Traduce los atributos usados por la validación.
+     */
     protected function attributes(): array
     {
         return [
@@ -343,6 +436,9 @@ class PurchaseRequestTable extends Component
         ];
     }
 
+    /**
+     * Restaura el formulario a sus valores iniciales.
+     */
     protected function resetForm(): void
     {
         $this->editingId = null;

@@ -45,31 +45,49 @@ class SponsorTable extends Component
         'status' => 1,
     ];
 
+    /**
+     * Inicializa el componente de sponsors.
+     */
     public function mount(): void
     {
         Gate::authorize('sponsors.view');
     }
 
+    /**
+     * Reinicia la paginación al cambiar la búsqueda.
+     */
     public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el evento.
+     */
     public function updatingEventId(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el estado.
+     */
     public function updatingStatus(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tamaño de página.
+     */
     public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Sincroniza el formulario al cambiar el nombre.
+     */
     public function updatedFormName(string $value): void
     {
         if (! $this->slugTouched) {
@@ -77,12 +95,18 @@ class SponsorTable extends Component
         }
     }
 
+    /**
+     * Sincroniza el formulario al cambiar el slug.
+     */
     public function updatedFormSlug(string $value): void
     {
         $this->slugTouched = true;
         $this->form['slug'] = Str::slug($value);
     }
 
+    /**
+     * Abre el formulario para crear un registro.
+     */
     public function create(): void
     {
         Gate::authorize('sponsors.create');
@@ -91,6 +115,9 @@ class SponsorTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Carga el registro seleccionado para editarlo.
+     */
     public function edit(int $id): void
     {
         Gate::authorize('sponsors.update');
@@ -118,6 +145,9 @@ class SponsorTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Valida y guarda los datos del formulario.
+     */
     public function save(ImageUploadOptimizer $images): void
     {
         Gate::authorize($this->editingId ? 'sponsors.update' : 'sponsors.create');
@@ -148,6 +178,9 @@ class SponsorTable extends Component
         $this->closeModal();
     }
 
+    /**
+     * Prepara la confirmación de eliminación del registro.
+     */
     public function confirmDelete(int $id): void
     {
         Gate::authorize('sponsors.delete');
@@ -159,6 +192,9 @@ class SponsorTable extends Component
         $this->showDeleteModal = true;
     }
 
+    /**
+     * Elimina el registro seleccionado cuando está permitido.
+     */
     public function delete(): void
     {
         Gate::authorize('sponsors.delete');
@@ -185,12 +221,18 @@ class SponsorTable extends Component
         $this->dispatch('successAlert', ['success' => __('mma.admin.sponsors.messages.deleted')]);
     }
 
+    /**
+     * Cierra el modal principal y limpia su estado.
+     */
     public function closeModal(): void
     {
         $this->showModal = false;
         $this->resetForm();
     }
 
+    /**
+     * Cierra el modal de eliminación.
+     */
     public function closeDeleteModal(): void
     {
         $this->showDeleteModal = false;
@@ -198,12 +240,18 @@ class SponsorTable extends Component
         $this->deleteName = '';
     }
 
+    /**
+     * Limpia filtros y reinicia la paginación.
+     */
     public function resetFilters(): void
     {
         $this->reset(['search', 'eventId', 'status']);
         $this->resetPage();
     }
 
+    /**
+     * Traduce el estado del registro.
+     */
     public function statusLabel(int $status): string
     {
         return $status === 1
@@ -211,11 +259,20 @@ class SponsorTable extends Component
             : __('mma.admin.common.inactive');
     }
 
+    /**
+     * Renderiza la tabla de sponsors con filtros activos.
+     */
     public function render()
     {
         $sponsors = Sponsor::query()
             ->withCount('events')
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($this->search !== '', function ($query) {
+                /**
+                 * Agrupa condiciones adicionales dentro de la consulta.
+                 */
                 $query->where(function ($subQuery) {
                     $subQuery->where('name', 'like', "%{$this->search}%")
                         ->orWhere('slug', 'like', "%{$this->search}%")
@@ -240,6 +297,9 @@ class SponsorTable extends Component
         return view('livewire.admin.sponsors.sponsor-table', compact('sponsors', 'events'));
     }
 
+    /**
+     * Define las reglas de validación del formulario.
+     */
     protected function rules(): array
     {
         return [
@@ -262,6 +322,9 @@ class SponsorTable extends Component
         ];
     }
 
+    /**
+     * Traduce los atributos usados por la validación.
+     */
     protected function attributes(): array
     {
         return [
@@ -277,6 +340,9 @@ class SponsorTable extends Component
         ];
     }
 
+    /**
+     * Restaura el formulario a sus valores iniciales.
+     */
     protected function resetForm(): void
     {
         $this->editingId = null;
@@ -296,6 +362,9 @@ class SponsorTable extends Component
         $this->resetErrorBag();
     }
 
+    /**
+     * Convierte campos vacíos en valores nulos persistibles.
+     */
     protected function normalizeNullableFields(array &$validated): void
     {
         foreach (['website_url', 'contact_email', 'description'] as $field) {
@@ -308,6 +377,9 @@ class SponsorTable extends Component
         $validated['status'] = (int) $validated['status'];
     }
 
+    /**
+     * Gestiona store logo dentro de la tabla de sponsors.
+     */
     protected function storeLogo(ImageUploadOptimizer $images, array &$validated, Sponsor $sponsor): void
     {
         if (! $this->logoImage) {
@@ -327,6 +399,9 @@ class SponsorTable extends Component
         $this->deleteStoredImage($sponsor->logo_path);
     }
 
+    /**
+     * Elimina un archivo almacenado si existe.
+     */
     protected function deleteStoredImage(?string $path): void
     {
         if (! $path || ! str_starts_with($path, 'storage/')) {
@@ -336,6 +411,9 @@ class SponsorTable extends Component
         Storage::disk('public')->delete(Str::after($path, 'storage/'));
     }
 
+    /**
+     * Gestiona sync events dentro de la tabla de sponsors.
+     */
     protected function syncEvents(Sponsor $sponsor): void
     {
         $currentPivot = $sponsor->events()

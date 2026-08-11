@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Gate;
 
 class FighterController extends Controller
 {
+    /**
+     * Muestra la pantalla administrativa de peleadores.
+     */
     public function index()
     {
         Gate::authorize('fighters.view');

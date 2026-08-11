@@ -10,10 +10,16 @@ use Spatie\Permission\PermissionRegistrar;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
+    /**
+     * Ejecuta la carga de datos definida por el seeder.
+     */
     public function run(): void
     {
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
+        /**
+         * Ejecuta las operaciones dentro de una transaccion.
+         */
         DB::transaction(function () {
             $permissions = $this->permissions();
 
@@ -38,6 +44,9 @@ class RolesAndPermissionsSeeder extends Seeder
         app(PermissionRegistrar::class)->forgetCachedPermissions();
     }
 
+    /**
+     * Ejecuta la operación permissions.
+     */
     private function permissions(): array
     {
         return array_values(array_unique([
@@ -141,6 +150,9 @@ class RolesAndPermissionsSeeder extends Seeder
         ]));
     }
 
+    /**
+     * Ejecuta la operación role permissions.
+     */
     private function rolePermissions(): array
     {
         return [

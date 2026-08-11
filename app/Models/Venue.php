@@ -18,11 +18,17 @@ class Venue extends Model
         'status' => 'integer',
     ];
 
+    /**
+     * Relaciona ciudad asociada.
+     */
     public function city()
     {
         return $this->belongsTo(City::class);
     }
 
+    /**
+     * Relaciona eventos asociados.
+     */
     public function events()
     {
         return $this->hasMany(Event::class);

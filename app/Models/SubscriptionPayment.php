@@ -16,11 +16,17 @@ class SubscriptionPayment extends Model
         'metadata' => 'array',
     ];
 
+    /**
+     * Relaciona usuario asociado.
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Relaciona suscripción asociada.
+     */
     public function subscription()
     {
         return $this->belongsTo(UserSubscription::class, 'user_subscription_id');

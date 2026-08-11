@@ -36,6 +36,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingController::class, 'index'])->name('landing.home');
 
+/**
+ * Resuelve la respuesta de esta ruta GET.
+ */
 Route::get('/idioma/{locale}', function (string $locale) {
     if (in_array($locale, ['es', 'en', 'pt', 'fr', 'de', 'ru'], true)) {
         session(['locale' => $locale]);
@@ -60,7 +63,13 @@ Route::get('/firebase-messaging-sw.js', [FirebaseWebPushController::class, 'serv
 Route::get('/register', fn () => response()->view('auth.register', status: 403))->name('register');
 Route::post('/register', fn () => abort(404));
 
+/**
+ * Agrupa rutas que comparten middleware de acceso.
+ */
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
+    /**
+     * Resuelve la respuesta de esta ruta GET.
+     */
     Route::get('/dashboard', function () {
         $user = auth()->user();
 
@@ -81,6 +90,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::get('/notifications/{notification}/images/{slot}', [NotificationImageController::class, 'show'])
         ->name('notifications.images.show');
 
+    /**
+     * Agrupa rutas bajo un prefijo comun.
+     */
     Route::prefix('subscriber')->name('subscriber.')->group(function () {
         Route::get('/dashboard', [SubscriberPortalController::class, 'dashboard'])
             ->middleware('can:subscriber.dashboard.view')
@@ -123,6 +135,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             ->name('profile.update');
     });
 
+    /**
+     * Agrupa rutas bajo un prefijo comun.
+     */
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])
             ->middleware('can:dashboard.view')

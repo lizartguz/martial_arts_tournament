@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 class AuthorizationAuditLogger
 {
     /**
-     * Registra una accion de autorizacion con usuario, IP y contexto.
+     * Ejecuta la operación record del servicio.
      */
     public function record(string $event, array $context = [], string $level = 'info'): void
     {
@@ -23,7 +23,7 @@ class AuthorizationAuditLogger
     }
 
     /**
-     * Registra un intento bloqueado por falta de permisos o jerarquia.
+     * Ejecuta la operación unauthorized del servicio.
      */
     public function unauthorized(string $action, array $context = []): void
     {
@@ -31,7 +31,7 @@ class AuthorizationAuditLogger
     }
 
     /**
-     * Resume los datos del usuario para dejar trazabilidad en logs.
+     * Ejecuta la operación user context del servicio.
      */
     public function userContext(?User $user): ?array
     {

@@ -14,7 +14,7 @@ use Illuminate\Validation\Rule;
 class PurchaseRequestController extends Controller
 {
     /**
-     * Registra una solicitud pública de contacto, compra o validación manual.
+     * Gestiona la acción store del módulo solicitudes de compra.
      */
     public function store(Request $request, FileUploadService $files)
     {

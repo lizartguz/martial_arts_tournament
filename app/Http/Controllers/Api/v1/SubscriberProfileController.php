@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class SubscriberProfileController extends Controller
 {
     /**
-     * Devuelve el resumen propio del usuario autenticado para el portal.
+     * Muestra el recurso solicitado cuando el usuario tiene acceso.
      */
     public function show(Request $request)
     {

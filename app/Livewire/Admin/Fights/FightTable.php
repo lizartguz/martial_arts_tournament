@@ -52,41 +52,65 @@ class FightTable extends Component
         'notes' => '',
     ];
 
+    /**
+     * Inicializa el componente de combates.
+     */
     public function mount(): void
     {
         Gate::authorize('fights.view');
     }
 
+    /**
+     * Reinicia la paginación al cambiar la búsqueda.
+     */
     public function updatingSearch(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el evento.
+     */
     public function updatingEventId(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el estado.
+     */
     public function updatingStatus(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tipo de combate.
+     */
     public function updatingBoutType(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar la categoría de peso.
+     */
     public function updatingWeightClassId(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tamaño de página.
+     */
     public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Abre el formulario para crear un registro.
+     */
     public function create(): void
     {
         Gate::authorize('fights.create');
@@ -95,6 +119,9 @@ class FightTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Carga el registro seleccionado para editarlo.
+     */
     public function edit(int $id): void
     {
         Gate::authorize('fights.update');
@@ -123,6 +150,9 @@ class FightTable extends Component
         $this->showModal = true;
     }
 
+    /**
+     * Valida y guarda los datos del formulario.
+     */
     public function save(ImageUploadOptimizer $images): void
     {
         Gate::authorize($this->editingId ? 'fights.update' : 'fights.create');
@@ -150,6 +180,9 @@ class FightTable extends Component
         $this->closeModal();
     }
 
+    /**
+     * Prepara la confirmación de eliminación del registro.
+     */
     public function confirmDelete(int $id): void
     {
         Gate::authorize('fights.delete');
@@ -172,6 +205,9 @@ class FightTable extends Component
         $this->showDeleteModal = true;
     }
 
+    /**
+     * Elimina el registro seleccionado cuando está permitido.
+     */
     public function delete(): void
     {
         Gate::authorize('fights.delete');
@@ -200,12 +236,18 @@ class FightTable extends Component
         $this->dispatch('successAlert', ['success' => __('mma.admin.fights.messages.deleted')]);
     }
 
+    /**
+     * Cierra el modal principal y limpia su estado.
+     */
     public function closeModal(): void
     {
         $this->showModal = false;
         $this->resetForm();
     }
 
+    /**
+     * Cierra el modal de eliminación.
+     */
     public function closeDeleteModal(): void
     {
         $this->showDeleteModal = false;
@@ -213,12 +255,18 @@ class FightTable extends Component
         $this->deleteName = '';
     }
 
+    /**
+     * Limpia filtros y reinicia la paginación.
+     */
     public function resetFilters(): void
     {
         $this->reset(['search', 'eventId', 'status', 'boutType', 'weightClassId']);
         $this->resetPage();
     }
 
+    /**
+     * Devuelve las opciones de estado permitidas.
+     */
     public function statusOptions(): array
     {
         return [
@@ -229,6 +277,9 @@ class FightTable extends Component
         ];
     }
 
+    /**
+     * Devuelve las opciones disponibles de bout type.
+     */
     public function boutTypeOptions(): array
     {
         return [
@@ -240,11 +291,17 @@ class FightTable extends Component
         ];
     }
 
+    /**
+     * Traduce el estado del registro.
+     */
     public function statusLabel(int $status): string
     {
         return $this->statusOptions()[$status] ?? (string) $status;
     }
 
+    /**
+     * Define la clase visual según el estado.
+     */
     public function statusBadge(int $status): string
     {
         return [
@@ -255,11 +312,17 @@ class FightTable extends Component
         ][$status] ?? 'tw-badge-gray';
     }
 
+    /**
+     * Devuelve la etiqueta visible de bout type.
+     */
     public function boutTypeLabel(?string $boutType): string
     {
         return $this->boutTypeOptions()[$boutType] ?? __('mma.admin.common.not_available');
     }
 
+    /**
+     * Gestiona fighter name dentro de la tabla de combates.
+     */
     public function fighterName(?Fighter $fighter): string
     {
         if (! $fighter) {
@@ -273,6 +336,9 @@ class FightTable extends Component
             : $name;
     }
 
+    /**
+     * Renderiza la tabla de combates con filtros activos.
+     */
     public function render()
     {
         $fights = Fight::query()
@@ -283,7 +349,13 @@ class FightTable extends Component
                 'cornerBlue:id,first_name,last_name,nickname,slug',
             ])
             ->withCount('result')
+            /**
+             * Aplica el filtro solo cuando existe un criterio activo.
+             */
             ->when($this->search !== '', function ($query) {
+                /**
+                 * Agrupa condiciones adicionales dentro de la consulta.
+                 */
                 $query->where(function ($subQuery) {
                     $subQuery->where('title', 'like', "%{$this->search}%")
                         ->orWhereHas('cornerRed', fn ($fighterQuery) => $this->applyFighterSearch($fighterQuery))
@@ -319,6 +391,9 @@ class FightTable extends Component
         return view('livewire.admin.fights.fight-table', compact('fights', 'events', 'fighters', 'weightClasses'));
     }
 
+    /**
+     * Define las reglas de validación del formulario.
+     */
     protected function rules(): array
     {
         return [
@@ -339,6 +414,9 @@ class FightTable extends Component
         ];
     }
 
+    /**
+     * Traduce los atributos usados por la validación.
+     */
     protected function attributes(): array
     {
         return [
@@ -359,6 +437,9 @@ class FightTable extends Component
         ];
     }
 
+    /**
+     * Restaura el formulario a sus valores iniciales.
+     */
     protected function resetForm(): void
     {
         $this->editingId = null;
@@ -382,6 +463,9 @@ class FightTable extends Component
         $this->resetErrorBag();
     }
 
+    /**
+     * Convierte campos vacíos en valores nulos persistibles.
+     */
     protected function normalizeNullableFields(array &$validated): void
     {
         foreach (['weight_class_id', 'title', 'starts_at', 'notes'] as $field) {
@@ -391,6 +475,9 @@ class FightTable extends Component
         }
     }
 
+    /**
+     * Gestiona store promo image dentro de la tabla de combates.
+     */
     protected function storePromoImage(ImageUploadOptimizer $images, array &$validated, Fight $fight): void
     {
         if (! $this->promoImage) {
@@ -410,6 +497,9 @@ class FightTable extends Component
         $this->deleteStoredImage($fight->promo_image);
     }
 
+    /**
+     * Elimina un archivo almacenado si existe.
+     */
     protected function deleteStoredImage(?string $path): void
     {
         if (! $path || ! str_starts_with($path, 'storage/')) {
@@ -419,6 +509,9 @@ class FightTable extends Component
         Storage::disk('public')->delete(Str::after($path, 'storage/'));
     }
 
+    /**
+     * Gestiona apply fighter search dentro de la tabla de combates.
+     */
     protected function applyFighterSearch($query): void
     {
         $query->where('first_name', 'like', "%{$this->search}%")
@@ -426,6 +519,9 @@ class FightTable extends Component
             ->orWhere('nickname', 'like', "%{$this->search}%");
     }
 
+    /**
+     * Gestiona fight name dentro de la tabla de combates.
+     */
     protected function fightName(Fight $fight): string
     {
         return $fight->title ?: $this->fighterName($fight->cornerRed).' vs '.$this->fighterName($fight->cornerBlue);

@@ -23,6 +23,9 @@
             confirmButtonText: @js(__('messages.actions.close')),
         };
 
+        /**
+         * Inicializa este comportamiento inmediato del navegador.
+         */
         (function () {
             try {
                 var s = localStorage.getItem('darkMode');
@@ -39,6 +42,9 @@
     {{-- Fija el estado del menú lateral antes del primer pintado (sin parpadeo) y lo
          conserva entre vistas vía localStorage, igual que el tema oscuro. --}}
     <script>
+        /**
+         * Inicializa este comportamiento inmediato del navegador.
+         */
         (function () {
             try {
                 var isDesktop = window.matchMedia('(min-width: 1024px)').matches;
@@ -168,6 +174,9 @@
 
     {{-- Aplica data-theme al body antes de que Alpine arranque --}}
     <script>
+        /**
+         * Inicializa este comportamiento inmediato del navegador.
+         */
         (function () {
             var t = document.documentElement.getAttribute('data-theme');
             if (t === 'dark') document.body.setAttribute('data-theme', 'dark');
@@ -403,6 +412,9 @@
             window.$ = window.jQuery;
         }
 
+        /**
+         * Alterna la vista de pantalla completa del panel.
+         */
         function toggleFullscreen() {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen().catch(() => {});
@@ -411,6 +423,9 @@
             }
         }
 
+        /**
+         * Define el estado interactivo del layout administrativo.
+         */
         function adminLayout() {
             return {
                 // Estado inicial = el que ya fijó el script del <head> antes de pintar (sin salto).

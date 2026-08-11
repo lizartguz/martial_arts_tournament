@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 
 class ReportController extends Controller
 {
+    /**
+     * Muestra la pantalla administrativa de reportes.
+     */
     public function index()
     {
         abort_unless(auth()->user()?->canAny([

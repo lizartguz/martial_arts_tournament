@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Storage;
 
 class SubscriptionPaymentController extends Controller
 {
+    /**
+     * Muestra la pantalla administrativa de pagos de suscripción.
+     */
     public function index()
     {
         Gate::authorize('subscription_payments.view');
@@ -16,6 +19,9 @@ class SubscriptionPaymentController extends Controller
         return view('admin.subscription-payments.index');
     }
 
+    /**
+     * Descarga el comprobante privado del registro.
+     */
     public function proof(SubscriptionPayment $subscriptionPayment)
     {
         Gate::authorize('subscription_payments.view');

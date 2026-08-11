@@ -7,6 +7,9 @@ use Illuminate\Notifications\Messages\MailMessage;
 
 class ResetPasswordNotification extends ResetPassword
 {
+    /**
+     * Construye el correo enviado por la notificación.
+     */
     public function toMail($notifiable): MailMessage
     {
         $resetUrl = $this->resetUrl($notifiable);
@@ -20,6 +23,9 @@ class ResetPasswordNotification extends ResetPassword
             ]);
     }
 
+    /**
+     * Construye la URL segura para restablecer contraseña.
+     */
     protected function resetUrl($notifiable): string
     {
         if (static::$createUrlCallback) {

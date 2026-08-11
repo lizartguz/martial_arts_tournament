@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Gate;
 
 class SystemSettingController extends Controller
 {
+    /**
+     * Muestra la pantalla administrativa de ajustes del sistema.
+     */
     public function index()
     {
         Gate::authorize('system_settings.view');

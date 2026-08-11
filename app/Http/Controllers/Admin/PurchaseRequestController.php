@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Storage;
 
 class PurchaseRequestController extends Controller
 {
+    /**
+     * Muestra la pantalla administrativa de solicitudes de compra.
+     */
     public function index()
     {
         Gate::authorize('purchase_requests.view');
@@ -16,6 +19,9 @@ class PurchaseRequestController extends Controller
         return view('admin.purchase-requests.index');
     }
 
+    /**
+     * Descarga el comprobante privado del registro.
+     */
     public function proof(PurchaseRequest $purchaseRequest)
     {
         Gate::authorize('purchase_requests.view');

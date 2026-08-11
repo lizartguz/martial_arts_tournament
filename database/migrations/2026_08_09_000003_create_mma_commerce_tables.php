@@ -6,8 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Aplica los cambios definidos por la migración.
+     */
     public function up(): void
     {
+        /**
+         * Define la estructura de la tabla subscription_plans.
+         */
         Schema::create('subscription_plans', function (Blueprint $table) {
             $table->id();
             $table->string('name', 120);
@@ -30,6 +36,9 @@ return new class extends Migration
             $table->index(['status', 'display_order']);
         });
 
+        /**
+         * Define la estructura de la tabla user_subscriptions.
+         */
         Schema::create('user_subscriptions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
@@ -50,6 +59,9 @@ return new class extends Migration
             $table->index('ends_at');
         });
 
+        /**
+         * Define la estructura de la tabla subscription_payments.
+         */
         Schema::create('subscription_payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_subscription_id')->nullable()->constrained()->nullOnDelete();
@@ -75,6 +87,9 @@ return new class extends Migration
             $table->index('provider_transaction_id');
         });
 
+        /**
+         * Define la estructura de la tabla purchase_requests.
+         */
         Schema::create('purchase_requests', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
@@ -107,6 +122,9 @@ return new class extends Migration
             $table->index('created_at');
         });
 
+        /**
+         * Define la estructura de la tabla subscription_plan_features.
+         */
         Schema::create('subscription_plan_features', function (Blueprint $table) {
             $table->id();
             $table->foreignId('subscription_plan_id')->constrained()->cascadeOnDelete();
@@ -121,6 +139,9 @@ return new class extends Migration
             $table->index(['subscription_plan_id', 'status']);
         });
 
+        /**
+         * Define la estructura de la tabla ticket_links.
+         */
         Schema::create('ticket_links', function (Blueprint $table) {
             $table->id();
             $table->foreignId('event_id')->constrained()->cascadeOnDelete();
@@ -141,6 +162,9 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Revierte los cambios definidos por la migración.
+     */
     public function down(): void
     {
         Schema::dropIfExists('ticket_links');

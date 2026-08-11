@@ -16,6 +16,9 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    /**
+     * Registra la configuracion global de middlewares.
+     */
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->web(append: [
             LocaleMiddleware::class,
@@ -29,7 +32,13 @@ return Application::configure(basePath: dirname(__DIR__))
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
     })
+    /**
+     * Registra la configuracion global de excepciones.
+     */
     ->withExceptions(function (Exceptions $exceptions) {
+        /**
+         * Registra el manejo de reporte para esta excepcion.
+         */
         $exceptions->report(function (CorruptComponentPayloadException $exception) {
             $request = app(Request::class);
             $snapshot = data_get($request->input('components'), '0.snapshot');

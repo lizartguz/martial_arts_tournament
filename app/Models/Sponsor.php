@@ -16,6 +16,9 @@ class Sponsor extends Model
         'status' => 'integer',
     ];
 
+    /**
+     * Relaciona eventos asociados.
+     */
     public function events()
     {
         return $this->belongsToMany(Event::class, 'event_sponsor')
@@ -23,6 +26,9 @@ class Sponsor extends Model
             ->withTimestamps();
     }
 
+    /**
+     * Devuelve la URL pública del logo.
+     */
     public function logoUrl(): ?string
     {
         return $this->logo_path ? asset($this->logo_path) : null;

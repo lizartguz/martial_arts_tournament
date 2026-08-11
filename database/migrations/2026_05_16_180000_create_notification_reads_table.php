@@ -6,8 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Aplica los cambios definidos por la migración.
+     */
     public function up(): void
     {
+        /**
+         * Define la estructura de la tabla notification_reads.
+         */
         Schema::create('notification_reads', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('notification_id');
@@ -27,6 +33,9 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Revierte los cambios definidos por la migración.
+     */
     public function down(): void
     {
         Schema::dropIfExists('notification_reads');

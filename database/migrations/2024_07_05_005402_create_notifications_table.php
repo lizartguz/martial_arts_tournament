@@ -7,10 +7,13 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Aplica los cambios definidos por la migración.
      */
     public function up(): void
     {
+        /**
+         * Define la estructura de la tabla notifications.
+         */
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->string('title', 255)->nullable();
@@ -37,7 +40,7 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * Revierte los cambios definidos por la migración.
      */
     public function down(): void
     {

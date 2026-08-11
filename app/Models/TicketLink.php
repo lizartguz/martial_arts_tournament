@@ -15,6 +15,9 @@ class TicketLink extends Model
         'status' => 'integer',
     ];
 
+    /**
+     * Relaciona evento asociado.
+     */
     public function event()
     {
         return $this->belongsTo(Event::class);

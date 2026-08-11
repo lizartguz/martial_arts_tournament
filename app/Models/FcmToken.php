@@ -35,6 +35,9 @@ class FcmToken extends Model
         'is_active' => 'boolean',
     ];
 
+    /**
+     * Relaciona usuario asociado.
+     */
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');

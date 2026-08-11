@@ -20,7 +20,7 @@ use Laravel\Fortify\Fortify;
 class FortifyServiceProvider extends ServiceProvider
 {
     /**
-     * Registra servicios de la aplicacion.
+     * Registra servicios compartidos en el contenedor.
      */
     public function register(): void
     {
@@ -28,12 +28,15 @@ class FortifyServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configura vistas, autenticacion y limites de Fortify.
+     * Ejecuta configuraciones de arranque de la aplicación.
      */
     public function boot(): void
     {
         app()->setLocale('es');
 
+        /**
+         * Valida las credenciales personalizadas de acceso.
+         */
         Fortify::authenticateUsing(function (Request $request) {
             try {
                 date_default_timezone_set('America/La_Paz');
@@ -58,6 +61,9 @@ class FortifyServiceProvider extends ServiceProvider
             }
         });
 
+        /**
+         * Devuelve la vista personalizada de inicio de sesion.
+         */
         Fortify::loginView(function () {
             $request = request();
 
@@ -77,19 +83,25 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
+        /**
+         * Configura el limite de intentos para el inicio de sesion.
+         */
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())) . '|' . $request->ip());
 
             return Limit::perMinute(5)->by($throttleKey);
         });
 
+        /**
+         * Configura el limite de intentos para doble factor.
+         */
         RateLimiter::for('two-factor', function (Request $request) {
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
         });
     }
 
     /**
-     * Busca los datos base del usuario para validar credenciales.
+     * Ejecuta la operación find user for login.
      */
     private function findUserForLogin(string $email): ?User
     {
@@ -110,7 +122,7 @@ class FortifyServiceProvider extends ServiceProvider
     }
 
     /**
-     * Valida que el usuario este activo y tenga alguno de los roles definidos por el sistema.
+     * Ejecuta la operación ensure user can authenticate.
      */
     private function ensureUserCanAuthenticate(User $user): void
     {
@@ -124,7 +136,7 @@ class FortifyServiceProvider extends ServiceProvider
     }
 
     /**
-     * Verifica que la cuenta no este desactivada manualmente.
+     * Indica si enabled user.
      */
     private function isEnabledUser(User $user): bool
     {
@@ -132,7 +144,7 @@ class FortifyServiceProvider extends ServiceProvider
     }
 
     /**
-     * Lanza una respuesta de validacion fallida para el login.
+     * Ejecuta la operación deny login.
      */
     private function denyLogin(string $message): void
     {
@@ -142,7 +154,7 @@ class FortifyServiceProvider extends ServiceProvider
     }
 
     /**
-     * Registra el resultado final del intento de login.
+     * Ejecuta la operación log authentication outcome.
      */
     private function logAuthenticationOutcome(Request $request, ?User $user): ?User
     {
@@ -175,7 +187,7 @@ class FortifyServiceProvider extends ServiceProvider
     }
 
     /**
-     * Registra un intento de login rechazado por validacion.
+     * Ejecuta la operación log failed login attempt.
      */
     private function logFailedLoginAttempt(Request $request, ValidationException $exception): void
     {

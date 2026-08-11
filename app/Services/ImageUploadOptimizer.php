@@ -15,7 +15,7 @@ class ImageUploadOptimizer
     private const IMAGE_QUALITY = 80;
 
     /**
-     * Valida, reduce y guarda una imagen en el disco indicado.
+     * Ejecuta la operación store del servicio.
      *
      * @param  TemporaryUploadedFile|UploadedFile  $image
      */
@@ -56,6 +56,9 @@ class ImageUploadOptimizer
         return $relativePath;
     }
 
+    /**
+     * Ejecuta la operación optimize del servicio.
+     */
     private function optimize(string $realPath, string $mimeType): array
     {
         if ($mimeType === 'image/gif') {
@@ -118,6 +121,8 @@ class ImageUploadOptimizer
     }
 
     /**
+     * Ejecuta la operación make file name del servicio.
+     *
      * @param  TemporaryUploadedFile|UploadedFile  $image
      */
     private function makeFileName($image, string $prefix, string $extension): string

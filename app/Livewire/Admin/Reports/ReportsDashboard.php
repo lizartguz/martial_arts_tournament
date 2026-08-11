@@ -29,6 +29,9 @@ class ReportsDashboard extends Component
         'status' => ['except' => ''],
     ];
 
+    /**
+     * Inicializa el componente de reports dashboard.
+     */
     public function mount(): void
     {
         $this->reportType = request()->query('type', $this->reportType);
@@ -45,6 +48,9 @@ class ReportsDashboard extends Component
         }
     }
 
+    /**
+     * Sincroniza el estado al cambiar el tipo de reporte.
+     */
     public function updatedReportType(): void
     {
         abort_unless($this->canViewType($this->reportType), 403);
@@ -52,32 +58,50 @@ class ReportsDashboard extends Component
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar la fecha inicial.
+     */
     public function updatingDateFrom(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar la fecha final.
+     */
     public function updatingDateTo(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el estado.
+     */
     public function updatingStatus(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Reinicia la paginación al cambiar el tamaño de página.
+     */
     public function updatingPerPage(): void
     {
         $this->resetPage();
     }
 
+    /**
+     * Limpia filtros y reinicia la paginación.
+     */
     public function resetFilters(): void
     {
         $this->reset(['dateFrom', 'dateTo', 'status']);
         $this->resetPage();
     }
 
+    /**
+     * Devuelve las opciones disponibles de type.
+     */
     public function typeOptions(): array
     {
         return collect([
@@ -87,6 +111,9 @@ class ReportsDashboard extends Component
         ])->filter(fn ($label, $type) => $this->canViewType($type))->all();
     }
 
+    /**
+     * Devuelve las opciones de estado permitidas.
+     */
     public function statusOptions(): array
     {
         return match ($this->reportType) {
@@ -114,6 +141,9 @@ class ReportsDashboard extends Component
         };
     }
 
+    /**
+     * Traduce el estado del registro.
+     */
     public function statusLabel(?int $status): string
     {
         return $status === null
@@ -121,6 +151,9 @@ class ReportsDashboard extends Component
             : ($this->statusOptions()[$status] ?? (string) $status);
     }
 
+    /**
+     * Renderiza la tabla de reports dashboard con filtros activos.
+     */
     public function render()
     {
         abort_unless($this->canViewType($this->reportType), 403);
@@ -131,6 +164,9 @@ class ReportsDashboard extends Component
         ]);
     }
 
+    /**
+     * Gestiona stats dentro de la tabla de reports dashboard.
+     */
     protected function stats(): array
     {
         return match ($this->reportType) {
@@ -141,6 +177,9 @@ class ReportsDashboard extends Component
         };
     }
 
+    /**
+     * Gestiona rows dentro de la tabla de reports dashboard.
+     */
     protected function rows()
     {
         return match ($this->reportType) {
@@ -151,6 +190,9 @@ class ReportsDashboard extends Component
         };
     }
 
+    /**
+     * Gestiona event stats dentro de la tabla de reports dashboard.
+     */
     protected function eventStats(): array
     {
         $query = $this->applyEventFilters(Event::query());
@@ -167,6 +209,9 @@ class ReportsDashboard extends Component
         ];
     }
 
+    /**
+     * Gestiona subscription stats dentro de la tabla de reports dashboard.
+     */
     protected function subscriptionStats(): array
     {
         $query = $this->applySubscriptionFilters(UserSubscription::query());
@@ -179,6 +224,9 @@ class ReportsDashboard extends Component
         ];
     }
 
+    /**
+     * Gestiona sales stats dentro de la tabla de reports dashboard.
+     */
     protected function salesStats(): array
     {
         $query = $this->applyPaymentFilters(SubscriptionPayment::query());
@@ -191,6 +239,9 @@ class ReportsDashboard extends Component
         ];
     }
 
+    /**
+     * Gestiona event rows dentro de la tabla de reports dashboard.
+     */
     protected function eventRows()
     {
         return $this->applyEventFilters(Event::query())
@@ -200,6 +251,9 @@ class ReportsDashboard extends Component
             ->paginate($this->perPage);
     }
 
+    /**
+     * Gestiona subscription rows dentro de la tabla de reports dashboard.
+     */
     protected function subscriptionRows()
     {
         return $this->applySubscriptionFilters(UserSubscription::query())
@@ -209,6 +263,9 @@ class ReportsDashboard extends Component
             ->paginate($this->perPage);
     }
 
+    /**
+     * Gestiona sales rows dentro de la tabla de reports dashboard.
+     */
     protected function salesRows()
     {
         return $this->applyPaymentFilters(SubscriptionPayment::query())
@@ -217,6 +274,9 @@ class ReportsDashboard extends Component
             ->paginate($this->perPage);
     }
 
+    /**
+     * Gestiona apply event filters dentro de la tabla de reports dashboard.
+     */
     protected function applyEventFilters(Builder $query): Builder
     {
         return $query
@@ -225,6 +285,9 @@ class ReportsDashboard extends Component
             ->when($this->dateTo, fn ($q) => $q->whereDate('starts_at', '<=', $this->dateTo));
     }
 
+    /**
+     * Gestiona apply subscription filters dentro de la tabla de reports dashboard.
+     */
     protected function applySubscriptionFilters(Builder $query): Builder
     {
         return $query
@@ -233,6 +296,9 @@ class ReportsDashboard extends Component
             ->when($this->dateTo, fn ($q) => $q->whereDate('starts_at', '<=', $this->dateTo));
     }
 
+    /**
+     * Gestiona apply payment filters dentro de la tabla de reports dashboard.
+     */
     protected function applyPaymentFilters(Builder $query): Builder
     {
         return $query
@@ -241,6 +307,9 @@ class ReportsDashboard extends Component
             ->when($this->dateTo, fn ($q) => $q->whereDate('created_at', '<=', $this->dateTo));
     }
 
+    /**
+     * Valida si el usuario puede view type.
+     */
     protected function canViewType(string $type): bool
     {
         $permission = $this->typePermissions()[$type] ?? null;
@@ -248,6 +317,9 @@ class ReportsDashboard extends Component
         return $permission !== null && auth()->user()?->can($permission);
     }
 
+    /**
+     * Gestiona type permissions dentro de la tabla de reports dashboard.
+     */
     protected function typePermissions(): array
     {
         return [

@@ -19,7 +19,7 @@ class VerifyCsrfToken
     
     
     /**
-     * Handle an incoming request.
+     * Ejecuta la operación principal del comando.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */

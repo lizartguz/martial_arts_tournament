@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 class WeightClassController extends Controller
 {
     /**
-     * Muestra la gestion administrativa de categorias de peso.
+     * Muestra la pantalla administrativa de categorías de peso.
      */
     public function index()
     {

@@ -18,21 +18,33 @@ class UserSubscription extends Model
         'metadata' => 'array',
     ];
 
+    /**
+     * Relaciona usuario asociado.
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Relaciona plan asociado.
+     */
     public function plan()
     {
         return $this->belongsTo(SubscriptionPlan::class, 'subscription_plan_id')->withTrashed();
     }
 
+    /**
+     * Relaciona pagos asociados.
+     */
     public function payments()
     {
         return $this->hasMany(SubscriptionPayment::class, 'user_subscription_id');
     }
 
+    /**
+     * Relaciona usuario creador.
+     */
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');

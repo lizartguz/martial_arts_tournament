@@ -1,7 +1,7 @@
 @php
     use App\Support\AdminPanel;
 
-    $panelUrl = auth()->check() ? route('admin-dashboard') : url('/login');
+    $panelUrl = auth()->check() ? route('admin.dashboard') : url('/login');
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">

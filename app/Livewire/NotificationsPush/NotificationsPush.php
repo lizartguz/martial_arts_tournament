@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Services\NotificationAttachmentService;
 use App\Services\PushNotificationService;
 use App\Support\ErrorMessage;
-use App\Traits\AuthValidationTrait;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -21,7 +20,6 @@ use Spatie\Permission\Models\Role;
 
 class NotificationsPush extends Component
 {
-    use AuthValidationTrait;
     use WithFileUploads;
     use WithPagination;
 
@@ -85,9 +83,7 @@ class NotificationsPush extends Component
 
     public function mount()
     {
-        $user = Auth::user();
-        $this->validarUsuario($user, []);
-        abort_unless($user?->can('notifications.view'), 403);
+        abort_unless(Auth::user()?->can('notifications.view'), 403);
         $this->loadRoleOptions();
     }
 

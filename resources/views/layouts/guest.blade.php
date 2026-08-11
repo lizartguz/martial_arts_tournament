@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    @php($brand = app(\App\Services\SystemSettingsService::class))
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'SenvaTec 3.0') }}</title>
-        <link rel="icon" type="image/png" href="{{ asset('frontend/images/logo_with_text.png') }}?v=20260510">
-        <link rel="shortcut icon" type="image/png" href="{{ asset('frontend/images/logo_with_text.png') }}?v=20260510">
+        <title>{{ $brand->productName() }}</title>
+        <link rel="icon" type="image/png" href="{{ $brand->faviconUrl() }}?v=20260510">
+        <link rel="shortcut icon" type="image/png" href="{{ $brand->faviconUrl() }}?v=20260510">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

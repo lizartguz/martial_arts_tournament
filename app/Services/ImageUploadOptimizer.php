@@ -30,7 +30,7 @@ class ImageUploadOptimizer
         $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
         if (! $mimeType || ! in_array($mimeType, $allowedMimes, true)) {
-            throw new \InvalidArgumentException('Formato no soportado. Use JPG, PNG, GIF o WebP.');
+            throw new \InvalidArgumentException(__('mma.uploads.public_images.invalid_type'));
         }
 
         $realPath = $image->getRealPath();
@@ -38,7 +38,7 @@ class ImageUploadOptimizer
         $maxBytes = $maxMegaBytes * 1024 * 1024;
 
         if ($originalSize > $maxBytes) {
-            throw new \InvalidArgumentException("La imagen no puede pesar mas de {$maxMegaBytes} MB.");
+            throw new \InvalidArgumentException(__('mma.uploads.public_images.max_size', ['max' => $maxMegaBytes]));
         }
 
         $optimized = $this->optimize($realPath, $mimeType);
@@ -49,7 +49,7 @@ class ImageUploadOptimizer
 
         Log::info(
             'ImageUploadOptimizer: '.$originalSize.'B -> '.$optimized['size'].'B '.
-            '('.round((1 - $optimized['size'] / max($originalSize, 1)) * 100).'% reduccion) -> '.
+            '('.round((1 - $optimized['size'] / max($originalSize, 1)) * 100).'% reducción) -> '.
             $disk.':'.$relativePath
         );
 
@@ -72,7 +72,7 @@ class ImageUploadOptimizer
         $source = @\imagecreatefromstring(\file_get_contents($realPath));
 
         if (! $source) {
-            throw new \RuntimeException('No se pudo procesar la imagen seleccionada.');
+            throw new \RuntimeException(__('mma.uploads.public_images.process_failed'));
         }
 
         $sourceWidth = \imagesx($source);

@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
+
+class SponsorController extends Controller
+{
+    public function index()
+    {
+        Gate::authorize('sponsors.view');
+
+        return view('admin.sponsors.index');
+    }
+}

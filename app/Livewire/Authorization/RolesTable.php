@@ -5,7 +5,7 @@ namespace App\Livewire\Authorization;
 use App\Services\AuthorizationAuditLogger;
 use App\Services\AuthorizationHierarchyService;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Spatie\Permission\Models\Permission;
@@ -86,16 +86,9 @@ class RolesTable extends Component
      */
     public function save(): void
     {
-        $permission = $this->editingId ? 'roles.update' : 'roles.create';
-        $this->authorizeAction($permission);
+        $this->authorizeAction('roles.update');
 
         $this->validate([
-            'form.name' => [
-                'required',
-                'string',
-                'max:100',
-                Rule::unique('roles', 'name')->ignore($this->editingId),
-            ],
             'form.permissions' => ['array'],
             'form.permissions.*' => ['string', 'exists:permissions,name'],
         ]);
@@ -103,27 +96,18 @@ class RolesTable extends Component
         $actor = auth()->user();
         $hierarchy = $this->hierarchy();
 
-        if (! $hierarchy->canManageRoleName($actor, $this->form['name'])) {
-            $this->audit()->unauthorized('guardar rol protegido', ['role_name' => $this->form['name']]);
+        $role = Role::with('permissions')->findOrFail($this->editingId);
+
+        if (! $hierarchy->canManageRoleName($actor, $role->name)) {
+            $this->audit()->unauthorized('actualizar permisos de rol protegido', ['role_id' => $role->id, 'role_name' => $role->name]);
             abort(403);
         }
 
-        $role = $this->editingId ? Role::findOrFail($this->editingId) : new Role(['guard_name' => 'web']);
-
-        if ($this->editingId && ! $hierarchy->canManageRoleName($actor, $role->name)) {
-            $this->audit()->unauthorized('renombrar rol protegido', ['role_id' => $role->id, 'role_name' => $role->name]);
-            abort(403);
-        }
-
-        $beforePermissions = $role->exists ? $role->permissions()->pluck('name')->values()->all() : [];
-        $beforeName = $role->name;
-
-        $role->name = $this->form['name'];
-        $role->guard_name = 'web';
-        $role->save();
+        $beforePermissions = $role->permissions->pluck('name')->values()->all();
+        $requestedPermissions = $this->permissionsAllowedForSync($beforePermissions, $this->form['permissions'] ?? []);
 
         $permissions = Permission::query()
-            ->whereIn('name', $this->form['permissions'] ?? [])
+            ->whereIn('name', $requestedPermissions)
             ->get();
 
         $role->syncPermissions($permissions);
@@ -131,19 +115,16 @@ class RolesTable extends Component
 
         $afterPermissions = $role->refresh()->permissions()->pluck('name')->values()->all();
 
-        $this->audit()->record($this->editingId ? 'Rol actualizado' : 'Rol creado', [
+        $this->audit()->record('Permisos de rol actualizados', [
             'role_id' => $role->id,
-            'before_name' => $beforeName,
-            'after_name' => $role->name,
+            'role_name' => $role->name,
             'before_permissions' => $beforePermissions,
             'after_permissions' => $afterPermissions,
             'added_permissions' => array_values(array_diff($afterPermissions, $beforePermissions)),
             'removed_permissions' => array_values(array_diff($beforePermissions, $afterPermissions)),
         ]);
 
-        $this->successMessage = $this->editingId
-            ? __('messages.authorization.roles.messages.updated')
-            : __('messages.authorization.roles.messages.created');
+        $this->successMessage = __('messages.authorization.roles.messages.updated');
         $this->closeModal();
     }
 
@@ -264,6 +245,47 @@ class RolesTable extends Component
     }
 
     /**
+     * Devuelve el nombre visible del rol en el idioma activo.
+     */
+    public function roleLabel(string $roleName): string
+    {
+        $key = "mma.roles.names.{$roleName}";
+        $translated = __($key);
+
+        return $translated === $key
+            ? Str::headline(str_replace('_', ' ', $roleName))
+            : $translated;
+    }
+
+    /**
+     * Devuelve el nombre visible del permiso sin exponer el identificador tecnico.
+     */
+    public function permissionLabel(string $permissionName): string
+    {
+        [$module, $action] = $this->splitPermissionName($permissionName);
+        $moduleLabel = __("mma.permissions.modules.{$module}");
+        $actionLabel = __("mma.permissions.actions.{$action}");
+
+        if ($moduleLabel === "mma.permissions.modules.{$module}") {
+            $moduleLabel = Str::headline(str_replace('_', ' ', $module));
+        }
+
+        if ($actionLabel === "mma.permissions.actions.{$action}") {
+            $actionLabel = Str::headline(str_replace('_', ' ', $action));
+        }
+
+        return trim("{$actionLabel} {$moduleLabel}");
+    }
+
+    /**
+     * Indica si el permiso puede marcarse o desmarcarse por el usuario actual.
+     */
+    public function canTogglePermission(string $permissionName): bool
+    {
+        return $this->hierarchy()->canManagePermissionName(auth()->user(), $permissionName);
+    }
+
+    /**
      * Renderiza la tabla de roles con permisos disponibles.
      */
     public function render()
@@ -312,5 +334,31 @@ class RolesTable extends Component
     protected function audit(): AuthorizationAuditLogger
     {
         return app(AuthorizationAuditLogger::class);
+    }
+
+    /**
+     * Mantiene intactos los permisos protegidos cuando el actor no puede editarlos.
+     */
+    protected function permissionsAllowedForSync(array $currentPermissions, array $requestedPermissions): array
+    {
+        $hierarchy = $this->hierarchy();
+        $actor = auth()->user();
+        $currentProtected = collect($currentPermissions)
+            ->filter(fn (string $permission) => ! $hierarchy->canManagePermissionName($actor, $permission))
+            ->all();
+        $requestedAllowed = collect($requestedPermissions)
+            ->filter(fn (string $permission) => $hierarchy->canManagePermissionName($actor, $permission))
+            ->all();
+
+        return array_values(array_unique(array_merge($currentProtected, $requestedAllowed)));
+    }
+
+    protected function splitPermissionName(string $permissionName): array
+    {
+        $parts = explode('.', $permissionName);
+        $action = array_pop($parts) ?: $permissionName;
+        $module = implode('.', $parts);
+
+        return [$module !== '' ? $module : $permissionName, $action];
     }
 }

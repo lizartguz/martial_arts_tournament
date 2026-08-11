@@ -7,8 +7,7 @@
 @stop
 
 @section('content')
-    <div class="grid gap-6 xl:grid-cols-2">
+    <div class="grid gap-6">
         <livewire:authorization.roles-table />
-        <livewire:authorization.permissions-table />
     </div>
 @stop

@@ -3,22 +3,21 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | Role hierarchy
+    | Jerarquía de roles
     |--------------------------------------------------------------------------
     |
-    | A higher rank can manage users and roles with the same or lower rank.
-    | Super administrator roles are hidden from every non-super user.
+    | Un rol solo puede administrar usuarios o roles de rango inferior.
+    | `super_manager` es la excepción y administra todo el sistema.
     |
     */
     'role_ranks' => [
         'super_manager' => 100,
         'admin' => 80,
         'manager' => 60,
-        'meteorology' => 60,
-        'meteorologist' => 60,
-        'technical' => 50,
+        'publisher' => 50,
         'sales' => 40,
-        'marketing' => 40,
+        'checkin' => 30,
+        'support' => 20,
         'subscriber' => 10,
     ],
 
@@ -28,14 +27,8 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Roles que ven el detalle tecnico de errores
+    | Roles que ven detalle técnico de errores
     |--------------------------------------------------------------------------
-    |
-    | Estos roles ven el mensaje crudo de las excepciones (util para depurar).
-    | Cualquier otro rol ve un mensaje amigable y generico. Es el unico lugar
-    | a ajustar para cambiar quien ve los errores tecnicos en el panel.
-    | Usado por App\Support\ErrorMessage.
-    |
     */
     'error_detail_roles' => [
         'super_manager',
@@ -43,36 +36,33 @@ return [
 
     'protected_permissions' => [
         'authorization.access',
+        'system_settings.view',
+        'system_settings.update',
         'roles.view',
-        'roles.create',
         'roles.update',
-        'roles.delete',
-        'permissions.view',
-        'permissions.create',
-        'permissions.update',
-        'permissions.delete',
+        'users.view',
+        'users.create',
+        'users.update',
+        'users.delete',
+        'users.assign_roles',
+        'reports.export',
+        'logs.view',
+        'logs.download',
+    ],
 
-        'notifications.view',
-        'subscriptions.view',
-        'sales_subscribers.view',
-
-        'user_management.view',
-        'pay_renewals.view',
-
-        'stations.table.view',
-        'stations.map.view',
-        'stations.charts.view',
-        'stations.downloads.view',
-
-        'agro.chill_hours.view',
-        'agro.gdd.view',
-        'agro.early_warning.view',
-
-        'data.import_global.view',
-        'data.organize_users.view',
-
-        'administration.forecasts_edit.view',
-        'administration.logs.view',
-        'administration.catalog.view',
+    'permission_labels' => [
+        'authorization.access' => 'Acceder a roles y permisos',
+        'system_settings.view' => 'Ver configuración del sistema',
+        'system_settings.update' => 'Actualizar configuración del sistema',
+        'events.view' => 'Ver eventos',
+        'events.create' => 'Crear eventos',
+        'events.update' => 'Editar eventos',
+        'events.delete' => 'Eliminar eventos',
+        'events.publish' => 'Publicar eventos',
+        'subscription_payments.view' => 'Ver pagos de suscripción',
+        'subscription_payments.upload_proof' => 'Cargar comprobante de pago',
+        'subscription_payments.confirm' => 'Confirmar pagos de suscripción',
+        'purchase_requests.view' => 'Ver solicitudes de compra',
+        'subscriber.purchases.view' => 'Ver mis compras',
     ],
 ];

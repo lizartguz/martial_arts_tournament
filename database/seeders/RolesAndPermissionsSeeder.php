@@ -10,166 +10,276 @@ use Spatie\Permission\PermissionRegistrar;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
-    /**
-     * Limpia y reconstruye roles y permisos base del sistema.
-     */
     public function run(): void
     {
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         DB::transaction(function () {
-            $this->clearSpatieAuthorizationData();
+            $permissions = $this->permissions();
 
-            $this->createPermissions();
-            $this->createRoles();
+            foreach ($permissions as $permission) {
+                Permission::query()->firstOrCreate([
+                    'name' => $permission,
+                    'guard_name' => 'web',
+                ]);
+            }
+
+            Permission::query()
+                ->whereNotIn('name', $permissions)
+                ->delete();
+
+            foreach ($this->rolePermissions() as $roleName => $rolePermissions) {
+                Role::query()
+                    ->firstOrCreate(['name' => $roleName, 'guard_name' => 'web'])
+                    ->syncPermissions($rolePermissions === ['*'] ? $permissions : $rolePermissions);
+            }
         });
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
     }
 
-    /**
-     * Elimina relaciones, roles y permisos previos de Spatie.
-     */
-    protected function clearSpatieAuthorizationData(): void
+    private function permissions(): array
     {
-        DB::table('model_has_permissions')->delete();
-        DB::table('model_has_roles')->delete();
-        DB::table('role_has_permissions')->delete();
-        Role::query()->delete();
-        Permission::query()->delete();
-    }
-
-    /**
-     * Crea los permisos estructurados por modulo del menu.
-     */
-    protected function createPermissions(): array
-    {
-        $permissions = [
+        return array_values(array_unique([
+            'dashboard.view',
             'authorization.access',
-
+            'system_settings.view',
+            'system_settings.update',
             'roles.view',
-            'roles.create',
             'roles.update',
-            'roles.delete',
-
-            'permissions.view',
-            'permissions.create',
-            'permissions.update',
-            'permissions.delete',
-
+            'users.view',
+            'users.create',
+            'users.update',
+            'users.delete',
+            'users.assign_roles',
+            'venues.view',
+            'venues.create',
+            'venues.update',
+            'venues.delete',
+            'events.view',
+            'events.create',
+            'events.update',
+            'events.delete',
+            'events.publish',
+            'fights.view',
+            'fights.create',
+            'fights.update',
+            'fights.delete',
+            'fight_results.view',
+            'fight_results.update',
+            'rankings.view',
+            'rankings.update',
+            'fighters.view',
+            'fighters.create',
+            'fighters.update',
+            'fighters.delete',
+            'fighter_teams.view',
+            'fighter_teams.create',
+            'fighter_teams.update',
+            'fighter_teams.delete',
+            'weight_classes.view',
+            'weight_classes.create',
+            'weight_classes.update',
+            'weight_classes.delete',
+            'event_media.view',
+            'event_media.create',
+            'event_media.update',
+            'event_media.delete',
+            'fighter_media.view',
+            'fighter_media.create',
+            'fighter_media.update',
+            'fighter_media.delete',
+            'news.view',
+            'news.create',
+            'news.update',
+            'news.delete',
+            'news.publish',
+            'landing.update',
+            'sponsors.view',
+            'sponsors.create',
+            'sponsors.update',
+            'sponsors.delete',
+            'subscription_plans.view',
+            'subscription_plans.create',
+            'subscription_plans.update',
+            'subscription_plans.delete',
+            'subscribers.view',
+            'subscribers.update',
+            'user_subscriptions.view',
+            'user_subscriptions.create',
+            'user_subscriptions.update',
+            'subscription_payments.view',
+            'subscription_payments.upload_proof',
+            'subscription_payments.confirm',
+            'subscription_payments.cancel',
+            'purchase_requests.view',
+            'purchase_requests.update',
+            'purchase_requests.assign',
+            'purchase_requests.close',
+            'purchase_requests.delete',
+            'ticket_links.view',
+            'ticket_links.create',
+            'ticket_links.update',
+            'ticket_links.delete',
+            'ticket_orders.view',
+            'ticket_orders.update',
+            'ticket_checkins.view',
+            'ticket_checkins.confirm',
             'notifications.view',
-            'subscriptions.view',
-            'sales_subscribers.view',
-
-            'user_management.view',
-            'pay_renewals.view',
-
-            'stations.table.view',
-            'stations.map.view',
-            'stations.charts.view',
-            'stations.downloads.view',
-
-            'agro.chill_hours.view',
-            'agro.gdd.view',
-            'agro.early_warning.view',
-
-            'data.import_global.view',
-            'data.organize_users.view',
-
-            'administration.forecasts_edit.view',
-            'administration.logs.view',
-            'administration.catalog.view',
-        ];
-
-        $permissions = array_values(array_unique($permissions));
-
-        foreach ($permissions as $permission) {
-            Permission::create([
-                'name' => $permission,
-                'guard_name' => 'web',
-            ]);
-        }
-
-        return $permissions;
+            'notifications.create',
+            'notifications.send',
+            'reports.events.view',
+            'reports.subscriptions.view',
+            'reports.sales.view',
+            'reports.export',
+            'logs.view',
+            'logs.download',
+            'support_messages.view',
+            'support_messages.update',
+            'subscriber.dashboard.view',
+            'subscriber.purchases.view',
+            'subscriber.events.view',
+            'subscriber.subscription.view',
+            'subscriber.profile.view',
+            'subscriber.profile.update',
+        ]));
     }
 
-    /**
-     * Crea roles base y asigna permisos segun su alcance operativo.
-     */
-    protected function createRoles(): void
+    private function rolePermissions(): array
     {
-        $allPermissions = Permission::query()->pluck('name')->all();
-
-        $superRoles = [
-            'super_manager',
-        ];
-
-        foreach ($superRoles as $roleName) {
-            Role::create(['name' => $roleName, 'guard_name' => 'web'])
-                ->syncPermissions($allPermissions);
-        }
-
-        Role::create(['name' => 'admin', 'guard_name' => 'web'])
-            ->syncPermissions($allPermissions);
-
-        $stationPermissions = [
-            'stations.table.view',
-            'stations.map.view',
-            'stations.charts.view',
-            'stations.downloads.view',
-        ];
-
-        $agroPermissions = [
-            'agro.chill_hours.view',
-            'agro.gdd.view',
-            'agro.early_warning.view',
-        ];
-
-        $operationalPermissions = [
-            'subscriptions.view',
-            'sales_subscribers.view',
-            'user_management.view',
-            'administration.forecasts_edit.view',
-            ...$stationPermissions,
-            ...$agroPermissions,
-        ];
-
-        Role::create(['name' => 'manager', 'guard_name' => 'web'])
-            ->syncPermissions($operationalPermissions);
-
-        Role::create(['name' => 'meteorology', 'guard_name' => 'web'])
-            ->syncPermissions($operationalPermissions);
-
-        Role::create(['name' => 'meteorologist', 'guard_name' => 'web'])
-            ->syncPermissions($operationalPermissions);
-
-        Role::create(['name' => 'technical', 'guard_name' => 'web'])
-            ->syncPermissions([
-                'user_management.view',
-                ...$stationPermissions,
-                ...$agroPermissions,
-            ]);
-
-        Role::create(['name' => 'sales', 'guard_name' => 'web'])
-            ->syncPermissions([
-                'user_management.view',
-                'sales_subscribers.view',
-                'stations.table.view',
-                'stations.map.view',
-            ]);
-
-        Role::create(['name' => 'marketing', 'guard_name' => 'web'])
-            ->syncPermissions([
+        return [
+            'super_manager' => ['*'],
+            'admin' => array_values(array_diff($this->permissions(), ['logs.download'])),
+            'manager' => [
+                'dashboard.view',
+                'system_settings.view',
+                'venues.view',
+                'venues.create',
+                'venues.update',
+                'events.view',
+                'events.create',
+                'events.update',
+                'fights.view',
+                'fights.create',
+                'fights.update',
+                'fight_results.view',
+                'fight_results.update',
+                'rankings.view',
+                'rankings.update',
+                'fighters.view',
+                'fighters.create',
+                'fighters.update',
+                'fighter_teams.view',
+                'fighter_teams.create',
+                'fighter_teams.update',
+                'weight_classes.view',
+                'event_media.view',
+                'event_media.create',
+                'event_media.update',
+                'fighter_media.view',
+                'fighter_media.create',
+                'fighter_media.update',
+                'subscribers.view',
+                'subscribers.update',
+                'user_subscriptions.view',
+                'user_subscriptions.update',
+                'subscription_payments.view',
+                'subscription_payments.upload_proof',
+                'subscription_payments.confirm',
+                'purchase_requests.view',
+                'purchase_requests.update',
+                'purchase_requests.assign',
+                'purchase_requests.close',
+                'ticket_links.view',
+                'ticket_links.create',
+                'ticket_links.update',
+                'reports.events.view',
+                'reports.subscriptions.view',
+                'reports.sales.view',
+            ],
+            'publisher' => [
+                'dashboard.view',
+                'events.view',
+                'events.create',
+                'events.update',
+                'events.publish',
+                'fights.view',
+                'fights.create',
+                'fights.update',
+                'fighters.view',
+                'fighter_teams.view',
+                'weight_classes.view',
+                'event_media.view',
+                'event_media.create',
+                'event_media.update',
+                'fighter_media.view',
+                'fighter_media.create',
+                'fighter_media.update',
+                'news.view',
+                'news.create',
+                'news.update',
+                'news.publish',
+                'landing.update',
+                'sponsors.view',
+                'sponsors.create',
+                'sponsors.update',
+                'ticket_links.view',
+                'ticket_links.create',
+                'ticket_links.update',
                 'notifications.view',
-            ]);
-
-        Role::create(['name' => 'subscriber', 'guard_name' => 'web'])
-            ->syncPermissions([
-                'user_management.view',
-                'pay_renewals.view',
-                ...$stationPermissions,
-                ...$agroPermissions,
-            ]);
+                'notifications.create',
+                'notifications.send',
+            ],
+            'sales' => [
+                'dashboard.view',
+                'events.view',
+                'ticket_links.view',
+                'ticket_orders.view',
+                'ticket_orders.update',
+                'subscription_plans.view',
+                'subscribers.view',
+                'subscribers.update',
+                'user_subscriptions.view',
+                'user_subscriptions.create',
+                'user_subscriptions.update',
+                'subscription_payments.view',
+                'subscription_payments.upload_proof',
+                'subscription_payments.confirm',
+                'subscription_payments.cancel',
+                'purchase_requests.view',
+                'purchase_requests.update',
+                'purchase_requests.close',
+                'reports.subscriptions.view',
+                'reports.sales.view',
+                'reports.export',
+                'support_messages.view',
+                'support_messages.update',
+            ],
+            'checkin' => [
+                'dashboard.view',
+                'events.view',
+                'ticket_orders.view',
+                'ticket_checkins.view',
+                'ticket_checkins.confirm',
+            ],
+            'support' => [
+                'dashboard.view',
+                'events.view',
+                'subscribers.view',
+                'user_subscriptions.view',
+                'subscription_payments.view',
+                'ticket_orders.view',
+                'support_messages.view',
+                'support_messages.update',
+            ],
+            'subscriber' => [
+                'subscriber.dashboard.view',
+                'subscriber.purchases.view',
+                'subscriber.events.view',
+                'subscriber.subscription.view',
+                'subscriber.profile.view',
+                'subscriber.profile.update',
+            ],
+        ];
     }
-
 }

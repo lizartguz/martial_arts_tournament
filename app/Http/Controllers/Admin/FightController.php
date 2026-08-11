@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
+
+class FightController extends Controller
+{
+    public function index()
+    {
+        Gate::authorize('fights.view');
+
+        return view('admin.fights.index');
+    }
+}

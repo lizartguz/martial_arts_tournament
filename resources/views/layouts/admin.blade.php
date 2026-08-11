@@ -385,7 +385,7 @@
             @if($footerContent !== '')
                 {!! $__env->yieldContent('footer') !!}
             @else
-                SenvaTec {{ date('Y') }} | Desarrollado por
+                {{ AdminPanel::brandName() }} {{ date('Y') }} | {{ __('mma.admin.common.developed_by') }}
                 <a href="https://www.artguz.com"
                    class="text-gray-400 transition-colors hover:text-emerald-600 dark:hover:text-emerald-400">
                     Artguz SRL

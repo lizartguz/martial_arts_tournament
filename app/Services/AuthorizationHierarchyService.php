@@ -84,7 +84,16 @@ class AuthorizationHierarchyService
      */
     public function canManageRoleName(?User $actor, string $roleName): bool
     {
-        return $this->canViewRoleName($actor, $roleName);
+        if (! $actor) {
+            return false;
+        }
+
+        if ($this->isSuperUser($actor)) {
+            return true;
+        }
+
+        return ! $this->isProtectedRoleName($roleName)
+            && $this->roleRank($roleName) < $this->userRank($actor);
     }
 
     /**
@@ -131,7 +140,22 @@ class AuthorizationHierarchyService
      */
     public function canManageUser(?User $actor, ?User $target): bool
     {
-        return $this->canViewUser($actor, $target);
+        if (! $actor || ! $target) {
+            return false;
+        }
+
+        $target->loadMissing('roles');
+        $actor->loadMissing('roles');
+
+        if ($this->isSuperUser($actor)) {
+            return true;
+        }
+
+        if ($this->isSuperUser($target)) {
+            return false;
+        }
+
+        return $this->userRank($target) < $this->userRank($actor);
     }
 
     /**

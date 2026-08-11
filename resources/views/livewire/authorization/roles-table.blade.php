@@ -17,11 +17,6 @@
             <strong class="text-gray-800 dark:text-gray-200">{{ __('messages.authorization.roles.title') }}</strong>
             <div class="mt-0.5 text-xs text-gray-500 dark:text-gray-400">{{ __('messages.authorization.roles.subtitle') }}</div>
         </div>
-        @can('roles.create')
-            <button type="button" class="tw-btn tw-btn-emerald" wire:click="create">
-                <i class="fas fa-plus text-xs"></i>{{ __('messages.authorization.roles.create') }}
-            </button>
-        @endcan
     </div>
 
     <div class="mb-4 flex flex-wrap gap-3">
@@ -54,7 +49,7 @@
                 @forelse ($roles as $role)
                     <tr>
                         <td>
-                            <div class="font-semibold text-gray-800 dark:text-gray-100">{{ $role->name }}</div>
+                            <div class="font-semibold text-gray-800 dark:text-gray-100">{{ $this->roleLabel($role->name) }}</div>
                         </td>
                         <td>{{ $role->permissions_count }}</td>
                         <td>{{ $role->users_count }}</td>
@@ -91,8 +86,9 @@
             <div class="space-y-4">
                 <div>
                     <label class="tw-label">{{ __('messages.authorization.roles.form.name') }}</label>
-                    <input type="text" class="tw-input @error('form.name') border-red-500 @enderror" wire:model.live="form.name">
-                    @error('form.name') <div class="mt-1 text-xs text-red-600">{{ $message }}</div> @enderror
+                    <div class="rounded border border-gray-200 bg-gray-50 px-3 py-2 text-sm font-medium text-gray-800 dark:border-gray-700 dark:bg-gray-900/30 dark:text-gray-100">
+                        {{ $this->roleLabel($form['name'] ?? '') }}
+                    </div>
                 </div>
 
                 <div>
@@ -102,11 +98,14 @@
                     </div>
                     <div class="grid max-h-[420px] gap-2 overflow-y-auto pr-1 sm:grid-cols-2">
                         @foreach ($allPermissions as $permissionName)
-                            <label class="flex min-h-[54px] items-start gap-2 rounded border border-gray-200 bg-gray-50 p-2 text-sm dark:border-gray-700 dark:bg-gray-900/30">
+                            <label class="flex min-h-[54px] items-start gap-2 rounded border border-gray-200 bg-gray-50 p-2 text-sm dark:border-gray-700 dark:bg-gray-900/30 {{ $this->canTogglePermission($permissionName) ? '' : 'opacity-70' }}">
                                 <input type="checkbox" class="mt-1 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
-                                       value="{{ $permissionName }}" wire:model.live="form.permissions">
+                                       value="{{ $permissionName }}" wire:model.live="form.permissions" @disabled(! $this->canTogglePermission($permissionName))>
                                 <span>
-                                    <span class="block break-all font-medium text-gray-800 dark:text-gray-100">{{ $permissionName }}</span>
+                                    <span class="block font-medium text-gray-800 dark:text-gray-100">{{ $this->permissionLabel($permissionName) }}</span>
+                                    @if (! $this->canTogglePermission($permissionName))
+                                        <span class="mt-0.5 block text-xs text-gray-500">{{ __('mma.authorization.protected') }}</span>
+                                    @endif
                                 </span>
                             </label>
                         @endforeach

@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Services\SystemSettingsService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
@@ -10,17 +11,17 @@ class AdminPanel
 {
     public static function brandName(): string
     {
-        return (string) config('panel.brand.name', config('app.name', 'Panel'));
+        return app(SystemSettingsService::class)->productName();
     }
 
     public static function brandLogo(): string
     {
-        return asset((string) config('panel.brand.logo', 'images/logo_circle.png'));
+        return app(SystemSettingsService::class)->logoUrl();
     }
 
     public static function favicon(): string
     {
-        return asset((string) config('panel.brand.favicon', 'frontend/images/logo_with_text.png'));
+        return app(SystemSettingsService::class)->faviconUrl();
     }
 
     public static function homeUrl(): string
@@ -37,10 +38,7 @@ class AdminPanel
 
     public static function menu(): array
     {
-        return self::filterVisible(array_merge(
-            (array) config('panel.menu', []),
-            [self::measurementSystemItem()],
-        ));
+        return self::filterVisible((array) config('panel.menu', []));
     }
 
     public static function label(?string $value): string
@@ -145,29 +143,5 @@ class AdminPanel
         }
 
         return [$url, "{$url}/*"];
-    }
-
-    protected static function measurementSystemItem(): array
-    {
-        $measure = session('measure', 'metric');
-
-        return [
-            'text' => 'measurement_system.label',
-            'icon' => 'fa fa-weight',
-            'submenu' => [
-                [
-                    'text' => 'measurement_system.metric',
-                    'url' => '/setmetric',
-                    'active' => ['setmetric'],
-                    'icon' => $measure === 'metric' ? 'fas fa-check-circle text-success' : 'far fa-circle',
-                ],
-                [
-                    'text' => 'measurement_system.imperial',
-                    'url' => '/setimperial',
-                    'active' => ['setimperial'],
-                    'icon' => $measure === 'imperial' ? 'fas fa-check-circle text-success' : 'far fa-circle',
-                ],
-            ],
-        ];
     }
 }

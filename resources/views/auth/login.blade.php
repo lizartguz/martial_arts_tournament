@@ -1,4 +1,5 @@
 <x-guest-layout>
+    @php($brand = app(\App\Services\SystemSettingsService::class))
     <style>
         .login-screen {
             position: relative;
@@ -97,9 +98,9 @@
                 <!-- Logo dentro del formulario -->
                 <div class="login-brand-wrap">
                     <div class="flex justify-center animate-fade-in">
-                        <img src="{{ asset('images/logo_rectangular.png') }}"
+                        <img src="{{ $brand->logoUrl() }}"
                             class="login-brand-logo"
-                            alt="Logo SENVATEC" />
+                            alt="{{ $brand->productName() }}" />
                     </div>
 
                     <div class="mb-0.5">
@@ -196,7 +197,7 @@
                 <!-- Footer opcional -->
                 <div class="auth-footer">
                     <p class="auth-footer-text">
-                        © {{ date('Y') }} SenvaTec. {{ __('messages.login.rights_reserved') }}
+                        © {{ date('Y') }} {{ $brand->productName() }}. {{ __('messages.login.rights_reserved') }}
                     </p>
                 </div>
             </div>

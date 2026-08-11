@@ -31,23 +31,15 @@ class User extends Authenticatable
         'name',
         'lastname',
         'email',
-        'occupation',
-        'ci',
-        //'issued',
+        'identity_document',
         'number_phone',
         'password',
         'image',
-        'pin',
-        'version_app',
-        'is_update',
-        //'type',
+        'profile_photo_path',
         'device_identifier',
-        'payment_state',
-        'access_type',
-        'user_type',
-        'own_state',
-        'user_dependency_id',
+        'version_app',
         'state',
+        'last_login_at',
     ];
 
     /**
@@ -71,6 +63,8 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'last_login_at' => 'datetime',
+        'state' => 'integer',
     ];
 
     /**
@@ -82,18 +76,6 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
-    /*public function subscription_user()
-    {
-        return $this->belongsToMany(SubscriptionM::class, 'users_subscriptions')->withPivot(['reg_date',
-        'expiration_notice',
-        'date_expiry',
-        'amount',
-        'is_discount',
-        'cost',
-        'data_save',
-        'state',]);
-    }*/
-
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPasswordNotification($token));
@@ -101,37 +83,22 @@ class User extends Authenticatable
 
     public function userSubscriptions()
     {
-        //return $this->hasMany(SubscriptionM::class, 'users_subscriptions', 'id');
-        return $this->hasMany(UsersSubscriptionM::class,'user_id', 'id');
+        return $this->hasMany(UserSubscription::class);
     }
 
-    public function notification(){ 
-        return $this->hasMany(User::class,'user_id', 'id'); 
-    }
-
-    public function dependencies(){
-        return $this->hasMany(UserDependencyM::class, 'dependent_user_id', 'id');
-    }
-
-    public function subscriptionsThroughDependencies(){
-        return $this->hasManyThrough(
-            UsersSubscriptionM::class,
-            UserDependencyM::class,
-            'dependent_user_id',       // Foreign key en UserDependencyM
-            'id',                      // Foreign key en UsersSubscriptionM (relacionado con user_subscription_id)
-            'id',                      // Local key en User
-            'user_subscription_id'     // Local key en UserDependencyM
-        );
-    }
-
-    public function networkCredentialsCreated()
+    public function latestSubscription()
     {
-        return $this->hasMany(NetworkCredentialM::class, 'user_creator_id', 'id');
+        return $this->hasOne(UserSubscription::class)->latestOfMany();
     }
 
-    public function networkCredentialHistoriesCreated()
+    public function subscriptionPayments()
     {
-        return $this->hasMany(NetworkCredentialHistoryM::class, 'user_creator_id', 'id');
+        return $this->hasMany(SubscriptionPayment::class);
+    }
+
+    public function purchaseRequests()
+    {
+        return $this->hasMany(PurchaseRequest::class);
     }
 
     public function fcmTokens()

@@ -36,6 +36,11 @@ class PurchaseRequestTable extends Component
         'notes' => '',
     ];
 
+    public function mount(): void
+    {
+        Gate::authorize('purchase_requests.view');
+    }
+
     public function updatingSearch(): void
     {
         $this->resetPage();

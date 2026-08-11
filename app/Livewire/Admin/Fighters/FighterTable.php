@@ -63,6 +63,11 @@ class FighterTable extends Component
         'status' => 1,
     ];
 
+    public function mount(): void
+    {
+        Gate::authorize('fighters.view');
+    }
+
     public function updatingSearch(): void
     {
         $this->resetPage();

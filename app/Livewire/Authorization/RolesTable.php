@@ -21,12 +21,8 @@ class RolesTable extends Component
     public int $perPage = 10;
     public string $search = '';
     public string $successMessage = '';
-    public string $errorMessage = '';
     public bool $showModal = false;
-    public bool $showDeleteModal = false;
     public ?int $editingId = null;
-    public ?int $pendingDeleteId = null;
-    public string $deleteName = '';
     public array $form = [
         'name' => '',
         'permissions' => [],
@@ -46,16 +42,6 @@ class RolesTable extends Component
     public function updatingPerPage(): void
     {
         $this->resetPage();
-    }
-
-    /**
-     * Prepara el formulario para crear un nuevo rol.
-     */
-    public function create(): void
-    {
-        $this->authorizeAction('roles.create');
-        $this->resetForm();
-        $this->showModal = true;
     }
 
     /**
@@ -129,84 +115,12 @@ class RolesTable extends Component
     }
 
     /**
-     * Abre la confirmacion para eliminar un rol permitido.
-     */
-    public function confirmDelete(int $roleId): void
-    {
-        $this->authorizeAction('roles.delete');
-
-        $role = Role::findOrFail($roleId);
-
-        if (! $this->hierarchy()->canManageRoleName(auth()->user(), $role->name)) {
-            $this->audit()->unauthorized('eliminar rol protegido', ['role_id' => $role->id, 'role_name' => $role->name]);
-            abort(403);
-        }
-
-        if (auth()->user()?->hasRole($role->name)) {
-            $this->errorMessage = __('messages.authorization.roles.messages.self_delete_blocked');
-            return;
-        }
-
-        $this->pendingDeleteId = $role->id;
-        $this->deleteName = $role->name;
-        $this->showDeleteModal = true;
-    }
-
-    /**
-     * Elimina el rol seleccionado y registra la auditoria.
-     */
-    public function delete(): void
-    {
-        $this->authorizeAction('roles.delete');
-
-        if (! $this->pendingDeleteId) {
-            return;
-        }
-
-        $role = Role::with('permissions')->findOrFail($this->pendingDeleteId);
-
-        if (! $this->hierarchy()->canManageRoleName(auth()->user(), $role->name)) {
-            $this->audit()->unauthorized('confirmar eliminacion de rol protegido', ['role_id' => $role->id, 'role_name' => $role->name]);
-            abort(403);
-        }
-
-        if (auth()->user()?->hasRole($role->name)) {
-            $this->errorMessage = __('messages.authorization.roles.messages.self_delete_blocked');
-            $this->closeDeleteModal();
-            return;
-        }
-
-        $context = [
-            'role_id' => $role->id,
-            'role_name' => $role->name,
-            'permissions' => $role->permissions->pluck('name')->values()->all(),
-        ];
-
-        $role->delete();
-        app(PermissionRegistrar::class)->forgetCachedPermissions();
-
-        $this->audit()->record('Rol eliminado', $context, 'warning');
-        $this->successMessage = __('messages.authorization.roles.messages.deleted');
-        $this->closeDeleteModal();
-    }
-
-    /**
      * Cierra el modal principal y limpia el formulario.
      */
     public function closeModal(): void
     {
         $this->showModal = false;
         $this->resetForm();
-    }
-
-    /**
-     * Cierra el modal de eliminacion y limpia la seleccion pendiente.
-     */
-    public function closeDeleteModal(): void
-    {
-        $this->showDeleteModal = false;
-        $this->pendingDeleteId = null;
-        $this->deleteName = '';
     }
 
     /**

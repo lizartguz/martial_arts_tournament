@@ -49,18 +49,14 @@ class NotificationViewController extends Controller
 
         $notification = new NotificationM;
         $notification->forceFill([
-            'title' => 'Alerta preventiva por lluvias intensas',
-            'description' => "Se pronostican lluvias intensas durante las proximas 24 horas.\n\nRevise el estado de sus estaciones y tome las medidas preventivas necesarias para proteger equipos, cultivos y personal de campo.",
+            'title' => 'Nuevo evento confirmado',
+            'description' => "Ya está disponible la cartelera completa del próximo evento.\n\nRevisa la fecha, sede y combates confirmados, y no te pierdas la venta de entradas.",
             'reg_date' => now('America/La_Paz'),
             'deadline' => now('America/La_Paz')->addDays(3)->toDateString(),
-            'link' => route('stationMapOnly'),
+            'link' => route('landing.home'),
         ]);
 
-        $images = collect([
-            asset('frontend/images/senvatec-hero-weather-station.png'),
-            asset('frontend/images/senvatec-monitoring-dashboard.png'),
-            asset('frontend/images/senvatec-sensor-network.png'),
-        ]);
+        $images = collect();
 
         return view('notificationspush.show', [
             'notification' => $notification,

@@ -35,44 +35,44 @@ $en['admin']['events'] = [
     'messages' => ['created' => 'Evento registrado com sucesso.', 'updated' => 'Evento atualizado com sucesso.', 'published' => 'Evento publicado com sucesso.', 'deleted' => 'Evento excluído com sucesso.', 'delete_blocked' => 'Não é possível excluir um evento com lutas, links de ingressos ou solicitações associadas.'],
 ];
 $en['admin']['event_media'] = [
-    'page_title' => 'M?dia de eventos',
-    'subtitle' => 'Gerencie imagens e links de v?deo associados aos eventos.',
-    'table_title' => 'Lista de m?dia',
-    'table_subtitle' => 'Filtre, envie, edite ou exclua pe?as p?blicas de m?dia dos eventos.',
-    'create' => 'Nova pe?a',
-    'edit' => 'Editar pe?a',
-    'delete_title' => 'Excluir m?dia',
-    'delete_warning' => 'Esta a??o excluir? a pe?a de m?dia:',
-    'search_placeholder' => 'T?tulo, descri??o ou evento...',
-    'image_help' => 'Imagens JPG, PNG ou WebP s?o otimizadas ao salvar. Tamanho m?ximo: 5 MB.',
+    'page_title' => 'Mídia de eventos',
+    'subtitle' => 'Gerencie imagens e links de vídeo associados aos eventos.',
+    'table_title' => 'Lista de mídia',
+    'table_subtitle' => 'Filtre, envie, edite ou exclua peças públicas de mídia dos eventos.',
+    'create' => 'Nova peça',
+    'edit' => 'Editar peça',
+    'delete_title' => 'Excluir mídia',
+    'delete_warning' => 'Esta ação excluirá a peça de mídia:',
+    'search_placeholder' => 'Título, descrição ou evento...',
+    'image_help' => 'Imagens JPG, PNG ou WebP são otimizadas ao salvar. Tamanho máximo: 5 MB.',
     'featured' => 'Destaque',
-    'untitled' => 'Sem t?tulo',
+    'untitled' => 'Sem título',
     'filters' => ['event' => 'Evento', 'file_type' => 'Tipo', 'category' => 'Categoria'],
-    'columns' => ['media' => 'M?dia', 'event' => 'Evento', 'category' => 'Categoria', 'order' => 'Ordem', 'status' => 'Status'],
-    'file_types' => ['image' => 'Imagem', 'video' => 'V?deo'],
+    'columns' => ['media' => 'Mídia', 'event' => 'Evento', 'category' => 'Categoria', 'order' => 'Ordem', 'status' => 'Status'],
+    'file_types' => ['image' => 'Imagem', 'video' => 'Vídeo'],
     'categories' => ['gallery' => 'Galeria', 'weigh_in' => 'Pesagem', 'faceoff' => 'Encarada', 'backstage' => 'Backstage', 'highlight' => 'Highlight', 'sponsor' => 'Patrocinador', 'other' => 'Outro'],
-    'form' => ['event_id' => 'Evento', 'file_type' => 'Tipo de arquivo', 'file_path' => 'URL do v?deo', 'category' => 'Categoria', 'title' => 'T?tulo', 'description' => 'Descri??o', 'is_featured' => 'Marcar como destaque', 'display_order' => 'Ordem', 'status' => 'Status', 'media_image' => 'Imagem'],
-    'messages' => ['created' => 'Pe?a de m?dia registrada com sucesso.', 'updated' => 'Pe?a de m?dia atualizada com sucesso.', 'deleted' => 'Pe?a de m?dia exclu?da com sucesso.'],
-    'validation' => ['image_required' => 'Voc? deve selecionar uma imagem para salvar esta pe?a de m?dia.'],
+    'form' => ['event_id' => 'Evento', 'file_type' => 'Tipo de arquivo', 'file_path' => 'URL do vídeo', 'category' => 'Categoria', 'title' => 'Título', 'description' => 'Descrição', 'is_featured' => 'Marcar como destaque', 'display_order' => 'Ordem', 'status' => 'Status', 'media_image' => 'Imagem'],
+    'messages' => ['created' => 'Peça de mídia registrada com sucesso.', 'updated' => 'Peça de mídia atualizada com sucesso.', 'deleted' => 'Peça de mídia excluída com sucesso.'],
+    'validation' => ['image_required' => 'Você deve selecionar uma imagem para salvar esta peça de mídia.'],
 ];
 
 $en['admin']['news'] = [
-    'page_title' => 'Not?cias',
-    'subtitle' => 'Gerencie comunicados, novidades, entrevistas e publica??es p?blicas.',
-    'table_title' => 'Lista de not?cias',
-    'table_subtitle' => 'Filtre, crie, edite, publique ou exclua publica??es editoriais.',
-    'create' => 'Nova not?cia',
-    'edit' => 'Editar not?cia',
-    'delete_title' => 'Excluir not?cia',
-    'delete_warning' => 'Esta a??o excluir? a not?cia:',
-    'search_placeholder' => 'T?tulo, slug ou resumo...',
-    'image_help' => 'A imagem de capa JPG, PNG ou WebP ? otimizada ao salvar. Tamanho m?ximo: 5 MB.',
-    'filters' => ['featured' => 'Destaque', 'from' => 'Desde', 'to' => 'At?'],
-    'columns' => ['post' => 'Not?cia', 'author' => 'Autor', 'published_at' => 'Publica??o', 'status' => 'Status', 'featured' => 'Destaque'],
+    'page_title' => 'Notícias',
+    'subtitle' => 'Gerencie comunicados, novidades, entrevistas e publicações públicas.',
+    'table_title' => 'Lista de notícias',
+    'table_subtitle' => 'Filtre, crie, edite, publique ou exclua publicações editoriais.',
+    'create' => 'Nova notícia',
+    'edit' => 'Editar notícia',
+    'delete_title' => 'Excluir notícia',
+    'delete_warning' => 'Esta ação excluirá a notícia:',
+    'search_placeholder' => 'Título, slug ou resumo...',
+    'image_help' => 'A imagem de capa JPG, PNG ou WebP é otimizada ao salvar. Tamanho máximo: 5 MB.',
+    'filters' => ['featured' => 'Destaque', 'from' => 'Desde', 'to' => 'Até'],
+    'columns' => ['post' => 'Notícia', 'author' => 'Autor', 'published_at' => 'Publicação', 'status' => 'Status', 'featured' => 'Destaque'],
     'status' => ['draft' => 'Rascunho', 'published' => 'Publicado', 'archived' => 'Arquivado'],
     'actions' => ['publish' => 'Publicar'],
-    'form' => ['title' => 'T?tulo', 'slug' => 'Slug', 'excerpt' => 'Resumo', 'content' => 'Conte?do', 'status' => 'Status', 'is_featured' => 'Marcar como destaque', 'published_at' => 'Data de publica??o', 'cover_image' => 'Imagem de capa'],
-    'messages' => ['created' => 'Not?cia registrada com sucesso.', 'updated' => 'Not?cia atualizada com sucesso.', 'published' => 'Not?cia publicada com sucesso.', 'deleted' => 'Not?cia exclu?da com sucesso.'],
+    'form' => ['title' => 'Título', 'slug' => 'Slug', 'excerpt' => 'Resumo', 'content' => 'Conteúdo', 'status' => 'Status', 'is_featured' => 'Marcar como destaque', 'published_at' => 'Data de publicação', 'cover_image' => 'Imagem de capa'],
+    'messages' => ['created' => 'Notícia registrada com sucesso.', 'updated' => 'Notícia atualizada com sucesso.', 'published' => 'Notícia publicada com sucesso.', 'deleted' => 'Notícia excluída com sucesso.'],
 ];
 
 $en['admin']['fights'] = [
@@ -98,21 +98,21 @@ $en['admin']['fight_results'] = [
     'page_title' => 'Resultados',
     'subtitle' => 'Registre e atualize o resultado oficial de cada luta.',
     'table_title' => 'Resultados das lutas',
-    'table_subtitle' => 'Filtre lutas, revise resultados oficiais e registre vencedor, m?todo, round e tempo.',
-    'search_placeholder' => 'Evento, luta, lutador ou m?todo...',
+    'table_subtitle' => 'Filtre lutas, revise resultados oficiais e registre vencedor, método, round e tempo.',
+    'search_placeholder' => 'Evento, luta, lutador ou método...',
     'modal_title' => 'Gerenciar resultado oficial',
     'pending' => 'Pendente',
-    'no_custom_title' => 'Sem t?tulo personalizado',
-    'round_time_value' => 'R: :round ? T: :time',
+    'no_custom_title' => 'Sem título personalizado',
+    'round_time_value' => 'R: :round · T: :time',
     'filters' => ['event' => 'Evento', 'result_type' => 'Resultado', 'result_state' => 'Registro'],
     'result_state' => ['with' => 'Com resultado', 'without' => 'Sem resultado'],
     'columns' => ['fight' => 'Luta', 'event' => 'Evento', 'result' => 'Resultado', 'winner' => 'Vencedor', 'round_time' => 'Round / tempo'],
-    'result_types' => ['ko_tko' => 'KO/TKO', 'submission' => 'Finaliza??o', 'decision' => 'Decis?o', 'draw' => 'Empate', 'no_contest' => 'Sem resultado', 'disqualification' => 'Desclassifica??o'],
+    'result_types' => ['ko_tko' => 'KO/TKO', 'submission' => 'Finalização', 'decision' => 'Decisão', 'draw' => 'Empate', 'no_contest' => 'Sem resultado', 'disqualification' => 'Desclassificação'],
     'corners' => ['red' => 'Vermelho: :fighter', 'blue' => 'Azul: :fighter'],
     'actions' => ['manage' => 'Gerenciar resultado'],
-    'form' => ['result_type' => 'Tipo de resultado', 'winner_fighter_id' => 'Vencedor', 'no_winner' => 'Sem vencedor', 'method' => 'M?todo', 'round' => 'Round', 'time' => 'Tempo', 'official_notes' => 'Notas oficiais'],
+    'form' => ['result_type' => 'Tipo de resultado', 'winner_fighter_id' => 'Vencedor', 'no_winner' => 'Sem vencedor', 'method' => 'Método', 'round' => 'Round', 'time' => 'Tempo', 'official_notes' => 'Notas oficiais'],
     'messages' => ['saved' => 'Resultado oficial salvo com sucesso.'],
-    'validation' => ['winner_required' => '? necess?rio selecionar um vencedor para este tipo de resultado.', 'winner_corner' => 'O vencedor deve pertencer ao corner vermelho ou azul da luta.', 'round_limit' => 'O round n?o pode ser maior que os :rounds rounds configurados para a luta.'],
+    'validation' => ['winner_required' => 'É necessário selecionar um vencedor para este tipo de resultado.', 'winner_corner' => 'O vencedor deve pertencer ao corner vermelho ou azul da luta.', 'round_limit' => 'O round não pode ser maior que os :rounds rounds configurados para a luta.'],
 ];
 
 $en['admin']['fighters'] = [
@@ -140,19 +140,19 @@ $en['admin']['subscribers'] = ['page_title' => 'Assinantes', 'subtitle' => 'Revi
 
 $en['admin']['rankings'] = [
     'page_title' => 'Rankings',
-    'subtitle' => 'Gerencie posi??es por categoria de peso e g?nero.',
+    'subtitle' => 'Gerencie posições por categoria de peso e gênero.',
     'table_title' => 'Lista de rankings',
-    'table_subtitle' => 'Filtre, crie e ajuste posi??es oficiais por categoria e g?nero.',
+    'table_subtitle' => 'Filtre, crie e ajuste posições oficiais por categoria e gênero.',
     'create' => 'Novo ranking',
     'edit' => 'Editar ranking',
     'search_placeholder' => 'Lutador, apelido ou categoria...',
-    'champion' => 'Campe?o',
-    'filters' => ['weight_class' => 'Categoria', 'gender' => 'G?nero'],
-    'columns' => ['position' => 'Posi??o', 'fighter' => 'Lutador', 'weight_class' => 'Categoria', 'record' => 'Cartel', 'movement' => 'Movimento', 'status' => 'Status'],
-    'movement' => ['same' => 'Sem mudan?a', 'up' => 'Sobe :places', 'down' => 'Desce :places'],
-    'form' => ['weight_class_id' => 'Categoria de peso', 'gender' => 'G?nero', 'fighter_id' => 'Lutador', 'position' => 'Posi??o atual', 'previous_position' => 'Posi??o anterior', 'is_champion' => 'Marcar como campe?o', 'ranked_at' => 'Data do ranking', 'status' => 'Status'],
+    'champion' => 'Campeão',
+    'filters' => ['weight_class' => 'Categoria', 'gender' => 'Gênero'],
+    'columns' => ['position' => 'Posição', 'fighter' => 'Lutador', 'weight_class' => 'Categoria', 'record' => 'Cartel', 'movement' => 'Movimento', 'status' => 'Status'],
+    'movement' => ['same' => 'Sem mudança', 'up' => 'Sobe :places', 'down' => 'Desce :places'],
+    'form' => ['weight_class_id' => 'Categoria de peso', 'gender' => 'Gênero', 'fighter_id' => 'Lutador', 'position' => 'Posição atual', 'previous_position' => 'Posição anterior', 'is_champion' => 'Marcar como campeão', 'ranked_at' => 'Data do ranking', 'status' => 'Status'],
     'messages' => ['created' => 'Ranking registrado com sucesso.', 'updated' => 'Ranking atualizado com sucesso.'],
-    'validation' => ['gender_mismatch' => 'O lutador selecionado n?o pertence ao g?nero do ranking.', 'weight_class_mismatch' => 'O lutador selecionado n?o pertence ? categoria de peso do ranking.', 'position_taken' => 'J? existe um ranking ativo com essa posi??o para a categoria e o g?nero selecionados.'],
+    'validation' => ['gender_mismatch' => 'O lutador selecionado não pertence ao gênero do ranking.', 'weight_class_mismatch' => 'O lutador selecionado não pertence à categoria de peso do ranking.', 'position_taken' => 'Já existe um ranking ativo com essa posição para a categoria e o gênero selecionados.'],
 ];
 
 $en['admin']['fighter_teams'] = [
@@ -194,9 +194,7 @@ $en['admin']['purchase_requests'] = [
 ];
 $en['admin']['dashboard']['page_title'] = 'Painel principal';
 $en['admin']['weight_classes']['page_title'] = 'Categorias de peso';
-$en['landing']['login'] = 'Entrar';
-$en['landing']['view_events'] = 'Ver eventos';
-$en['landing']['contact'] = 'Contato';
+$en['landing'] = ['login' => 'Entrar', 'hero_text' => 'Eventos, lutas, rankings e assinaturas para uma promotora de artes marciais.', 'view_events' => 'Ver eventos', 'contact' => 'Contato', 'events_title' => 'Eventos ativos', 'events_subtitle' => 'Eventos publicados, próximos e anteriores que continuam ativos.', 'featured' => 'Destaque', 'empty_events' => 'Ainda não há eventos publicados.', 'no_image' => 'Sem imagem disponível', 'back' => 'Voltar', 'fights_title' => 'Card de lutas', 'empty_fights' => 'Este evento ainda não tem lutas publicadas.', 'vs' => 'vs', 'nav' => ['home' => 'Início', 'fighters' => 'Lutadores', 'news' => 'Notícias', 'subscription' => 'Assinatura', 'contact' => 'Contato'], 'footer' => ['quick_links' => 'Links rápidos', 'contact' => 'Contato', 'follow_us' => 'Siga-nos', 'rights' => 'Todos os direitos reservados.'], 'fighters' => ['featured_title' => 'Lutadores em destaque', 'featured_subtitle' => 'Conheça alguns dos atletas do nosso elenco.', 'view_all' => 'Ver todos os lutadores', 'title' => 'Lutadores', 'subtitle' => 'Conheça o elenco completo de lutadores ativos.', 'empty' => 'Ainda não há lutadores publicados.', 'wins' => 'Vitórias', 'losses' => 'Derrotas', 'draws' => 'Empates', 'bio_title' => 'Biografia', 'fight_history' => 'Histórico de lutas', 'round' => 'Round', 'result_win' => 'Vitória', 'result_loss' => 'Derrota', 'result_pending' => 'Pendente', 'no_fights' => 'Ainda não há lutas registradas.'], 'news' => ['section_title' => 'Últimas notícias', 'view_all' => 'Ver todas as notícias', 'title' => 'Notícias', 'subtitle' => 'Comunicados, novidades e entrevistas.', 'read_more' => 'Leia mais', 'empty' => 'Ainda não há notícias publicadas.'], 'event' => ['prev' => 'Evento anterior', 'next' => 'Próximo evento', 'main_event' => 'Luta principal', 'tickets_title' => 'Ingressos', 'price_from' => 'A partir de', 'no_tickets' => 'Os links de venda serão publicados em breve.', 'contact_cta' => 'Fale conosco'], 'subscription' => ['title' => 'Assinatura', 'subtitle' => 'Escolha o plano ideal para você e aproveite benefícios exclusivos.', 'empty' => 'Não há planos disponíveis no momento.', 'cta' => 'Quero assinar'], 'contact_page' => ['title' => 'Contato', 'subtitle' => 'Envie sua solicitação e nossa equipe entrará em contato em breve.', 'about_event' => 'Você está entrando em contato sobre: :event', 'about_plan' => 'Você está entrando em contato sobre: :plan', 'success' => 'Sua solicitação foi enviada com sucesso. Entraremos em contato em breve.', 'direct_title' => 'Prefere falar diretamente conosco?', 'direct_hint' => 'Você também pode entrar em contato com nossa equipe por qualquer um destes canais.', 'form' => ['name' => 'Nome completo', 'email' => 'E-mail', 'phone' => 'Telefone', 'whatsapp' => 'WhatsApp', 'channel' => 'Canal de contato preferido', 'type' => 'Motivo do contato', 'message' => 'Mensagem', 'proof' => 'Comprovante de pagamento', 'proof_hint' => 'Opcional. Formatos aceitos: JPG, JPEG, PNG ou PDF, no máximo 5 MB.', 'submit' => 'Enviar solicitação'], 'channel_options' => ['whatsapp' => 'WhatsApp', 'phone' => 'Telefone', 'email' => 'E-mail'], 'type_options' => ['general_contact' => 'Consulta geral', 'event_ticket' => 'Ingressos de evento', 'subscription' => 'Assinatura', 'payment_proof' => 'Comprovante de pagamento']]];
 $en['uploads']['payment_proofs'] = ['invalid_type' => 'Formato não suportado. Use JPG, JPEG, PNG ou PDF.', 'max_size' => 'O comprovante não pode ter mais de :max MB.'];
 $en['uploads']['public_images'] = ['invalid_type' => 'Formato não suportado. Use JPG, PNG, GIF ou WebP.', 'max_size' => 'A imagem não pode ter mais de :max MB.', 'process_failed' => 'Não foi possível processar a imagem selecionada.'];
 
@@ -517,12 +515,12 @@ $en['admin']['landing'] = [
 $en['subscriber_portal'] = [
     'menu' => ['dashboard' => 'Início', 'purchases' => 'Minhas compras', 'events' => 'Meus eventos', 'subscription' => 'Minha assinatura', 'profile' => 'Perfil'],
     'dashboard' => ['title' => 'Início do assinante', 'subtitle' => 'Revise sua conta, assinatura, compras e eventos disponíveis.', 'cards' => ['account' => 'Status da conta', 'subscription' => 'Status da assinatura', 'events' => 'Eventos disponíveis'], 'latest_purchases' => 'Últimos pagamentos', 'latest_requests' => 'Últimas solicitações', 'next_events' => 'Eventos disponíveis'],
-    'actions' => ['view_all' => 'Ver tudo', 'save' => 'Salvar alterações'],
+    'actions' => ['view_all' => 'Ver tudo', 'save' => 'Salvar alterações', 'back_to_purchases' => 'Voltar para minhas compras'],
     'empty' => ['no_subscription' => 'Sem assinatura ativa', 'no_purchases' => 'Nenhuma compra registrada.', 'no_requests' => 'Nenhuma solicitação registrada.', 'no_events' => 'Você não tem eventos disponíveis.'],
     'events' => ['title' => 'Meus eventos', 'subtitle' => 'Eventos associados às suas solicitações, compras ou benefícios de acesso.'],
-    'purchases' => ['title' => 'Minhas compras', 'subtitle' => 'Revise pagamentos e solicitações registrados na sua conta.', 'payments' => 'Pagamentos', 'requests' => 'Solicitações'],
-    'subscription' => ['title' => 'Minha assinatura', 'subtitle' => 'Revise seu plano atual e o histórico de assinaturas.', 'current' => 'Assinatura atual', 'history' => 'Histórico de assinaturas'],
-    'profile' => ['title' => 'Perfil', 'subtitle' => 'Atualize seus próprios dados de contato.', 'updated' => 'Perfil atualizado com sucesso.', 'form' => ['name' => 'Nome', 'lastname' => 'Sobrenome', 'email' => 'E-mail', 'number_phone' => 'Telefone', 'identity_document' => 'Documento de identidade']],
+    'purchases' => ['title' => 'Minhas compras', 'subtitle' => 'Revise pagamentos e solicitações registrados na sua conta.', 'payments' => 'Pagamentos', 'requests' => 'Solicitações', 'detail_title' => 'Detalhe da compra', 'detail_subtitle' => 'Informações completas deste pagamento ou solicitação.', 'proof_status' => 'Status do comprovante', 'proof_uploaded_label' => 'Comprovante enviado', 'proof_missing_label' => 'Sem comprovante enviado', 'notes' => 'Notas', 'message' => 'Mensagem', 'related_event' => 'Evento associado', 'upload_proof_title' => 'Enviar ou reenviar comprovante', 'upload_proof_hint' => 'Formatos aceitos: JPG, JPEG, PNG ou PDF, no máximo 5 MB.', 'upload_proof_submit' => 'Enviar comprovante', 'proof_field' => 'Comprovante de pagamento', 'proof_uploaded' => 'Comprovante enviado com sucesso. Nossa equipe irá revisá-lo em breve.', 'proof_not_allowed' => 'Este registro não aceita mais um novo comprovante. Entre em contato com o suporte.', 'contact_title' => 'Precisa de ajuda com esta compra?', 'contact_hint' => 'Entre em contato com nossa equipe de vendas ou suporte por qualquer um destes canais.'],
+    'subscription' => ['title' => 'Minha assinatura', 'subtitle' => 'Revise seu plano atual e o histórico de assinaturas.', 'current' => 'Assinatura atual', 'history' => 'Histórico de assinaturas', 'benefits' => 'Benefícios do plano', 'contact_title' => 'Quer renovar ou fazer upgrade?', 'contact_hint' => 'Entre em contato com nossa equipe de vendas para renovar, fazer upgrade ou tirar dúvidas sobre sua assinatura.'],
+    'profile' => ['title' => 'Perfil', 'subtitle' => 'Atualize seus próprios dados de contato.', 'updated' => 'Perfil atualizado com sucesso.', 'form' => ['name' => 'Nome', 'lastname' => 'Sobrenome', 'email' => 'E-mail', 'number_phone' => 'Telefone', 'identity_document' => 'Documento de identidade', 'current_password' => 'Senha atual', 'new_password' => 'Nova senha', 'confirm_password' => 'Confirmar senha'], 'password_title' => 'Alterar senha', 'password_hint' => 'Use pelo menos 8 caracteres e evite reutilizar senhas antigas.', 'password_updated' => 'Senha atualizada com sucesso.', 'password_submit' => 'Atualizar senha'],
     'columns' => ['concept' => 'Conceito', 'amount' => 'Valor', 'method' => 'Método', 'status' => 'Status', 'date' => 'Data', 'channel' => 'Canal', 'plan' => 'Plano', 'start' => 'Início', 'end' => 'Fim', 'period' => 'Período'],
 ];
 

@@ -40,6 +40,11 @@ class UserTable extends Component
         'roles' => [],
     ];
 
+    public function mount(): void
+    {
+        Gate::authorize('users.view');
+    }
+
     public function updatingSearch(): void
     {
         $this->resetPage();

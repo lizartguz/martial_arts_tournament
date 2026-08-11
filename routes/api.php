@@ -3,7 +3,12 @@
 use App\Http\Controllers\Api\V1\PublicEventController;
 use App\Http\Controllers\Api\V1\PurchaseRequestController;
 use App\Http\Controllers\Api\V1\SubscriberProfileController;
+use App\Http\Controllers\NotificationImageController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/notifications/{notification}/images/{slot}/{user}', [NotificationImageController::class, 'showApi'])
+    ->middleware('signed')
+    ->name('api.notifications.images.show');
 
 Route::prefix('v1')->name('api.v1.')->group(function () {
     Route::get('/events', [PublicEventController::class, 'index'])->name('events.index');

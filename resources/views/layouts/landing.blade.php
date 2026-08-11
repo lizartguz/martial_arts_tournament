@@ -1,54 +1,112 @@
+@php
+    $settings = $settings ?? app(\App\Services\SystemSettingsService::class);
+    $navItems = [
+        ['route' => 'landing.home', 'label' => __('mma.landing.nav.home'), 'anchor' => null],
+        ['route' => 'landing.fighters.index', 'label' => __('mma.landing.nav.fighters'), 'anchor' => null],
+        ['route' => 'landing.news.index', 'label' => __('mma.landing.nav.news'), 'anchor' => null],
+        ['route' => 'landing.subscription', 'label' => __('mma.landing.nav.subscription'), 'anchor' => null],
+        ['route' => 'landing.contact', 'label' => __('mma.landing.nav.contact'), 'anchor' => null],
+    ];
+@endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ trim($__env->yieldContent('title')) ?: $settings->seoTitle() }}</title>
+    @if ($settings->seoDescription())
+        <meta name="description" content="{{ $settings->seoDescription() }}">
+    @endif
+    <link rel="icon" type="image/png" href="{{ $settings->faviconUrl() }}">
+    <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @yield('head')
+</head>
+<body class="flex min-h-screen flex-col bg-gray-950 text-white">
+    <header class="border-b border-white/10 bg-gray-950/95 sticky top-0 z-30 backdrop-blur">
+        <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-4">
+            <a href="{{ route('landing.home') }}" class="flex items-center gap-3">
+                <img src="{{ $settings->logoUrl() }}" alt="{{ $settings->productName() }}" class="h-10 w-10 rounded-full object-cover">
+                <span class="text-sm font-semibold">{{ $settings->productName() }}</span>
+            </a>
 
-        <title>{{ config('app.name', 'SenvaTec 3.0') }}</title>
-        <link rel="icon" type="image/png" href="{{ asset('frontend/images/logo_with_text.png') }}?v=20260510">
-        <link rel="shortcut icon" type="image/png" href="{{ asset('frontend/images/logo_with_text.png') }}?v=20260510">
+            <nav class="order-3 flex w-full flex-wrap gap-1 text-sm lg:order-2 lg:w-auto lg:gap-2">
+                @foreach ($navItems as $item)
+                    <a href="{{ route($item['route']) }}"
+                        class="rounded px-3 py-1.5 font-medium transition {{ request()->routeIs($item['route']) ? 'bg-emerald-500 text-gray-950' : 'text-gray-300 hover:bg-white/10 hover:text-white' }}">
+                        {{ $item['label'] }}
+                    </a>
+                @endforeach
+            </nav>
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/analytics.js'])
-        
-        <!-- Tema Claro/Oscuro -->
-        <link rel="stylesheet" href="{{ asset('css/theme/themes.css') }}">
-        
-        <!-- Styles -->
-        @livewireStyles
-    </head>
-    <body class="font-sans bg-white">
-        <div class="w-full">
-            @include('landing.partials.navbar')
-            {{ $slot }}
-            @include('landing.partials.footer')
-
-            <div class="fixed z-50 left-10 bottom-10">
-                <a href="{{ route('landing.knows')}}">
-                    <img src="{{ asset('frontend/images/conoce.jpg')}}" alt="" width="120px">
-                </a>
-            </div>
-
-            <div id="whatsapp" class="fixed z-50 right-10 bottom-10" title="{{ __('messages.landing.whatsapp_hint')}}">
-                <a href="https://bit.ly/Senvatec" target="_blank">
-                <div style="background-color: #25D366; padding: 14px; border-radius: 50%; box-shadow: 0px 0px 11px rgba(0,0,0,.5);">
-                    <svg style="pointer-events:none; display:block; height:40px; width:40px;" width="40px" height="40px" viewBox="0 0 1219.547 1225.016">
-                        <path fill="#E0E0E0" d="M1041.858 178.02C927.206 63.289 774.753.07 612.325 0 277.617 0 5.232 272.298 5.098 606.991c-.039 106.986 27.915 211.42 81.048 303.476L0 1225.016l321.898-84.406c88.689 48.368 188.547 73.855 290.166 73.896h.258.003c334.654 0 607.08-272.346 607.222-607.023.056-162.208-63.052-314.724-177.689-429.463zm-429.533 933.963h-.197c-90.578-.048-179.402-24.366-256.878-70.339l-18.438-10.93-191.021 50.083 51-186.176-12.013-19.087c-50.525-80.336-77.198-173.175-77.16-268.504.111-278.186 226.507-504.503 504.898-504.503 134.812.056 261.519 52.604 356.814 147.965 95.289 95.36 147.728 222.128 147.688 356.948-.118 278.195-226.522 504.543-504.693 504.543z"></path>
-                        <linearGradient id="htwaicona-chat" gradientUnits="userSpaceOnUse" x1="609.77" y1="1190.114" x2="609.77" y2="21.084">
-                            <stop id="s3_1_offset_1" offset="0" stop-color="#25D366"></stop>
-                            <stop id="s3_1_offset_2" offset="1" stop-color="#25D366"></stop>
-                        </linearGradient>
-                        <path fill="url(#htwaicona-chat)" d="M27.875 1190.114l82.211-300.18c-50.719-87.852-77.391-187.523-77.359-289.602.133-319.398 260.078-579.25 579.469-579.25 155.016.07 300.508 60.398 409.898 169.891 109.414 109.492 169.633 255.031 169.57 409.812-.133 319.406-260.094 579.281-579.445 579.281-.023 0 .016 0 0 0h-.258c-96.977-.031-192.266-24.375-276.898-70.5l-307.188 80.548z"></path>
-                        <image overflow="visible" opacity=".08" width="682" height="639" transform="translate(270.984 291.372)"></image>
-                        <path fill-rule="evenodd" clip-rule="evenodd" fill="#FFF" d="M462.273 349.294c-11.234-24.977-23.062-25.477-33.75-25.914-8.742-.375-18.75-.352-28.742-.352-10 0-26.25 3.758-39.992 18.766-13.75 15.008-52.5 51.289-52.5 125.078 0 73.797 53.75 145.102 61.242 155.117 7.5 10 103.758 166.266 256.203 226.383 126.695 49.961 152.477 40.023 179.977 37.523s88.734-36.273 101.234-71.297c12.5-35.016 12.5-65.031 8.75-71.305-3.75-6.25-13.75-10-28.75-17.5s-88.734-43.789-102.484-48.789-23.75-7.5-33.75 7.516c-10 15-38.727 48.773-47.477 58.773-8.75 10.023-17.5 11.273-32.5 3.773-15-7.523-63.305-23.344-120.609-74.438-44.586-39.75-74.688-88.844-83.438-103.859-8.75-15-.938-23.125 6.586-30.602 6.734-6.719 15-17.508 22.5-26.266 7.484-8.758 9.984-15.008 14.984-25.008 5-10.016 2.5-18.773-1.25-26.273s-32.898-81.67-46.234-111.326z"></path>
-                        <path fill="#FFF" d="M1036.898 176.091C923.562 62.677 772.859.185 612.297.114 281.43.114 12.172 269.286 12.039 600.137 12 705.896 39.633 809.13 92.156 900.13L7 1211.067l318.203-83.438c87.672 47.812 186.383 73.008 286.836 73.047h.255.003c330.812 0 600.109-269.219 600.25-600.055.055-160.343-62.328-311.108-175.649-424.53zm-424.601 923.242h-.195c-89.539-.047-177.344-24.086-253.93-69.531l-18.227-10.805-188.828 49.508 50.414-184.039-11.875-18.867c-49.945-79.414-76.312-171.188-76.273-265.422.109-274.992 223.906-498.711 499.102-498.711 133.266.055 258.516 52 352.719 146.266 94.195 94.266 146.031 219.578 145.992 352.852-.118 274.999-223.923 498.749-498.899 498.749z"></path>
-                    </svg>
-                </div>
+            <div class="order-2 flex items-center gap-2 lg:order-3">
+                <x-locale-switcher />
+                <a href="{{ route('login') }}" class="rounded border border-white/20 px-3 py-1.5 text-sm hover:bg-white hover:text-gray-950">
+                    {{ __('mma.landing.login') }}
                 </a>
             </div>
         </div>
-        @livewireScripts
-        <script src="{{ asset('js/dark-mode.js') }}"></script>
-    </body>
+    </header>
+
+    <main class="flex-1">
+        @yield('content')
+    </main>
+
+    <footer class="border-t border-white/10 bg-gray-950">
+        <div class="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:grid-cols-2 lg:grid-cols-4">
+            <div>
+                <div class="flex items-center gap-3">
+                    <img src="{{ $settings->logoUrl() }}" alt="{{ $settings->productName() }}" class="h-9 w-9 rounded-full object-cover">
+                    <span class="text-sm font-semibold">{{ $settings->productName() }}</span>
+                </div>
+                @if ($settings->shortDescription())
+                    <p class="mt-3 text-sm text-gray-400">{{ $settings->shortDescription() }}</p>
+                @endif
+            </div>
+
+            <div>
+                <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-300">{{ __('mma.landing.footer.quick_links') }}</h3>
+                <ul class="mt-3 space-y-2 text-sm text-gray-400">
+                    @foreach ($navItems as $item)
+                        <li><a href="{{ route($item['route']) }}" class="hover:text-white">{{ $item['label'] }}</a></li>
+                    @endforeach
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-300">{{ __('mma.landing.footer.contact') }}</h3>
+                <ul class="mt-3 space-y-2 text-sm text-gray-400">
+                    @if ($settings->whatsappPhone())
+                        <li><a href="https://wa.me/{{ preg_replace('/\D/', '', $settings->whatsappPhone()) }}" target="_blank" rel="noopener" class="hover:text-white"><i class="fab fa-whatsapp mr-1"></i> WhatsApp</a></li>
+                    @endif
+                    @if ($settings->contactPhone())
+                        <li><a href="tel:{{ $settings->contactPhone() }}" class="hover:text-white"><i class="fas fa-phone mr-1"></i> {{ $settings->contactPhone() }}</a></li>
+                    @endif
+                    @if ($settings->contactEmail())
+                        <li><a href="mailto:{{ $settings->contactEmail() }}" class="hover:text-white"><i class="fas fa-envelope mr-1"></i> {{ $settings->contactEmail() }}</a></li>
+                    @endif
+                </ul>
+            </div>
+
+            @if (!empty($settings->socialLinks()))
+                <div>
+                    <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-300">{{ __('mma.landing.footer.follow_us') }}</h3>
+                    <div class="mt-3 flex gap-3 text-lg text-gray-400">
+                        @foreach ($settings->socialLinks() as $network => $url)
+                            @if (filled($url))
+                                <a href="{{ $url }}" target="_blank" rel="noopener" class="hover:text-white">
+                                    <i class="fab fa-{{ strtolower($network) }}"></i>
+                                </a>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+        </div>
+
+        <div class="border-t border-white/10 px-4 py-4 text-center text-xs text-gray-500">
+            &copy; {{ date('Y') }} {{ $settings->productName() }}. {{ __('mma.landing.footer.rights') }}
+        </div>
+    </footer>
+</body>
 </html>

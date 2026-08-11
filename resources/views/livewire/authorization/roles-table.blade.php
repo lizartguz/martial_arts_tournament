@@ -5,13 +5,6 @@
             <span>{{ $successMessage }}</span>
         </div>
     @endif
-    @if ($errorMessage)
-        <div class="tw-alert tw-alert-red">
-            <i class="fas fa-exclamation-triangle mt-0.5"></i>
-            <span>{{ $errorMessage }}</span>
-        </div>
-    @endif
-
     <div class="tw-panel-header">
         <div>
             <strong class="text-gray-800 dark:text-gray-200">{{ __('messages.authorization.roles.title') }}</strong>
@@ -58,11 +51,6 @@
                                 @can('roles.update')
                                     <button type="button" class="tw-btn-xs tw-btn-outline-blue" wire:click="edit({{ $role->id }})">
                                         <i class="fas fa-pencil-alt"></i>
-                                    </button>
-                                @endcan
-                                @can('roles.delete')
-                                    <button type="button" class="tw-btn-xs tw-btn-outline-red" wire:click="confirmDelete({{ $role->id }})">
-                                        <i class="fas fa-trash"></i>
                                     </button>
                                 @endcan
                             </div>
@@ -119,18 +107,6 @@
                 <button type="button" class="tw-btn tw-btn-emerald" wire:click="save" wire:loading.attr="disabled">
                     <i class="fas fa-save text-xs"></i>{{ __('messages.actions.save') }}
                 </button>
-            </x-slot:footer>
-        </x-tw-modal>
-    @endif
-
-    @if ($showDeleteModal)
-        <x-tw-modal close="closeDeleteModal" max-width="md" :title="__('messages.authorization.roles.delete_title')" icon="fas fa-trash" header-class="bg-red-600 text-white">
-            <p class="text-sm text-gray-700 dark:text-gray-300">
-                {{ __('messages.authorization.roles.delete_warning') }} <strong>{{ $deleteName }}</strong>
-            </p>
-            <x-slot:footer>
-                <button type="button" class="tw-btn tw-btn-gray" wire:click="closeDeleteModal">{{ __('messages.actions.cancel') }}</button>
-                <button type="button" class="tw-btn tw-btn-red" wire:click="delete" wire:loading.attr="disabled">{{ __('messages.actions.delete') }}</button>
             </x-slot:footer>
         </x-tw-modal>
     @endif

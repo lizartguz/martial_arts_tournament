@@ -44,6 +44,11 @@ class FighterTeamTable extends Component
         'status' => 1,
     ];
 
+    public function mount(): void
+    {
+        Gate::authorize('fighter_teams.view');
+    }
+
     public function updatingSearch(): void
     {
         $this->resetPage();

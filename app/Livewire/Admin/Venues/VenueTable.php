@@ -47,6 +47,11 @@ class VenueTable extends Component
         'status' => 1,
     ];
 
+    public function mount(): void
+    {
+        Gate::authorize('venues.view');
+    }
+
     public function updatingSearch(): void
     {
         $this->resetPage();

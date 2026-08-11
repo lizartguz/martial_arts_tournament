@@ -29,7 +29,7 @@ class PurchaseRequestController extends Controller
             'preferred_channel' => ['required', Rule::in(['whatsapp', 'phone', 'email'])],
             'request_type' => ['required', Rule::in(['general_contact', 'event_ticket', 'subscription', 'payment_proof'])],
             'message' => ['nullable', 'string', 'max:2000'],
-            'payment_proof' => ['nullable', 'file', 'max:5120'],
+            'payment_proof' => ['nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:'.((int) config('uploads.payment_proofs.max_mb', 5) * 1024)],
         ]);
 
         $eventId = $validated['event_id'] ?? null;

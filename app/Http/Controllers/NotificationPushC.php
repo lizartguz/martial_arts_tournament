@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\NotificationM;
 use App\Services\NotificationAttachmentService;
-use App\Services\PushNotificationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -254,17 +253,5 @@ class NotificationPushC extends Controller
                 'message' => $message,
             ]);
         }
-    }
-
-    public function sendNotification(Request $request)
-    {
-        $result = app(PushNotificationService::class)->sendToUsers(
-            [1061, 1062],
-            'all',
-            'Actualización Disponible!',
-            'Ve a la tienda Play Store y actualiza las nuevas funciones!'
-        );
-
-        return response()->json($result);
     }
 }

@@ -228,7 +228,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'ticket_links.update',
                 'notifications.view',
                 'notifications.create',
-                'notifications.send',
+                'notifications.send',                                                                                     
             ],
             'sales' => [
                 'dashboard.view',

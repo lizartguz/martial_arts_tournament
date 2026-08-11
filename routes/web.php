@@ -26,6 +26,9 @@ use App\Http\Controllers\Admin\VenueController;
 use App\Http\Controllers\Admin\WeightClassController;
 use App\Http\Controllers\AuthorizationC;
 use App\Http\Controllers\FirebaseWebPushController;
+use App\Http\Controllers\NotificationImageController;
+use App\Http\Controllers\NotificationPushC;
+use App\Http\Controllers\NotificationViewController;
 use App\Http\Controllers\Public\LandingController;
 use App\Http\Controllers\Subscriber\PortalController as SubscriberPortalController;
 use Illuminate\Support\Facades\Cookie;
@@ -43,6 +46,15 @@ Route::get('/idioma/{locale}', function (string $locale) {
 })->name('locale.switch');
 
 Route::get('/eventos/{event:slug}', [LandingController::class, 'event'])->name('landing.events.show');
+Route::get('/peleadores', [LandingController::class, 'fighters'])->name('landing.fighters.index');
+Route::get('/peleadores/{fighter:slug}', [LandingController::class, 'fighter'])->name('landing.fighters.show');
+Route::get('/noticias', [LandingController::class, 'news'])->name('landing.news.index');
+Route::get('/noticias/{newsPost:slug}', [LandingController::class, 'newsShow'])->name('landing.news.show');
+Route::get('/suscripcion', [LandingController::class, 'subscription'])->name('landing.subscription');
+Route::get('/contacto', [LandingController::class, 'contact'])->name('landing.contact');
+Route::post('/contacto', [LandingController::class, 'submitContact'])
+    ->middleware('throttle:10,1')
+    ->name('landing.contact.submit');
 Route::get('/firebase-messaging-sw.js', [FirebaseWebPushController::class, 'serviceWorker'])->name('firebase.web-push.sw');
 
 Route::get('/register', fn () => response()->view('auth.register', status: 403))->name('register');
@@ -63,6 +75,12 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         abort(403);
     })->name('dashboard');
 
+    Route::get('/notifications/{notification}', [NotificationViewController::class, 'show'])
+        ->name('notifications.show');
+
+    Route::get('/notifications/{notification}/images/{slot}', [NotificationImageController::class, 'show'])
+        ->name('notifications.images.show');
+
     Route::prefix('subscriber')->name('subscriber.')->group(function () {
         Route::get('/dashboard', [SubscriberPortalController::class, 'dashboard'])
             ->middleware('can:subscriber.dashboard.view')
@@ -71,6 +89,22 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/purchases', [SubscriberPortalController::class, 'purchases'])
             ->middleware('can:subscriber.purchases.view')
             ->name('purchases');
+
+        Route::get('/purchases/payments/{payment}', [SubscriberPortalController::class, 'paymentDetail'])
+            ->middleware('can:subscriber.purchases.view')
+            ->name('purchases.payments.show');
+
+        Route::post('/purchases/payments/{payment}/proof', [SubscriberPortalController::class, 'uploadPaymentProof'])
+            ->middleware('can:subscriber.purchases.view')
+            ->name('purchases.payments.proof');
+
+        Route::get('/purchases/requests/{purchaseRequest}', [SubscriberPortalController::class, 'requestDetail'])
+            ->middleware('can:subscriber.purchases.view')
+            ->name('purchases.requests.show');
+
+        Route::post('/purchases/requests/{purchaseRequest}/proof', [SubscriberPortalController::class, 'uploadRequestProof'])
+            ->middleware('can:subscriber.purchases.view')
+            ->name('purchases.requests.proof');
 
         Route::get('/events', [SubscriberPortalController::class, 'events'])
             ->middleware('can:subscriber.events.view')
@@ -208,4 +242,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::delete('/firebase/web-push/token', [FirebaseWebPushController::class, 'destroyToken'])
             ->name('firebase.web-push.token.destroy');
     });
+
+    Route::get('/admin/notifications', [NotificationPushC::class, 'index'])
+        ->middleware('can:notifications.view')
+        ->name('notificationsp');
 });

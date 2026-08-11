@@ -27,7 +27,11 @@
                 <tbody class="divide-y divide-white/10">
                     @forelse ($payments as $payment)
                         <tr>
-                            <td class="px-4 py-3">{{ $payment->subscription?->plan?->name ?? __('mma.admin.common.not_available') }}</td>
+                            <td class="px-4 py-3">
+                                <a href="{{ route('subscriber.purchases.payments.show', $payment) }}" class="font-semibold text-emerald-400 hover:underline">
+                                    {{ $payment->subscription?->plan?->name ?? __('mma.admin.common.not_available') }}
+                                </a>
+                            </td>
                             <td class="px-4 py-3">{{ number_format((float) $payment->amount, 2) }} {{ $payment->currency }}</td>
                             <td class="px-4 py-3">{{ $payment->payment_method }}</td>
                             <td class="px-4 py-3">{{ __('mma.admin.subscription_payments.status.'.($paymentStatus[$payment->status] ?? 'pending')) }}</td>
@@ -61,7 +65,11 @@
                 <tbody class="divide-y divide-white/10">
                     @forelse ($purchaseRequests as $request)
                         <tr>
-                            <td class="px-4 py-3">{{ $request->event?->name ?? $request->plan?->name ?? __('mma.admin.purchase_requests.request_types.'.$request->request_type) }}</td>
+                            <td class="px-4 py-3">
+                                <a href="{{ route('subscriber.purchases.requests.show', $request) }}" class="font-semibold text-emerald-400 hover:underline">
+                                    {{ $request->event?->name ?? $request->plan?->name ?? __('mma.admin.purchase_requests.request_types.'.$request->request_type) }}
+                                </a>
+                            </td>
                             <td class="px-4 py-3">{{ __('mma.admin.purchase_requests.channels.'.$request->preferred_channel) }}</td>
                             <td class="px-4 py-3">{{ __('mma.admin.purchase_requests.status.'.($requestStatus[$request->status] ?? 'pending')) }}</td>
                             <td class="px-4 py-3">{{ $request->created_at?->format('d/m/Y H:i') }}</td>

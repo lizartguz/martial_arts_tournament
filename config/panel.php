@@ -65,11 +65,9 @@ return [
         [
             'text' => 'mma.menu.tickets.group',
             'icon' => 'fas fa-ticket-alt',
-            'can' => ['ticket_links.view', 'ticket_orders.view', 'ticket_checkins.view'],
+            'can' => ['ticket_links.view'],
             'submenu' => [
                 ['text' => 'mma.menu.tickets.links', 'url' => '/admin/ticket-links', 'active' => ['admin/ticket-links*'], 'icon' => 'fas fa-link', 'can' => ['ticket_links.view']],
-                ['text' => 'mma.menu.tickets.orders', 'url' => '/admin/ticket-orders', 'active' => ['admin/ticket-orders*'], 'icon' => 'fas fa-list', 'can' => ['ticket_orders.view']],
-                ['text' => 'mma.menu.tickets.checkins', 'url' => '/admin/ticket-checkins', 'active' => ['admin/ticket-checkins*'], 'icon' => 'fas fa-qrcode', 'can' => ['ticket_checkins.view']],
             ],
         ],
         [

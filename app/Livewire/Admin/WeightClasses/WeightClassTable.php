@@ -37,6 +37,11 @@ class WeightClassTable extends Component
         'status' => 1,
     ];
 
+    public function mount(): void
+    {
+        Gate::authorize('weight_classes.view');
+    }
+
     public function updatingSearch(): void
     {
         $this->resetPage();

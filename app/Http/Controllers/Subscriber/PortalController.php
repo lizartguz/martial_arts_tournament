@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Subscriber;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\PurchaseRequest;
+use App\Models\SubscriptionPayment;
+use App\Services\FileUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class PortalController extends Controller
@@ -54,6 +57,96 @@ class PortalController extends Controller
         ]);
     }
 
+    public function paymentDetail(Request $request, SubscriptionPayment $payment)
+    {
+        Gate::authorize('subscriber.purchases.view');
+        abort_unless($payment->user_id === $request->user()->id, 404);
+
+        return view('subscriber.payment-detail', [
+            'payment' => $payment->load('subscription.plan:id,name,slug'),
+        ]);
+    }
+
+    public function uploadPaymentProof(Request $request, SubscriptionPayment $payment, FileUploadService $files)
+    {
+        Gate::authorize('subscriber.purchases.view');
+        abort_unless($payment->user_id === $request->user()->id, 404);
+
+        if ((int) $payment->status !== 0) {
+            return back()->with('error', __('mma.subscriber_portal.purchases.proof_not_allowed'));
+        }
+
+        $request->validate([
+            'proof' => [
+                'required',
+                'file',
+                'mimes:jpg,jpeg,png,pdf',
+                'max:'.((int) config('uploads.payment_proofs.max_mb', 5) * 1024),
+            ],
+        ], attributes: ['proof' => __('mma.subscriber_portal.purchases.proof_field')]);
+
+        if (filled($payment->payment_proof_path)) {
+            Storage::disk((string) config('uploads.payment_proofs.disk', 'local'))->delete($payment->payment_proof_path);
+        }
+
+        $stored = $files->storePaymentProof($request->file('proof'), 'subscriber-payment');
+
+        $payment->update([
+            'payment_proof_path' => $stored['path'],
+            'payment_proof_mime' => $stored['mime'],
+            'payment_proof_size' => $stored['size'],
+        ]);
+
+        return redirect()
+            ->route('subscriber.purchases.payments.show', $payment)
+            ->with('success', __('mma.subscriber_portal.purchases.proof_uploaded'));
+    }
+
+    public function requestDetail(Request $request, PurchaseRequest $purchaseRequest)
+    {
+        Gate::authorize('subscriber.purchases.view');
+        abort_unless($purchaseRequest->user_id === $request->user()->id, 404);
+
+        return view('subscriber.request-detail', [
+            'purchaseRequest' => $purchaseRequest->load(['event:id,name,slug,starts_at,status', 'plan:id,name,slug']),
+        ]);
+    }
+
+    public function uploadRequestProof(Request $request, PurchaseRequest $purchaseRequest, FileUploadService $files)
+    {
+        Gate::authorize('subscriber.purchases.view');
+        abort_unless($purchaseRequest->user_id === $request->user()->id, 404);
+
+        if (! in_array((int) $purchaseRequest->status, [0, 1], true)) {
+            return back()->with('error', __('mma.subscriber_portal.purchases.proof_not_allowed'));
+        }
+
+        $request->validate([
+            'proof' => [
+                'required',
+                'file',
+                'mimes:jpg,jpeg,png,pdf',
+                'max:'.((int) config('uploads.payment_proofs.max_mb', 5) * 1024),
+            ],
+        ], attributes: ['proof' => __('mma.subscriber_portal.purchases.proof_field')]);
+
+        if (filled($purchaseRequest->payment_proof_path)) {
+            Storage::disk((string) config('uploads.payment_proofs.disk', 'local'))->delete($purchaseRequest->payment_proof_path);
+        }
+
+        $stored = $files->storePaymentProof($request->file('proof'), 'subscriber-request');
+
+        $purchaseRequest->update([
+            'payment_proof_path' => $stored['path'],
+            'payment_proof_mime' => $stored['mime'],
+            'payment_proof_size' => $stored['size'],
+        ]);
+
+        return redirect()
+            ->route('subscriber.purchases.requests.show', $purchaseRequest)
+            ->with('success', __('mma.subscriber_portal.purchases.proof_uploaded'));
+    }
+
     public function events(Request $request)
     {
         Gate::authorize('subscriber.events.view');
@@ -72,7 +165,8 @@ class PortalController extends Controller
 
         return view('subscriber.subscription', [
             'currentSubscription' => $user->userSubscriptions()
-                ->with(['plan:id,name,slug,description,price,currency,billing_period,features,status'])
+                ->with(['plan' => fn ($query) => $query->select('id', 'name', 'slug', 'description', 'price', 'currency', 'billing_period', 'features', 'status')
+                    ->with(['planFeatures' => fn ($features) => $features->where('status', 1)])])
                 ->latest('id')
                 ->first(),
             'subscriptions' => $user->userSubscriptions()

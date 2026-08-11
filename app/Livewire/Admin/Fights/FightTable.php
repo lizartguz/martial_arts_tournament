@@ -52,6 +52,11 @@ class FightTable extends Component
         'notes' => '',
     ];
 
+    public function mount(): void
+    {
+        Gate::authorize('fights.view');
+    }
+
     public function updatingSearch(): void
     {
         $this->resetPage();

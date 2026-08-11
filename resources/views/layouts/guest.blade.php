@@ -40,7 +40,7 @@
             <!-- Selector de idiomas -->
             <livewire:components.language-select triggerClass="hover:bg-white/20"/>
             
-            @if($showThemeToggle)
+            @if($showThemeToggle ?? false)
                 <!-- Toggle de modo oscuro -->
                 <button class="dark-mode-toggle p-2 rounded text-white hover:bg-white/20 transition" onclick="toggleDarkMode()" title="Modo Oscuro/Claro">
                     <i class="fas fa-moon"></i>
@@ -55,7 +55,7 @@
 
         @livewireScripts
 
-        @if($showThemeToggle && ! request()->routeIs('register', 'public.station.feed'))
+        @if(($showThemeToggle ?? false) && ! request()->routeIs('register', 'public.station.feed'))
         <script>
             // Función para alternar modo oscuro
             /**

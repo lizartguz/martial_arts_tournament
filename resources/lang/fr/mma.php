@@ -555,4 +555,6 @@ $en['admin']['logs'] = [
     'actions' => ['download' => 'Télécharger le log', 'view_detail' => 'Voir le détail'],
 ];
 
+$en['landing']['fighters']['result_draw'] = 'Nul / Sans décision';
+
 return $en;

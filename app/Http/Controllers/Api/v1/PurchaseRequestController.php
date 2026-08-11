@@ -33,7 +33,7 @@ class PurchaseRequestController extends Controller
         ]);
 
         $eventId = $validated['event_id'] ?? null;
-        if (! $eventId && ! empty($validated['event_slug'])) {
+        if (! $eventId && filled($validated['event_slug'] ?? null)) {
             $eventId = Event::query()
                 ->published()
                 ->where('slug', $validated['event_slug'])

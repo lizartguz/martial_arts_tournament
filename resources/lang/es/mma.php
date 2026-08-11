@@ -511,4 +511,6 @@ $en['admin']['logs'] = [
     'actions' => ['download' => 'Descargar log', 'view_detail' => 'Ver detalle'],
 ];
 
+$en['landing']['fighters']['result_draw'] = 'Empate / Sin decisión';
+
 return $en;

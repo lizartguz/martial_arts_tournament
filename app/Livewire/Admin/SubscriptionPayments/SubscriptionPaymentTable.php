@@ -8,7 +8,6 @@ use App\Models\UserSubscription;
 use App\Services\FileUploadService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -165,7 +164,13 @@ class SubscriptionPaymentTable extends Component
         $payment->fill($validated);
 
         if ($this->proofFile) {
-            $this->replaceProof($payment, $uploads);
+            try {
+                $this->replaceProof($payment, $uploads);
+            } catch (\InvalidArgumentException $exception) {
+                $this->addError('proofFile', $exception->getMessage());
+
+                return;
+            }
         }
 
         $payment->save();
@@ -467,11 +472,7 @@ class SubscriptionPaymentTable extends Component
 
     protected function replaceProof(SubscriptionPayment $payment, FileUploadService $uploads): void
     {
-        if ($payment->exists && filled($payment->payment_proof_path)) {
-            Storage::disk((string) config('uploads.payment_proofs.disk', 'local'))->delete($payment->payment_proof_path);
-        }
-
-        $stored = $uploads->storePaymentProof($this->proofFile, 'subscription-payment');
+        $stored = $uploads->replacePaymentProof($payment, $this->proofFile, 'subscription-payment');
         $payment->payment_proof_path = $stored['path'];
         $payment->payment_proof_mime = $stored['mime'];
         $payment->payment_proof_size = $stored['size'];

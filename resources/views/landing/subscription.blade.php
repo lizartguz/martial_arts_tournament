@@ -32,7 +32,7 @@
                                         <i class="fas fa-check-circle mt-0.5 text-emerald-400"></i>
                                         <span>
                                             {{ $feature->name }}
-                                            @if ($feature->value)
+                                            @if (filled($feature->value))
                                                 <span class="text-gray-400">— {{ $feature->value }}</span>
                                             @endif
                                         </span>

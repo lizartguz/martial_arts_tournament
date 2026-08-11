@@ -36,4 +36,19 @@ class NewsPost extends Model
     {
         return $this->cover_image ? asset($this->cover_image) : null;
     }
+
+    public function scopePublished($query)
+    {
+        return $query
+            ->where('status', 1)
+            ->where(fn ($subQuery) => $subQuery
+                ->whereNull('published_at')
+                ->orWhere('published_at', '<=', now()));
+    }
+
+    public function isPublished(): bool
+    {
+        return (int) $this->status === 1
+            && (! $this->published_at || $this->published_at->lte(now()));
+    }
 }

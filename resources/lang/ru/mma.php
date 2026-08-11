@@ -555,4 +555,6 @@ $en['admin']['logs'] = [
     'actions' => ['download' => 'Скачать лог', 'view_detail' => 'Смотреть детали'],
 ];
 
+$en['landing']['fighters']['result_draw'] = 'Ничья / Без результата';
+
 return $en;

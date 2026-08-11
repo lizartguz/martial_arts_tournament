@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -44,6 +45,23 @@ class FileUploadService
         }
 
         throw new \InvalidArgumentException(__('mma.uploads.payment_proofs.invalid_type'));
+    }
+
+    /**
+     * Reemplaza un comprobante privado conservando el anterior si el nuevo archivo falla.
+     *
+     * @param  TemporaryUploadedFile|UploadedFile  $file
+     */
+    public function replacePaymentProof(Model $model, $file, string $prefix = 'payment-proof', string $pathColumn = 'payment_proof_path'): array
+    {
+        $previousPath = $model->getAttribute($pathColumn);
+        $stored = $this->storePaymentProof($file, $prefix);
+
+        if ($model->exists && filled($previousPath)) {
+            Storage::disk((string) config('uploads.payment_proofs.disk', 'local'))->delete($previousPath);
+        }
+
+        return $stored;
     }
 
     /**

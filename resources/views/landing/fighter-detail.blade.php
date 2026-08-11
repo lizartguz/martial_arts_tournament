@@ -72,6 +72,7 @@
                         $opponent = $isRed ? $fight->cornerBlue : $fight->cornerRed;
                         $wonFight = $fight->result && (int) $fight->result->winner_fighter_id === (int) $fighter->id;
                         $lostFight = $fight->result && $fight->result->winner_fighter_id && (int) $fight->result->winner_fighter_id !== (int) $fighter->id;
+                        $isDraw = $fight->result && in_array($fight->result->result_type, ['draw', 'no_contest'], true);
                     @endphp
                     <a href="{{ route('landing.events.show', $fight->event->slug) }}" class="flex flex-wrap items-center justify-between gap-3 p-4 hover:bg-white/5">
                         <div>
@@ -92,6 +93,8 @@
                             <span class="shrink-0 rounded bg-emerald-500 px-2 py-1 text-xs font-semibold text-gray-950">{{ __('mma.landing.fighters.result_win') }}</span>
                         @elseif ($lostFight)
                             <span class="shrink-0 rounded bg-red-500/80 px-2 py-1 text-xs font-semibold text-white">{{ __('mma.landing.fighters.result_loss') }}</span>
+                        @elseif ($isDraw)
+                            <span class="shrink-0 rounded bg-amber-400/80 px-2 py-1 text-xs font-semibold text-gray-950">{{ __('mma.landing.fighters.result_draw') }}</span>
                         @else
                             <span class="shrink-0 rounded bg-white/10 px-2 py-1 text-xs font-semibold text-gray-300">{{ __('mma.landing.fighters.result_pending') }}</span>
                         @endif

@@ -305,11 +305,9 @@ ticket_links.view
 ticket_links.create
 ticket_links.update
 ticket_links.delete
-ticket_orders.view
-ticket_orders.update
-ticket_checkins.view
-ticket_checkins.confirm
 ```
+
+Los permisos para venta interna y check-in (`ticket_orders.*`, `ticket_checkins.*`) no forman parte del catálogo vigente. Deben agregarse junto con las rutas, pantallas y tablas del módulo correspondiente.
 
 ### Notificaciones
 
@@ -464,10 +462,6 @@ ticket_links.view
 ticket_links.create
 ticket_links.update
 ticket_links.delete
-ticket_orders.view
-ticket_orders.update
-ticket_checkins.view
-ticket_checkins.confirm
 notifications.view
 notifications.create
 notifications.send
@@ -542,9 +536,6 @@ purchase_requests.close
 ticket_links.view
 ticket_links.create
 ticket_links.update
-ticket_orders.view
-ticket_orders.update
-ticket_checkins.view
 notifications.view
 reports.events.view
 reports.subscriptions.view
@@ -598,8 +589,6 @@ Permisos sugeridos:
 dashboard.view
 events.view
 ticket_links.view
-ticket_orders.view
-ticket_orders.update
 subscription_plans.view
 subscribers.view
 subscribers.update
@@ -627,9 +616,6 @@ Permisos sugeridos:
 ```text
 dashboard.view
 events.view
-ticket_orders.view
-ticket_checkins.view
-ticket_checkins.confirm
 ```
 
 ### `support`
@@ -642,7 +628,6 @@ events.view
 subscribers.view
 user_subscriptions.view
 subscription_payments.view
-ticket_orders.view
 support_messages.view
 support_messages.update
 ```
@@ -660,7 +645,7 @@ subscriber.profile.view
 subscriber.profile.update
 ```
 
-El suscriptor no debe recibir permisos administrativos como `users.view`, `subscribers.view`, `events.update`, `ticket_orders.view` o `subscription_payments.view`.
+El suscriptor no debe recibir permisos administrativos como `users.view`, `subscribers.view`, `events.update`, `ticket_links.update` o `subscription_payments.view`.
 
 ## Permisos asignables manualmente
 
@@ -675,7 +660,6 @@ subscription_payments.upload_proof
 subscription_payments.cancel
 purchase_requests.assign
 purchase_requests.close
-ticket_checkins.confirm
 logs.view
 ```
 

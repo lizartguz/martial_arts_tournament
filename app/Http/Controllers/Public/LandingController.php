@@ -40,8 +40,7 @@ class LandingController extends Controller
             ->get(['id', 'first_name', 'last_name', 'nickname', 'slug', 'profile_image', 'weight_class_id', 'country_id', 'wins', 'losses', 'draws']);
 
         $latestNews = NewsPost::query()
-            ->where('status', 1)
-            ->where(fn ($query) => $query->whereNull('published_at')->orWhere('published_at', '<=', now()))
+            ->published()
             ->orderByDesc('published_at')
             ->limit(3)
             ->get(['id', 'title', 'slug', 'excerpt', 'cover_image', 'published_at']);
@@ -141,8 +140,7 @@ class LandingController extends Controller
     public function news(SystemSettingsService $settings)
     {
         $newsPosts = NewsPost::query()
-            ->where('status', 1)
-            ->where(fn ($query) => $query->whereNull('published_at')->orWhere('published_at', '<=', now()))
+            ->published()
             ->orderByDesc('published_at')
             ->paginate(9, ['id', 'title', 'slug', 'excerpt', 'cover_image', 'published_at']);
 
@@ -154,7 +152,7 @@ class LandingController extends Controller
      */
     public function newsShow(NewsPost $newsPost, SystemSettingsService $settings)
     {
-        abort_unless((int) $newsPost->status === 1 && (! $newsPost->published_at || $newsPost->published_at->lte(now())), 404);
+        abort_unless($newsPost->isPublished(), 404);
 
         return view('landing.news-detail', ['post' => $newsPost, 'settings' => $settings]);
     }
@@ -228,7 +226,7 @@ class LandingController extends Controller
         ]);
 
         $eventId = null;
-        if (! empty($validated['event_slug'])) {
+        if (filled($validated['event_slug'] ?? null)) {
             $eventId = Event::query()->published()->where('slug', $validated['event_slug'])->value('id');
         }
 

@@ -9,8 +9,8 @@ use App\Models\SubscriptionPayment;
 use App\Services\FileUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class PortalController extends Controller
 {
@@ -85,11 +85,13 @@ class PortalController extends Controller
             ],
         ], attributes: ['proof' => __('mma.subscriber_portal.purchases.proof_field')]);
 
-        if (filled($payment->payment_proof_path)) {
-            Storage::disk((string) config('uploads.payment_proofs.disk', 'local'))->delete($payment->payment_proof_path);
+        try {
+            $stored = $files->replacePaymentProof($payment, $request->file('proof'), 'subscriber-payment');
+        } catch (\InvalidArgumentException $exception) {
+            throw ValidationException::withMessages([
+                'proof' => [$exception->getMessage()],
+            ]);
         }
-
-        $stored = $files->storePaymentProof($request->file('proof'), 'subscriber-payment');
 
         $payment->update([
             'payment_proof_path' => $stored['path'],
@@ -130,11 +132,13 @@ class PortalController extends Controller
             ],
         ], attributes: ['proof' => __('mma.subscriber_portal.purchases.proof_field')]);
 
-        if (filled($purchaseRequest->payment_proof_path)) {
-            Storage::disk((string) config('uploads.payment_proofs.disk', 'local'))->delete($purchaseRequest->payment_proof_path);
+        try {
+            $stored = $files->replacePaymentProof($purchaseRequest, $request->file('proof'), 'subscriber-request');
+        } catch (\InvalidArgumentException $exception) {
+            throw ValidationException::withMessages([
+                'proof' => [$exception->getMessage()],
+            ]);
         }
-
-        $stored = $files->storePaymentProof($request->file('proof'), 'subscriber-request');
 
         $purchaseRequest->update([
             'payment_proof_path' => $stored['path'],

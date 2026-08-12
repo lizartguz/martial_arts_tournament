@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    @php($brand = app(\App\Services\SystemSettingsService::class))
+    @php
+        $brand = app(\App\Services\SystemSettingsService::class);
+    @endphp
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,7 +31,7 @@
         <!-- Styles -->
         @livewireStyles
     </head>
-    <body style="background: linear-gradient(135deg,rgb(36, 48, 102) 0%,rgb(98, 153, 53) 100%);">
+    <body class="auth-layout-body">
         @php
             $showThemeToggle = ! request()->routeIs('login', 'password.request');
         @endphp

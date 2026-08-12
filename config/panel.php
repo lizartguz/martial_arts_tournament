@@ -3,8 +3,8 @@
 return [
     'brand' => [
         'name' => env('APP_NAME', 'Combate Real'),
-        'logo' => 'images/logo_circle.png',
-        'favicon' => 'frontend/images/logo_with_text.png',
+        'logo' => 'images/mma/brand/combate-real-logo.svg',
+        'favicon' => 'images/mma/brand/combate-real-favicon.png',
         'home_url' => '/admin/dashboard',
     ],
 

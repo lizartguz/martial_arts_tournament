@@ -1,11 +1,5 @@
 <a href="{{ route('landing.events.show', $event->slug) }}" class="overflow-hidden rounded-lg border border-white/10 bg-white/5 transition hover:border-emerald-400/70">
-    @if ($event->poster_image)
-        <img src="{{ asset($event->poster_image) }}" alt="{{ $event->name }}" class="h-44 w-full object-cover">
-    @else
-        <div class="flex h-44 items-center justify-center bg-gray-900 text-sm text-gray-500">
-            {{ __('mma.landing.no_image') }}
-        </div>
-    @endif
+    <img src="{{ asset($event->poster_image ?: 'images/mma/generated/event-card.webp') }}" alt="{{ $event->name }}" class="h-44 w-full object-cover">
 
     <div class="p-4">
         <div class="flex items-center justify-between gap-3 text-xs text-gray-400">

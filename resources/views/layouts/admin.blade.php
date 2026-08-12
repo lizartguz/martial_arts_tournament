@@ -204,7 +204,7 @@
            class="flex items-center gap-3 px-4 py-4 bg-sidebar-brand border-b border-black/20 flex-shrink-0">
             <img src="{{ AdminPanel::brandLogo() }}"
                  alt="{{ AdminPanel::brandName() }}"
-                 class="h-9 w-9 rounded-full object-cover flex-shrink-0">
+                 class="h-10 w-auto max-w-[150px] object-contain flex-shrink-0">
             <span class="truncate text-sm font-semibold text-sidebar-text">
                 {{ AdminPanel::brandName() }}
             </span>

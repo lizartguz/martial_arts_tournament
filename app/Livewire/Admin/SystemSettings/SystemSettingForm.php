@@ -155,8 +155,8 @@ class SystemSettingForm extends Component
             [
                 'product_name' => 'Combate Real',
                 'public_title' => 'Combate Real',
-                'logo_path' => 'images/logo_circle.png',
-                'favicon_path' => 'frontend/images/logo_with_text.png',
+                'logo_path' => 'images/mma/brand/combate-real-logo.svg',
+                'favicon_path' => 'images/mma/brand/combate-real-favicon.png',
                 'landing_show_rankings' => false,
             ]
         );

@@ -1,63 +1,65 @@
-/* Estilos de alertas para autenticación */
+/* Alertas de autenticacion. */
 
-.alert-success {
-    margin-bottom: 1rem;
-    padding: 1rem;
-    background-color: #f0fdf4;
-    border-left: 4px solid #10b981;
-    border-radius: 0.5rem;
+.alert-success,
+.alert-error {
     display: flex;
     align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 0.7rem;
+    padding: 0.9rem;
 }
 
-.alert-success-icon {
-    flex-shrink: 0;
-    width: 1.25rem;
-    height: 1.25rem;
-    color: #34d399;
-}
-
-.alert-success-content {
-    margin-left: 0.75rem;
-}
-
-.alert-success-text {
-    font-size: 0.875rem;
-    color: #065f46;
+.alert-success {
+    border: 1px solid #bbf7d0;
+    background-color: #f0fdf4;
 }
 
 .alert-error {
-    margin-bottom: 1rem;
-    padding: 1rem;
+    border: 1px solid #fecaca;
     background-color: #fef2f2;
-    border-left: 4px solid #ef4444;
-    border-radius: 0.5rem;
-    display: flex;
-    align-items: flex-start;
-    animation: shake 0.5s ease-in-out;
+    animation: shake 0.45s ease-in-out;
+}
+
+.alert-success-icon,
+.alert-error-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+    margin-top: 0.05rem;
+}
+
+.alert-success-icon {
+    color: #16a34a;
 }
 
 .alert-error-icon {
-    flex-shrink: 0;
-    width: 1.25rem;
-    height: 1.25rem;
-    color: #fca5a5;
+    color: #dc2626;
 }
 
+.alert-success-content,
 .alert-error-content {
-    margin-left: 0.75rem;
+    min-width: 0;
+}
+
+.alert-success-text,
+.alert-error-title {
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.alert-success-text {
+    color: #166534;
 }
 
 .alert-error-title {
-    font-size: 0.875rem;
-    font-weight: 500;
     color: #991b1b;
+    font-weight: 800;
 }
 
 .alert-error-list {
-    margin-top: 0.5rem;
-    font-size: 0.875rem;
+    margin: 0.35rem 0 0;
+    padding-left: 1rem;
     color: #b91c1c;
-    list-style-type: disc;
-    list-style-position: inside;
+    font-size: 0.875rem;
 }

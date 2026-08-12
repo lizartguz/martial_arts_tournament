@@ -60,8 +60,14 @@ class LandingController extends Controller
             'ticketLinks' => fn ($query) => $query->where('status', 1)->orderBy('display_order'),
             'fights' => fn ($query) => $query
                 ->with([
-                    'cornerRed:id,nickname,first_name,last_name,slug',
-                    'cornerBlue:id,nickname,first_name,last_name,slug',
+                    'cornerRed:id,nickname,first_name,last_name,slug,gender,profile_image,wins,losses,draws,no_contests,height_cm,reach_cm,weight_class_id,country_id,fighter_team_id',
+                    'cornerRed.country:id,name',
+                    'cornerRed.team:id,name,slug',
+                    'cornerRed.weightClass:id,name,gender',
+                    'cornerBlue:id,nickname,first_name,last_name,slug,gender,profile_image,wins,losses,draws,no_contests,height_cm,reach_cm,weight_class_id,country_id,fighter_team_id',
+                    'cornerBlue.country:id,name',
+                    'cornerBlue.team:id,name,slug',
+                    'cornerBlue.weightClass:id,name,gender',
                     'weightClass:id,name,gender',
                 ])
                 ->orderBy('display_order'),

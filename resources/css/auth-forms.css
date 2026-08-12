@@ -1,99 +1,90 @@
-/* Estilos de formularios para autenticación */
-
-.auth-input {
-    display: block;
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.875rem;
-    border: 1px solid #d1d5db;
-    border-radius: 0.5rem;
-    transition: all 0.2s;
-}
-
-.auth-input:focus {
-    border-color: transparent;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-    outline: none;
-    border: 2px solid #6366f1;
-}
-
-.auth-input::placeholder {
-    color: #9ca3af;
-}
-
-.auth-label {
-    display: block;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #374151;
-    margin-bottom: 0.5rem;
-}
-
-.auth-label i {
-    margin-right: 0.25rem;
-    color: #4f46e5;
-}
+/* Formularios de autenticacion. */
 
 .auth-card {
-    background: white;
-    border-radius: 1rem;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     overflow: hidden;
-    border: 1px solid #f3f4f6;
-}
-
-.auth-header {
-    background: linear-gradient(to right, #2563eb, #4f46e5);
-    padding: 1rem 1.5rem 0.25rem;
-}
-
-.auth-header-text {
-    color: #000000;
-    font-size: 1rem;
-    text-align: center;
-    margin-top: 0.25rem;
+    border: 1px solid rgba(226, 232, 240, 0.95);
+    border-radius: 0.9rem;
+    background: #ffffff;
+    box-shadow: 0 28px 70px -34px rgba(0, 0, 0, 0.75);
 }
 
 .auth-body {
     padding: 1.5rem;
 }
 
+.auth-input {
+    display: block;
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.65rem;
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 0.95rem;
+    line-height: 1.45;
+    padding: 0.78rem 0.9rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-input:focus {
+    border-color: #16a34a;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.16);
+    outline: none;
+}
+
+.auth-input::placeholder {
+    color: #94a3b8;
+}
+
+.auth-label {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: #334155;
+    font-size: 0.86rem;
+    font-weight: 800;
+}
+
+.auth-label i {
+    margin-right: 0.35rem;
+    color: #dc2626;
+}
+
 .auth-footer {
+    border-top: 1px solid #eef2f7;
+    background: #f8fafc;
     padding: 1rem 1.5rem;
-    background-color: #f9fafb;
-    border-top: 1px solid #f3f4f6;
 }
 
 .auth-footer-text {
+    margin: 0;
+    color: #64748b;
     font-size: 0.75rem;
-    color: #6b7280;
     text-align: center;
 }
 
-/* Mantener los formularios de autenticación en estilo claro aunque
-   el usuario haya dejado activado el modo oscuro global. */
-body[data-theme="dark"] .auth-input {
+body[data-theme="dark"] .auth-card,
+body[data-theme="dark"] .auth-input,
+body[data-theme="dark"] .login-brand-wrap {
     background-color: #ffffff !important;
-    color: #111827 !important;
-    border-color: #d1d5db !important;
+    color: #0f172a !important;
+}
+
+body[data-theme="dark"] .auth-input {
+    border-color: #cbd5e1 !important;
 }
 
 body[data-theme="dark"] .auth-input:focus {
-    background-color: #ffffff !important;
-    color: #111827 !important;
-    border-color: #6366f1 !important;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
-    outline: none !important;
+    border-color: #16a34a !important;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.16) !important;
 }
 
 body[data-theme="dark"] .auth-input::placeholder {
-    color: #9ca3af !important;
+    color: #94a3b8 !important;
 }
 
 body[data-theme="dark"] .auth-label {
-    color: #374151 !important;
+    color: #334155 !important;
 }
 
-body[data-theme="dark"] .auth-label i {
-    color: #4f46e5 !important;
+body[data-theme="dark"] .auth-footer {
+    background-color: #f8fafc !important;
 }

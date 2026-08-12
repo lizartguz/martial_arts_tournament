@@ -27,7 +27,7 @@
         <div class="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4 lg:flex-row lg:items-center lg:justify-between">
             <div class="flex items-center justify-between gap-3">
                 <a href="{{ route('subscriber.dashboard') }}" class="flex min-w-0 items-center gap-3">
-                    <img src="{{ $settings->logoUrl() }}" alt="{{ $settings->productName() }}" class="h-10 w-10 rounded-full object-cover">
+                    <img src="{{ $settings->logoUrl() }}" alt="{{ $settings->productName() }}" class="h-10 w-auto max-w-[180px] object-contain">
                     <span class="truncate text-sm font-semibold">{{ $settings->productName() }}</span>
                 </a>
                 <div class="lg:hidden">

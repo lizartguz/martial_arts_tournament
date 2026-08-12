@@ -9,9 +9,7 @@
         </a>
 
         <article class="mt-6">
-            @if ($post->cover_image)
-                <img src="{{ asset($post->cover_image) }}" alt="{{ $post->title }}" class="h-72 w-full rounded-lg object-cover">
-            @endif
+            <img src="{{ asset($post->cover_image ?: 'images/mma/generated/news-cover.webp') }}" alt="{{ $post->title }}" class="h-72 w-full rounded-lg object-cover">
 
             <p class="mt-4 text-sm text-gray-400">{{ $post->published_at?->format('d/m/Y') }}</p>
             <h1 class="mt-1 text-3xl font-bold">{{ $post->title }}</h1>

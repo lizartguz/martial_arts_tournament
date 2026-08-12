@@ -28,6 +28,16 @@ Implementar una vista administrativa para configurar la identidad visible de la 
 - Favicon.
 - URLs de redes sociales: Facebook, Instagram, YouTube y TikTok.
 
+## Identidad visual vigente
+
+Los valores por defecto de la marca usan assets propios de MMA:
+
+- Logo: `images/mma/brand/combate-real-logo.svg`.
+- Favicon: `images/mma/brand/combate-real-favicon.png`.
+- Imagen por defecto: `images/mma/generated/landing-hero.webp`.
+
+Los datos demo usan imagenes fotorealistas bajo `images/mma/generated/` para eventos, peleadores, noticias y fondos publicos.
+
 ## Vista
 
 La pantalla mantiene el patrón visual administrativo:
@@ -67,6 +77,7 @@ La landing usa:
 - `seo_description` como metadescripción cuando exista.
 - `logo_path` como logo visible.
 - `favicon_path` como favicon.
+- `default_image` como imagen visual de respaldo para el hero publico.
 - `public_title` como título principal.
 - `short_description` como texto principal cuando esté configurado.
 - Teléfono de contacto o WhatsApp como enlace inicial de contacto.

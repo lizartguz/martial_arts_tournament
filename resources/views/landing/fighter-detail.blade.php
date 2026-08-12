@@ -14,11 +14,7 @@
 
         <section class="mt-6 grid gap-6 rounded-lg border border-white/10 bg-white/5 p-5 sm:grid-cols-[220px_1fr]">
             <div class="mx-auto aspect-square w-full max-w-[220px] overflow-hidden rounded-lg bg-gray-900">
-                @if ($fighter->profile_image)
-                    <img src="{{ asset($fighter->profile_image) }}" alt="{{ $fullName }}" class="h-full w-full object-cover">
-                @else
-                    <div class="flex h-full items-center justify-center text-gray-600"><i class="fas fa-user-ninja text-4xl"></i></div>
-                @endif
+                <img src="{{ asset($fighter->profile_image ?: ($fighter->gender === 'female' ? 'images/mma/generated/fighter-female.webp' : 'images/mma/generated/fighter-male.webp')) }}" alt="{{ $fullName }}" class="h-full w-full object-cover">
             </div>
 
             <div>

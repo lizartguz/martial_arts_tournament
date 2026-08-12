@@ -55,7 +55,7 @@ class SystemSettingsService
      */
     public function logoPath(): string
     {
-        return $this->filledSetting('logo_path', (string) config('panel.brand.logo', 'images/logo_circle.png'));
+        return $this->filledSetting('logo_path', (string) config('panel.brand.logo', 'images/mma/brand/combate-real-logo.svg'));
     }
 
     /**
@@ -63,7 +63,7 @@ class SystemSettingsService
      */
     public function faviconPath(): string
     {
-        return $this->filledSetting('favicon_path', (string) config('panel.brand.favicon', 'frontend/images/logo_with_text.png'));
+        return $this->filledSetting('favicon_path', (string) config('panel.brand.favicon', 'images/mma/brand/combate-real-favicon.png'));
     }
 
     /**

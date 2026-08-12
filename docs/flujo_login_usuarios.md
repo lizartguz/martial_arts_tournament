@@ -129,6 +129,8 @@ Función que cumple:
 
 > Nota: `boot()` también define la vista de login (`auth.login`), las acciones de registro/actualización de perfil/contraseña de Fortify, y los **rate limiters** (ver sección final).
 
+La vista de login se renderiza con el componente `x-guest-layout`, que usa `resources/views/layouts/guest.blade.php`. Ese layout debe mantener las directivas Blade compilables (`@vite`, `csrf_token()`, `asset()`, Livewire) para que los estilos de autenticación se carguen desde Vite y no queden impresos como texto crudo en el HTML.
+
 ---
 
 ## Paso 1: búsqueda del usuario — `findUserForLogin()`

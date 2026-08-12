@@ -25,9 +25,9 @@
 <body class="flex min-h-screen flex-col bg-gray-950 text-white">
     <header class="border-b border-white/10 bg-gray-950/95 sticky top-0 z-30 backdrop-blur">
         <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-4">
-            <a href="{{ route('landing.home') }}" class="flex items-center gap-3">
-                <img src="{{ $settings->logoUrl() }}" alt="{{ $settings->productName() }}" class="h-10 w-10 rounded-full object-cover">
-                <span class="text-sm font-semibold">{{ $settings->productName() }}</span>
+            <a href="{{ route('landing.home') }}" class="flex min-w-0 items-center gap-3">
+                <img src="{{ $settings->logoUrl() }}" alt="{{ $settings->productName() }}" class="h-11 w-auto max-w-[190px] object-contain">
+                <span class="sr-only">{{ $settings->productName() }}</span>
             </a>
 
             <nav class="order-3 flex w-full flex-wrap gap-1 text-sm lg:order-2 lg:w-auto lg:gap-2">
@@ -56,8 +56,8 @@
         <div class="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:grid-cols-2 lg:grid-cols-4">
             <div>
                 <div class="flex items-center gap-3">
-                    <img src="{{ $settings->logoUrl() }}" alt="{{ $settings->productName() }}" class="h-9 w-9 rounded-full object-cover">
-                    <span class="text-sm font-semibold">{{ $settings->productName() }}</span>
+                    <img src="{{ $settings->logoUrl() }}" alt="{{ $settings->productName() }}" class="h-10 w-auto max-w-[180px] object-contain">
+                    <span class="sr-only">{{ $settings->productName() }}</span>
                 </div>
                 @if ($settings->shortDescription())
                     <p class="mt-3 text-sm text-gray-400">{{ $settings->shortDescription() }}</p>

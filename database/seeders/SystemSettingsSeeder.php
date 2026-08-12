@@ -19,9 +19,9 @@ class SystemSettingsSeeder extends Seeder
             [
                 'product_name' => 'Combate Real',
                 'public_title' => 'Combate Real',
-                'logo_path' => 'images/logo_circle.png',
-                'favicon_path' => 'frontend/images/logo_with_text.png',
-                'default_image' => 'frontend/images/senvatec-cta-landscape.png',
+                'logo_path' => 'images/mma/brand/combate-real-logo.svg',
+                'favicon_path' => 'images/mma/brand/combate-real-favicon.png',
+                'default_image' => 'images/mma/generated/landing-hero.webp',
                 'contact_email' => 'contacto@combatereal.dev',
                 'contact_phone' => '+59170000000',
                 'whatsapp_phone' => '+59170000000',

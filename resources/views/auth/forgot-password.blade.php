@@ -1,4 +1,8 @@
 <x-guest-layout>
+    @php
+        $brand = app(\App\Services\SystemSettingsService::class);
+    @endphp
+
     <div class="flex flex-col sm:justify-center items-center pt-6 sm:pt-0 min-h-screen">
         
         <!-- Contenedor del formulario con diseño moderno -->
@@ -7,10 +11,10 @@
                 
                 <!-- Logo dentro del formulario -->
                 <div class="px-6 pt-2 pb-0">
-                    <img src="{{asset('frontend/images/reduced_logo.png')}}" 
+                    <img src="{{ $brand->logoUrl() }}"
                          class="w-full h-auto object-contain animate-fade-in" 
                          style="filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.08));"
-                         alt="Logo" />
+                         alt="{{ $brand->productName() }}" />
                 </div>
                 
                 <!-- Header con gradiente -->

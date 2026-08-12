@@ -41,7 +41,7 @@
             <img
                 src="{{ AdminPanel::brandLogo() }}"
                 alt="{{ AdminPanel::brandName() }}"
-                class="mx-auto mb-8 h-16 w-16 rounded-full object-contain shadow-sm"
+                class="mx-auto mb-8 h-16 w-auto max-w-[220px] object-contain shadow-sm"
             >
 
             <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800">

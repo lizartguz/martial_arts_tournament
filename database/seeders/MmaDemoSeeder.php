@@ -11,11 +11,12 @@ use Illuminate\Support\Str;
 class MmaDemoSeeder extends Seeder
 {
     private array $images = [
-        'frontend/images/senvatec-hero-weather-station.png',
-        'frontend/images/senvatec-cta-landscape.png',
-        'frontend/images/senvatec-agro-monitoring.png',
-        'frontend/images/senvatec-monitoring-dashboard.png',
-        'frontend/images/senvatec-sensor-network.png',
+        'images/mma/generated/event-main.webp',
+        'images/mma/generated/event-card.webp',
+        'images/mma/generated/landing-hero.webp',
+        'images/mma/generated/fighter-male.webp',
+        'images/mma/generated/fighter-female.webp',
+        'images/mma/generated/news-cover.webp',
     ];
 
     /**
@@ -109,7 +110,7 @@ class MmaDemoSeeder extends Seeder
                     'city_id' => $cityIds[$city] ?? null,
                     'coach_name' => $coach,
                     'contact_phone' => '+59170000000',
-                    'logo_path' => 'images/logo_circle.png',
+                    'logo_path' => 'images/mma/brand/combate-real-icon.png',
                     'description' => "Equipo demo para pruebas de {$name}.",
                     'status' => 1,
                     'created_by' => $rootId,
@@ -169,8 +170,10 @@ class MmaDemoSeeder extends Seeder
                     'reach_cm' => 165 + ($index * 3),
                     'stance' => $index % 2 === 0 ? 'orthodox' : 'southpaw',
                     'bio' => "Perfil demo de {$firstName} {$lastName} para visualizar fichas públicas y administrativas.",
-                    'profile_image' => $this->images[$index % count($this->images)],
-                    'cover_image' => $this->images[($index + 1) % count($this->images)],
+                    'profile_image' => $gender === 'female'
+                        ? 'images/mma/generated/fighter-female.webp'
+                        : 'images/mma/generated/fighter-male.webp',
+                    'cover_image' => 'images/mma/generated/landing-hero.webp',
                     'wins' => 4 + $index,
                     'losses' => $index % 4,
                     'draws' => $index % 2,

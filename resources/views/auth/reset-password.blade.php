@@ -1,4 +1,8 @@
 <x-guest-layout>
+    @php
+        $brand = app(\App\Services\SystemSettingsService::class);
+    @endphp
+
     <style>
         .reset-screen {
             position: relative;
@@ -11,7 +15,7 @@
             background-image:
                 linear-gradient(135deg, rgba(16, 24, 40, 0.48), rgba(15, 122, 58, 0.22)),
                 linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.08)),
-                url('{{ asset('images/login-background-station-senvatec.png') }}');
+                url('{{ asset('images/mma/generated/login-bg.webp') }}');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -97,9 +101,9 @@
             <div class="auth-card reset-panel">
                 <div class="reset-brand-wrap">
                     <div class="flex justify-center animate-fade-in">
-                        <img src="{{ asset('images/logo_rectangular.png') }}"
+                        <img src="{{ $brand->logoUrl() }}"
                             class="reset-brand-logo"
-                            alt="Logo SENVATEC" />
+                            alt="{{ $brand->productName() }}" />
                     </div>
 
                     <h1 class="reset-title">{{ __('messages.reset_password.title') }}</h1>

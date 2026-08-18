@@ -79,6 +79,12 @@ class NotificationsPush extends Component
 
     public $currentImage2 = null;
 
+    public bool $showDeleteModal = false;
+
+    public ?int $pendingDeleteId = null;
+
+    public string $deleteName = '';
+
     protected $listeners = ['deleteNotif'];
 
     /**
@@ -463,11 +469,46 @@ class NotificationsPush extends Component
     }
 
     /**
-     * Gestiona delete notif dentro de la tabla de notificaciones push.
+     * Prepara la confirmacion visual antes de eliminar un aviso.
      */
-    public function deleteNotif($payload)
+    public function confirmDeleteNotif(int $id): void
     {
-        $id = is_array($payload) ? ($payload['id'] ?? null) : $payload;
+        $notification = NotificationM::find($id);
+
+        if (! $notification) {
+            $this->dispatch('failedAlert', ['failed' => __('messages.notices.alerts.not_found')]);
+
+            return;
+        }
+
+        $this->pendingDeleteId = $notification->id;
+        $this->deleteName = $notification->title ?: 'Aviso #'.$notification->id;
+        $this->showDeleteModal = true;
+    }
+
+    /**
+     * Limpia el estado pendiente del modal de eliminacion.
+     */
+    public function closeDeleteModal(): void
+    {
+        $this->showDeleteModal = false;
+        $this->pendingDeleteId = null;
+        $this->deleteName = '';
+    }
+
+    /**
+     * Elimina el aviso seleccionado despues de confirmar la accion.
+     */
+    public function deleteNotif($payload = null)
+    {
+        $id = $this->pendingDeleteId ?? (is_array($payload) ? ($payload['id'] ?? null) : $payload);
+
+        if (! $id) {
+            $this->dispatch('failedAlert', ['failed' => __('messages.notices.alerts.not_found')]);
+
+            return;
+        }
+
         DB::beginTransaction();
         try {
             $notification = NotificationM::findOrFail($id);
@@ -476,6 +517,7 @@ class NotificationsPush extends Component
             $this->deleteStoredImage($notification->image_2);
             $notification->delete();
             DB::commit();
+            $this->closeDeleteModal();
             $this->dispatch('successAlert', ['success' => __('messages.notices.alerts.deleted')]);
         } catch (\Throwable $th) {
             DB::rollBack();

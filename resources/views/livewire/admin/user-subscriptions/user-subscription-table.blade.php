@@ -229,17 +229,13 @@
     @endif
 
     @if ($showCancelModal)
-        <x-tw-modal close="closeCancelModal" max-width="md" :title="__('mma.admin.user_subscriptions.cancel_title')" icon="fas fa-ban" header-class="bg-red-600 text-white">
-            <p class="text-sm text-gray-600 dark:text-gray-300">
-                {{ __('mma.admin.user_subscriptions.cancel_warning') }} <strong>{{ $cancelName }}</strong>
-            </p>
-
-            <x-slot:footer>
-                <button type="button" class="tw-btn tw-btn-gray" wire:click="closeCancelModal">{{ __('messages.actions.cancel') }}</button>
-                <button type="button" class="tw-btn tw-btn-red" wire:click="cancel" wire:loading.attr="disabled">
-                    <i class="fas fa-ban text-xs"></i>{{ __('mma.admin.user_subscriptions.actions.cancel') }}
-                </button>
-            </x-slot:footer>
-        </x-tw-modal>
+        <x-tw-confirm-modal
+            close="closeCancelModal"
+            confirm="cancel"
+            :title="__('mma.admin.user_subscriptions.cancel_title')"
+            :message="__('mma.admin.user_subscriptions.cancel_warning')"
+            :target-name="$cancelName"
+            :confirm-text="__('mma.admin.user_subscriptions.actions.cancel')"
+        />
     @endif
 </div>

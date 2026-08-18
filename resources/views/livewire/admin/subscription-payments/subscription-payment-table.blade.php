@@ -275,32 +275,25 @@
     @endif
 
     @if ($showConfirmModal)
-        <x-tw-modal close="closeConfirmModal" max-width="md" :title="__('mma.admin.subscription_payments.confirm_title')" icon="fas fa-check">
-            <p class="text-sm text-gray-600 dark:text-gray-300">
-                {{ __('mma.admin.subscription_payments.confirm_warning') }} <strong>{{ $actionName }}</strong>
-            </p>
-
-            <x-slot:footer>
-                <button type="button" class="tw-btn tw-btn-gray" wire:click="closeConfirmModal">{{ __('messages.actions.cancel') }}</button>
-                <button type="button" class="tw-btn tw-btn-emerald" wire:click="markAsPaid" wire:loading.attr="disabled">
-                    <i class="fas fa-check text-xs"></i>{{ __('mma.admin.subscription_payments.actions.confirm') }}
-                </button>
-            </x-slot:footer>
-        </x-tw-modal>
+        <x-tw-confirm-modal
+            close="closeConfirmModal"
+            confirm="markAsPaid"
+            :title="__('mma.admin.subscription_payments.confirm_title')"
+            :message="__('mma.admin.subscription_payments.confirm_warning')"
+            :target-name="$actionName"
+            :confirm-text="__('mma.admin.subscription_payments.actions.confirm')"
+            variant="success"
+        />
     @endif
 
     @if ($showCancelModal)
-        <x-tw-modal close="closeCancelModal" max-width="md" :title="__('mma.admin.subscription_payments.cancel_title')" icon="fas fa-ban" header-class="bg-red-600 text-white">
-            <p class="text-sm text-gray-600 dark:text-gray-300">
-                {{ __('mma.admin.subscription_payments.cancel_warning') }} <strong>{{ $actionName }}</strong>
-            </p>
-
-            <x-slot:footer>
-                <button type="button" class="tw-btn tw-btn-gray" wire:click="closeCancelModal">{{ __('messages.actions.cancel') }}</button>
-                <button type="button" class="tw-btn tw-btn-red" wire:click="markAsFailed" wire:loading.attr="disabled">
-                    <i class="fas fa-ban text-xs"></i>{{ __('mma.admin.subscription_payments.actions.cancel') }}
-                </button>
-            </x-slot:footer>
-        </x-tw-modal>
+        <x-tw-confirm-modal
+            close="closeCancelModal"
+            confirm="markAsFailed"
+            :title="__('mma.admin.subscription_payments.cancel_title')"
+            :message="__('mma.admin.subscription_payments.cancel_warning')"
+            :target-name="$actionName"
+            :confirm-text="__('mma.admin.subscription_payments.actions.cancel')"
+        />
     @endif
 </div>

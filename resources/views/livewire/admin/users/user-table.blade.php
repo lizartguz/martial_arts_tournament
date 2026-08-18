@@ -198,14 +198,12 @@
     @endif
 
     @if ($showDeleteModal)
-        <x-tw-modal close="closeDeleteModal" max-width="md" :title="__('mma.admin.users.delete_title')" icon="fas fa-trash" header-class="bg-red-600 text-white">
-            <p class="text-sm text-gray-700 dark:text-gray-300">
-                {{ __('mma.admin.users.delete_warning') }} <strong>{{ $deleteName }}</strong>
-            </p>
-            <x-slot:footer>
-                <button type="button" class="tw-btn tw-btn-gray" wire:click="closeDeleteModal">{{ __('messages.actions.cancel') }}</button>
-                <button type="button" class="tw-btn tw-btn-red" wire:click="delete" wire:loading.attr="disabled">{{ __('messages.actions.delete') }}</button>
-            </x-slot:footer>
-        </x-tw-modal>
+        <x-tw-confirm-modal
+            close="closeDeleteModal"
+            confirm="delete"
+            :title="__('mma.admin.users.delete_title')"
+            :message="__('mma.admin.users.delete_warning')"
+            :target-name="$deleteName"
+        />
     @endif
 </div>

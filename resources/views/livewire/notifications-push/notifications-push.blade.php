@@ -479,9 +479,8 @@
                                         </button>
                                         <button type="button"
                                                 class="tw-btn-xs tw-btn-outline-red"
-                                                wire:click="deleteNotif({{ $item->id }})"
-                                                wire:loading.attr="disabled" wire:target="resendPush"
-                                                wire:confirm="{{ __('messages.notices.confirm.delete') }}">
+                                                wire:click="confirmDeleteNotif({{ $item->id }})"
+                                                wire:loading.attr="disabled" wire:target="confirmDeleteNotif({{ $item->id }})">
                                             <i class="fa fa-trash-alt mr-1"></i> {{ __('messages.notices.buttons.delete') }}
                                         </button>
                                     </div>
@@ -528,6 +527,16 @@
                 </div>
             </div>
         </div>
+    @endif
+
+    @if ($showDeleteModal)
+        <x-tw-confirm-modal
+            close="closeDeleteModal"
+            confirm="deleteNotif"
+            :title="__('messages.notices.buttons.delete')"
+            :message="__('messages.notices.confirm.delete')"
+            :target-name="$deleteName"
+        />
     @endif
 
     <style>

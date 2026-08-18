@@ -14,6 +14,14 @@ class ImageUploadOptimizer
 
     private const IMAGE_QUALITY = 80;
 
+    private const PNG_COMPRESSION = 8;
+
+    /**
+     * Formatos que conservan canal alfa: no deben aplanarse a JPEG porque
+     * perderían la transparencia (crítico en logos, favicons y sponsors).
+     */
+    private const ALPHA_MIMES = ['image/png', 'image/webp'];
+
     /**
      * Ejecuta la operación store del servicio.
      *
@@ -88,9 +96,22 @@ class ImageUploadOptimizer
             $targetHeight = (int) \round($sourceHeight * ($targetWidth / $sourceWidth));
         }
 
+        $keepsAlpha = \in_array($mimeType, self::ALPHA_MIMES, true);
         $canvas = \imagecreatetruecolor($targetWidth, $targetHeight);
-        $white = \imagecolorallocate($canvas, 255, 255, 255);
-        \imagefill($canvas, 0, 0, $white);
+
+        if ($keepsAlpha) {
+            // Sin blending y con canal alfa guardado, imagecopyresampled copia la
+            // transparencia original en vez de fundirla contra un fondo opaco.
+            \imagealphablending($canvas, false);
+            \imagesavealpha($canvas, true);
+            $transparent = \imagecolorallocatealpha($canvas, 0, 0, 0, 127);
+            \imagefilledrectangle($canvas, 0, 0, $targetWidth, $targetHeight, $transparent);
+        } else {
+            // JPEG no tiene canal alfa: sin este relleno las zonas vacías salen negras.
+            $white = \imagecolorallocate($canvas, 255, 255, 255);
+            \imagefill($canvas, 0, 0, $white);
+        }
+
         \imagecopyresampled(
             $canvas,
             $source,
@@ -103,10 +124,41 @@ class ImageUploadOptimizer
             $sourceWidth,
             $sourceHeight
         );
-        \imageinterlace($canvas, true);
 
+        return $this->encode($canvas, $source, $mimeType);
+    }
+
+    /**
+     * Codifica el lienzo conservando el formato original del archivo subido.
+     *
+     * @param  \GdImage  $canvas
+     * @param  \GdImage  $source
+     */
+    private function encode($canvas, $source, string $mimeType): array
+    {
         \ob_start();
-        \imagejpeg($canvas, null, self::IMAGE_QUALITY);
+
+        switch ($mimeType) {
+            case 'image/png':
+                \imagepng($canvas, null, self::PNG_COMPRESSION);
+                $mime = 'image/png';
+                $extension = 'png';
+                break;
+
+            case 'image/webp':
+                \imagewebp($canvas, null, self::IMAGE_QUALITY);
+                $mime = 'image/webp';
+                $extension = 'webp';
+                break;
+
+            default:
+                \imageinterlace($canvas, true);
+                \imagejpeg($canvas, null, self::IMAGE_QUALITY);
+                $mime = 'image/jpeg';
+                $extension = 'jpg';
+                break;
+        }
+
         $content = (string) \ob_get_clean();
 
         \imagedestroy($source);
@@ -115,8 +167,8 @@ class ImageUploadOptimizer
         return [
             'content' => $content,
             'size' => \strlen($content),
-            'mime' => 'image/jpeg',
-            'extension' => 'jpg',
+            'mime' => $mime,
+            'extension' => $extension,
         ];
     }
 

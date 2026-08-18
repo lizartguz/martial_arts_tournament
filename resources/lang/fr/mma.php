@@ -422,7 +422,7 @@ $en['admin']['system_settings'] = [
         'save' => 'Enregistrer les paramètres',
     ],
     'messages' => [
-        'updated' => 'Paramètres du système mis à jour avec succès.',
+        'updated' => 'Paramètres du système mis à jour avec succès.', 'updated_with_images' => 'Paramètres et images mis à jour avec succès.', 'uploading' => 'Téléversement de l’image...',
     ],
 ];
 

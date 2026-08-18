@@ -6,11 +6,15 @@
         </div>
 
         @can('system_settings.update')
+            {{-- Se deshabilita también mientras el archivo viaja al servidor: guardar
+                 antes de que termine la subida grabaría los ajustes sin la imagen. --}}
             <button type="button"
                 wire:click="save"
                 wire:loading.attr="disabled"
+                wire:target="save,logoImage,faviconImage"
                 class="inline-flex items-center justify-center gap-2 rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-70">
-                <i class="fas fa-save"></i>
+                <i class="fas fa-save" wire:loading.remove wire:target="save,logoImage,faviconImage"></i>
+                <i class="fas fa-spinner fa-spin" wire:loading wire:target="save,logoImage,faviconImage"></i>
                 <span>{{ __('mma.admin.system_settings.actions.save') }}</span>
             </button>
         @endcan
@@ -112,6 +116,10 @@
                     @endif
                 </div>
                 <input type="file" wire:model="logoImage" accept="image/png,image/jpeg,image/webp" class="mt-3 w-full text-sm text-gray-700 dark:text-gray-300">
+                <p wire:loading wire:target="logoImage" class="mt-2 flex items-center gap-2 text-xs font-medium text-amber-600 dark:text-amber-400">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>{{ __('mma.admin.system_settings.messages.uploading') }}</span>
+                </p>
                 @error('logoImage') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
             </section>
 
@@ -126,6 +134,10 @@
                     @endif
                 </div>
                 <input type="file" wire:model="faviconImage" accept="image/png,image/jpeg,image/webp" class="mt-3 w-full text-sm text-gray-700 dark:text-gray-300">
+                <p wire:loading wire:target="faviconImage" class="mt-2 flex items-center gap-2 text-xs font-medium text-amber-600 dark:text-amber-400">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>{{ __('mma.admin.system_settings.messages.uploading') }}</span>
+                </p>
                 @error('faviconImage') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
             </section>
         </aside>

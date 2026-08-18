@@ -373,7 +373,7 @@ $en['admin']['system_settings'] = [
         'save' => 'Guardar ajustes',
     ],
     'messages' => [
-        'updated' => 'Ajustes del sistema actualizados correctamente.',
+        'updated' => 'Ajustes del sistema actualizados correctamente.', 'updated_with_images' => 'Ajustes e imágenes actualizados correctamente.', 'uploading' => 'Subiendo imagen...',
     ],
 ];
 

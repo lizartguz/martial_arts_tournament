@@ -422,7 +422,7 @@ $en['admin']['system_settings'] = [
         'save' => 'Salvar configurações',
     ],
     'messages' => [
-        'updated' => 'Configurações do sistema atualizadas com sucesso.',
+        'updated' => 'Configurações do sistema atualizadas com sucesso.', 'updated_with_images' => 'Configurações e imagens atualizadas com sucesso.', 'uploading' => 'Enviando imagem...',
     ],
 ];
 

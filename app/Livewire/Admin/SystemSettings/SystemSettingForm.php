@@ -75,6 +75,10 @@ class SystemSettingForm extends Component
         $validated = $this->validate($this->rules(), attributes: $this->attributes())['form'];
         $settings = $this->settings();
 
+        // Se evalúa antes de limpiar las propiedades para poder confirmar al
+        // usuario si el logo/favicon realmente se reemplazó en este guardado.
+        $replacedImages = $this->logoImage !== null || $this->faviconImage !== null;
+
         $this->normalizeNullableFields($validated);
         $this->storeImages($images, $validated, $settings);
 
@@ -86,7 +90,11 @@ class SystemSettingForm extends Component
         $this->logoImage = null;
         $this->faviconImage = null;
 
-        $this->dispatch('successAlert', ['success' => __('mma.admin.system_settings.messages.updated')]);
+        $this->dispatch('successAlert', [
+            'success' => $replacedImages
+                ? __('mma.admin.system_settings.messages.updated_with_images')
+                : __('mma.admin.system_settings.messages.updated'),
+        ]);
     }
 
     /**

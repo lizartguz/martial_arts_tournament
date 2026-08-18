@@ -1,10 +1,14 @@
 # Hallazgos de code review — 2026-08-11
 
-Revisión con 10 agentes (ángulos A–E, Reuse, Simplification, Efficiency, Altitude, Conventions) sobre el diff de: Fase 0 (limpieza legacy), fix de login, notificaciones, landing pública, portal del suscriptor, y limpieza de RolesTable/mount() guards. 14 hallazgos verificados. Ninguno se corrigió todavía.
+Revisión con 10 agentes (ángulos A–E, Reuse, Simplification, Efficiency, Altitude, Conventions) sobre el diff de: Fase 0 (limpieza legacy), fix de login, notificaciones, landing pública, portal del suscriptor, y limpieza de RolesTable/mount() guards. 14 hallazgos verificados.
+
+**Actualización 2026-08-17:** 13 de los 14 hallazgos (#1–#13) fueron corregidos por el commit `e5c906b` ("Corregir hallazgos reales del portal y landing MMA"), aplicado el mismo día ~50 minutos después de esta revisión. El hallazgo #14 se dejó sin cambios a propósito, tal como concluía su propia solución recomendada. Verificado contra el código actual — no quedan hallazgos abiertos de esta lista.
 
 ## Bugs de comportamiento
 
 ### 1. Empates/no-contest se muestran como "Pendiente"
+
+**Estado:** Corregido en `e5c906b`.
 
 **Dónde:** `resources/views/landing/fighter-detail.blade.php:73-97`
 
@@ -16,6 +20,8 @@ Revisión con 10 agentes (ángulos A–E, Reuse, Simplification, Efficiency, Alt
 
 ### 2. Flash `session('error')` nunca se renderiza en el portal del suscriptor
 
+**Estado:** Corregido en `e5c906b`.
+
 **Dónde:** `app/Http/Controllers/Subscriber/PortalController.php:76,121` (métodos `uploadPaymentProof`/`uploadRequestProof`)
 
 **Qué pasa:** cuando el guard de estado rechaza la subida (el pago/solicitud ya no está pendiente), el controlador hace `return back()->with('error', __('mma.subscriber_portal.purchases.proof_not_allowed'));`. Pero `resources/views/layouts/subscriber.blade.php:72-82` solo tiene bloques `@if (session('success'))` y `@if ($errors->any())` — no existe ningún `@if (session('error'))`. El usuario recarga la página, el formulario de subida desaparece (porque el guard de estado también lo oculta), y no ve ningún mensaje explicando por qué.
@@ -25,6 +31,8 @@ Revisión con 10 agentes (ángulos A–E, Reuse, Simplification, Efficiency, Alt
 ---
 
 ### 3. `@if ($feature->value)` oculta valores "0"
+
+**Estado:** Corregido en `e5c906b`.
 
 **Dónde:** `resources/views/landing/subscription.blade.php:35-36` y `resources/views/subscriber/subscription.blade.php:43-44`
 
@@ -36,6 +44,8 @@ Revisión con 10 agentes (ángulos A–E, Reuse, Simplification, Efficiency, Alt
 
 ### 4. Excepción sin capturar al subir comprobante → error 500
 
+**Estado:** Corregido en `e5c906b` (el `try/catch` se agregó dentro del nuevo `FileUploadService::replacePaymentProof()`, ver #11).
+
 **Dónde:** `app/Http/Controllers/Subscriber/PortalController.php:92,137`
 
 **Qué pasa:** `FileUploadService::storePaymentProof()` lanza `\InvalidArgumentException` si el MIME real del archivo no coincide exactamente con la whitelist interna (`image/jpeg`, `image/png`, `application/pdf`), aun cuando el archivo pasó la regla `mimes:jpg,jpeg,png,pdf` de Laravel (que acepta un conjunto más amplio de MIME según la extensión). `LandingController::submitContact()` envuelve la misma llamada en `try/catch` y la convierte en `ValidationException` (mensaje amigable + redirect con errores). El portal del suscriptor no lo hace, así que ese mismo caso borde termina en un error 500 sin manejar.
@@ -45,6 +55,8 @@ Revisión con 10 agentes (ángulos A–E, Reuse, Simplification, Efficiency, Alt
 ---
 
 ### 5. Plan borrado (soft-delete) rompe el historial de pagos del suscriptor
+
+**Estado:** Corregido en `e5c906b` (opción elegida: `->withTrashed()` en ambos modelos).
 
 **Dónde:** `app/Models/UserSubscription.php:27` (`plan()`), `app/Models/PurchaseRequest.php:27` (`plan()`)
 
@@ -56,6 +68,8 @@ Revisión con 10 agentes (ángulos A–E, Reuse, Simplification, Efficiency, Alt
 
 ### 6. `empty()` vs `filled()` inconsistente para `event_slug`
 
+**Estado:** Corregido en `e5c906b`.
+
 **Dónde:** `app/Http/Controllers/Public/LandingController.php:234` (método `submitContact`)
 
 **Qué pasa:** `if (! empty($validated['event_slug']))` trataría un slug literal `"0"` como vacío (edge case improbable — requeriría un evento cuyo nombre generara ese slug exacto — pero real). El resto del mismo archivo usa `filled()` para este tipo de chequeo (ver `contact()` unas líneas antes), así que además de ser un bug potencial es una inconsistencia de estilo dentro del mismo archivo.
@@ -66,6 +80,8 @@ Revisión con 10 agentes (ángulos A–E, Reuse, Simplification, Efficiency, Alt
 
 ### 7. `app/View/Components/LandingLayout.php` — componente huérfano y roto si se reusa
 
+**Estado:** Corregido en `e5c906b` (archivo eliminado).
+
 **Qué pasa:** este componente Blade (`render()` devuelve `view('layouts.landing')`) asume que la vista imprime `{{ $slot }}` en algún lado, ya que así funciona un componente Blade estándar. Pero `layouts/landing.blade.php` fue reescrito en este mismo trabajo a un layout tradicional `@extends`/`@yield('content')` sin ninguna referencia a `$slot`. Ningún archivo usa `<x-landing-layout>` hoy (grep completo sin resultados), pero si alguien lo reintrodujera más adelante, la página renderizaría con el `<main>` completamente vacío — una trampa silenciosa.
 
 **Solución recomendada:** eliminar `app/View/Components/LandingLayout.php` (y su vista asociada si tuviera una `resources/views/components/landing-layout.blade.php` — no la tiene, usa `layouts.landing` directamente).
@@ -73,6 +89,8 @@ Revisión con 10 agentes (ángulos A–E, Reuse, Simplification, Efficiency, Alt
 ---
 
 ### 8. `scripts/run_automation_probe.php` — falla si se ejecuta
+
+**Estado:** Corregido en `e5c906b` (archivo eliminado).
 
 **Qué pasa:** este script de prueba manual llama a `app(App\Services\Automation\AutomationExecutor::class)->execute($text)`. Esa clase, junto con todo `app/Automation/`, `app/AI/` y los bindings en `AppServiceProvider`, fue eliminada en una vuelta anterior a pedido del usuario ("bórralo todo, no lo necesitamos"). Ejecutar `php scripts/run_automation_probe.php` hoy falla con `Target class [App\Services\Automation\AutomationExecutor] does not exist`.
 
@@ -82,6 +100,8 @@ Revisión con 10 agentes (ángulos A–E, Reuse, Simplification, Efficiency, Alt
 
 ### 9. `app/Http/Requests/Api/v1/ExecuteAutomationRequest.php` — FormRequest huérfano
 
+**Estado:** Corregido en `e5c906b` (archivo eliminado).
+
 **Qué pasa:** su único consumidor era `AutomationApiController` (ya eliminado) y la ruta `/api/v1/automations/execute` ya no existe en `routes/api.php`. Grep repo-completo confirma cero referencias externas.
 
 **Solución recomendada:** eliminar el archivo.
@@ -89,6 +109,8 @@ Revisión con 10 agentes (ángulos A–E, Reuse, Simplification, Efficiency, Alt
 ---
 
 ### 10. Permisos `ticket_orders.*`/`ticket_checkins.*` sin módulo detrás
+
+**Estado:** Corregido en `e5c906b` (opción elegida: (b), retirados del seeder).
 
 **Dónde:** `database/seeders/RolesAndPermissionsSeeder.php`
 
@@ -100,6 +122,8 @@ Revisión con 10 agentes (ángulos A–E, Reuse, Simplification, Efficiency, Alt
 
 ### 11. Lógica de subir comprobante triplicada
 
+**Estado:** Corregido en `e5c906b` (`FileUploadService::replacePaymentProof()`).
+
 **Dónde:** `PortalController::uploadPaymentProof` (líneas 70-103) y `uploadRequestProof` (líneas 115-148) son casi idénticos entre sí (validar → borrar comprobante previo → guardar nuevo → actualizar 3 columnas → redirect), y ya existe una tercera copia del mismo patrón en `SubscriptionPaymentTable.php:470-475`.
 
 **Solución recomendada:** extraer un método `FileUploadService::replaceProof(Model $model, string $pathColumn, UploadedFile $file, string $prefix): array` que encapsule "borrar el anterior si existe + guardar el nuevo + devolver metadata", y llamarlo desde los 3 puntos en vez de repetir la lógica.
@@ -107,6 +131,8 @@ Revisión con 10 agentes (ángulos A–E, Reuse, Simplification, Efficiency, Alt
 ---
 
 ### 12. Filtro "noticia publicada" reimplementado 3 veces, sin scope en el modelo
+
+**Estado:** Corregido en `e5c906b` (`NewsPost::scopePublished()` + `isPublished()`).
 
 **Dónde:** `LandingController.php` en `index()` (línea ~42), `news()` (línea ~143) y `newsShow()` (línea ~157) — las dos primeras como query (`where('status',1)->where(fn...)`), la tercera como condición booleana con forma distinta.
 
@@ -116,6 +142,8 @@ Revisión con 10 agentes (ángulos A–E, Reuse, Simplification, Efficiency, Alt
 
 ### 13. `SystemSettingsService` consultado 2 veces por página
 
+**Estado:** Corregido en `e5c906b` (opción elegida: singleton en `AppServiceProvider::register()`).
+
 **Dónde:** `resources/views/subscriber/payment-detail.blade.php:9`, `request-detail.blade.php:9`, `subscription.blade.php:9` — cada uno hace `app(\App\Services\SystemSettingsService::class)` para el bloque de contacto, pese a que `layouts/subscriber.blade.php:4` ya lo instancia. El servicio no es singleton (solo cachea con una propiedad `$loaded` de instancia), así que cada instanciación nueva vuelve a consultar `SystemSetting::query()->first()`.
 
 **Solución recomendada:** opción simple — pasar `$settings` desde `PortalController` a cada vista (mismo patrón que ya usa `LandingController` en las 8 acciones de landing), en vez de resolverlo dentro del `@php` de cada vista. Opción más profunda — enlazar `SystemSettingsService` como singleton en `AppServiceProvider::register()`.
@@ -123,6 +151,8 @@ Revisión con 10 agentes (ángulos A–E, Reuse, Simplification, Efficiency, Alt
 ---
 
 ### 14. `mount() { Gate::authorize(...) }` duplica el `can:` de la ruta
+
+**Estado:** Sin cambios, a propósito (ver "Solución recomendada" abajo). Verificado 2026-08-17: el patrón sigue presente en 19 componentes `*Table.php` bajo `app/Livewire/Admin/`.
 
 **Dónde:** los 7 componentes Livewire donde se agregó hoy (`FighterTable`, `FighterTeamTable`, `FightTable`, `PurchaseRequestTable`, `UserTable`, `VenueTable`, `WeightClassTable`).
 

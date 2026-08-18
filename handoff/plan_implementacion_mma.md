@@ -39,7 +39,7 @@ El logo, favicon y login actuales pueden conservarse al inicio. Mas adelante, de
 - El `slug` se genera automaticamente al crear desde `name` o `title`.
 - El administrador puede editar manualmente el `slug`, con validación de formato y unicidad.
 - El `slug` no debe cambiar automaticamente al editar el título de un registro publicado.
-- Los roles definitivos son `super_manager`, `admin`, `manager`, `publisher`, `sales`, `checkin`, `support` y `subscriber`.
+- Los roles definitivos son `super_manager`, `admin`, `publisher`, `sales`, `checkin`, `support` y `subscriber`. (El rol `manager`/"Gestor" se eliminó el 2026-08-17: sus permisos operativos quedaron cubiertos por `admin`.)
 - `super_manager` es el rol técnico de root funcional.
 - Roles y permisos se crean por código, no desde el panel.
 - El panel solo asigna o quita roles/permisos existentes.

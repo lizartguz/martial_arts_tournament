@@ -304,13 +304,13 @@ class SponsorTable extends Component
     {
         return [
             'form.name' => ['required', 'string', 'max:180'],
-            'form.slug' => [
+            'form.slug' => array_filter([
                 'nullable',
                 'string',
                 'max:220',
                 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
-                Rule::unique('sponsors', 'slug')->ignore($this->editingId),
-            ],
+                $this->slugTouched ? Rule::unique('sponsors', 'slug')->ignore($this->editingId) : null,
+            ]),
             'form.website_url' => ['nullable', 'url', 'max:500'],
             'form.contact_email' => ['nullable', 'email', 'max:150'],
             'form.description' => ['nullable', 'string', 'max:3000'],

@@ -302,6 +302,14 @@ return [
             'help' => "Si vous pensez avoir besoin d'accès, contactez un administrateur.",
             'dashboard' => 'Aller au tableau de bord',
         ],
+
+        '419' => [
+            'eyebrow' => 'Session expirée',
+            'title' => 'Votre session a expiré',
+            'message' => "Pour votre sécurité, votre session a été fermée après une période d'inactivité.",
+            'help' => 'Reconnectez-vous pour continuer.',
+            'login' => 'Aller à la connexion',
+        ],
     ],
 
     'authorization' => [

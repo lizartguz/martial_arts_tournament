@@ -419,13 +419,13 @@ class FighterTable extends Component
             'form.first_name' => ['required', 'string', 'max:100'],
             'form.last_name' => ['nullable', 'string', 'max:100'],
             'form.nickname' => ['nullable', 'string', 'max:120'],
-            'form.slug' => [
+            'form.slug' => array_filter([
                 'nullable',
                 'string',
                 'max:220',
                 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
-                Rule::unique('fighters', 'slug')->ignore($this->editingId),
-            ],
+                $this->slugTouched ? Rule::unique('fighters', 'slug')->ignore($this->editingId) : null,
+            ]),
             'form.gender' => ['required', Rule::in(array_keys($this->genderOptions()))],
             'form.country_id' => ['nullable', 'integer', 'exists:countries,id'],
             'form.city_id' => ['nullable', 'integer', 'exists:cities,id'],

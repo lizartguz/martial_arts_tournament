@@ -310,13 +310,13 @@ class FighterTeamTable extends Component
     {
         return [
             'form.name' => ['required', 'string', 'max:180'],
-            'form.slug' => [
+            'form.slug' => array_filter([
                 'nullable',
                 'string',
                 'max:220',
                 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
-                Rule::unique('fighter_teams', 'slug')->ignore($this->editingId),
-            ],
+                $this->slugTouched ? Rule::unique('fighter_teams', 'slug')->ignore($this->editingId) : null,
+            ]),
             'form.city_id' => ['nullable', 'integer', 'exists:cities,id'],
             'form.coach_name' => ['nullable', 'string', 'max:120'],
             'form.contact_phone' => ['nullable', 'string', 'max:30'],

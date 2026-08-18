@@ -3,7 +3,7 @@
 $en = require dirname(__DIR__).'/en/mma.php';
 
 $en['authorization']['protected'] = 'Protégé';
-$en['roles']['names'] = ['super_manager' => 'Root', 'admin' => 'Administrateur', 'manager' => 'Gestionnaire', 'publisher' => 'Éditeur', 'sales' => 'Ventes', 'checkin' => 'Contrôle d’entrée', 'support' => 'Support', 'subscriber' => 'Abonné'];
+$en['roles']['names'] = ['super_manager' => 'Root', 'admin' => 'Administrateur', 'publisher' => 'Éditeur', 'sales' => 'Ventes', 'checkin' => 'Contrôle d’entrée', 'support' => 'Support', 'subscriber' => 'Abonné'];
 $en['menu'] = [
     'dashboard' => 'Accueil',
     'events' => ['group' => 'Événements', 'events' => 'Événements', 'fights' => 'Combats', 'results' => 'Résultats', 'media' => 'Médias des événements'],
@@ -17,7 +17,6 @@ $en['menu'] = [
 $en['admin']['common'] = ['active' => 'Actif', 'inactive' => 'Inactif', 'empty' => 'Aucun enregistrement à afficher.', 'not_available' => 'Non disponible', 'yes' => 'Oui', 'no' => 'Non', 'developed_by' => 'Développé par', 'filters' => ['search' => 'Rechercher', 'status' => 'Statut', 'all' => 'Tous', 'per_page' => 'Par page', 'clear' => 'Effacer'], 'columns' => ['actions' => 'Actions']];
 $en['admin']['events'] = [
     'page_title' => 'Événements',
-    'subtitle' => 'Gérez les événements publics, brouillons, dates, lieux, slugs et images principales.',
     'table_title' => 'Liste des événements',
     'table_subtitle' => 'Filtrez, créez, modifiez, publiez ou supprimez les événements sans dépendances actives.',
     'create' => 'Nouvel événement',
@@ -36,7 +35,6 @@ $en['admin']['events'] = [
 ];
 $en['admin']['event_media'] = [
     'page_title' => 'Médias des événements',
-    'subtitle' => 'Gérez les images et liens vidéo associés aux événements.',
     'table_title' => 'Liste des médias',
     'table_subtitle' => 'Filtrez, importez, modifiez ou supprimez les médias publics des événements.',
     'create' => 'Nouveau média',
@@ -58,7 +56,6 @@ $en['admin']['event_media'] = [
 
 $en['admin']['news'] = [
     'page_title' => 'Actualités',
-    'subtitle' => 'Gérez les communiqués, nouveautés, interviews et publications publiques.',
     'table_title' => 'Liste des actualités',
     'table_subtitle' => 'Filtrez, créez, modifiez, publiez ou supprimez les publications éditoriales.',
     'create' => 'Nouvelle actualité',
@@ -77,7 +74,6 @@ $en['admin']['news'] = [
 
 $en['admin']['fights'] = [
     'page_title' => 'Combats',
-    'subtitle' => 'Gérez la carte de chaque événement, coins, rounds, ordre et statut du combat.',
     'table_title' => 'Liste des combats',
     'table_subtitle' => 'Filtrez, programmez, modifiez ou supprimez les combats sans résultat officiel.',
     'create' => 'Nouveau combat',
@@ -96,7 +92,6 @@ $en['admin']['fights'] = [
 ];
 $en['admin']['fight_results'] = [
     'page_title' => 'Résultats',
-    'subtitle' => 'Enregistrez et mettez à jour le résultat officiel de chaque combat.',
     'table_title' => 'Résultats des combats',
     'table_subtitle' => 'Filtrez les combats, consultez les résultats officiels et saisissez le vainqueur, la méthode, le round et le temps.',
     'search_placeholder' => 'Événement, combat, combattant ou méthode...',
@@ -117,7 +112,6 @@ $en['admin']['fight_results'] = [
 
 $en['admin']['fighters'] = [
     'page_title' => 'Combattants',
-    'subtitle' => 'Gérez les profils sportifs, palmarès, catégories, équipes et images des combattants.',
     'table_title' => 'Liste des combattants',
     'table_subtitle' => 'Filtrez, créez, modifiez ou supprimez les combattants sans combats ni classements associés.',
     'create' => 'Nouveau combattant',
@@ -134,13 +128,12 @@ $en['admin']['fighters'] = [
     'form' => ['first_name' => 'Prénom', 'last_name' => 'Nom', 'nickname' => 'Surnom', 'slug' => 'Slug', 'gender' => 'Genre', 'country_id' => 'Pays', 'city_id' => 'Ville', 'fighter_team_id' => 'Équipe/salle', 'weight_class_id' => 'Catégorie de poids', 'birthdate' => 'Date de naissance', 'height_cm' => 'Taille (cm)', 'reach_cm' => 'Allonge (cm)', 'stance' => 'Garde', 'bio' => 'Biographie', 'wins' => 'Victoires', 'losses' => 'Défaites', 'draws' => 'Nuls', 'no_contests' => 'Sans décision', 'status' => 'Statut', 'profile_image' => 'Image de profil', 'cover_image' => 'Image de couverture'],
     'messages' => ['created' => 'Combattant enregistré avec succès.', 'updated' => 'Combattant mis à jour avec succès.', 'deleted' => 'Combattant supprimé avec succès.', 'delete_blocked' => 'Impossible de supprimer un combattant avec des combats ou classements associés.'],
 ];
-$en['admin']['sponsors'] = ['page_title' => 'Sponsors', 'subtitle' => 'Gérez les marques sponsors et les partenaires commerciaux.', 'table_title' => 'Liste des sponsors', 'table_subtitle' => 'Filtrez, créez, modifiez ou supprimez les sponsors sans événements liés.', 'create' => 'Nouveau sponsor', 'edit' => 'Modifier le sponsor', 'delete_title' => 'Supprimer le sponsor', 'delete_warning' => 'Cette action supprimera le sponsor :', 'search_placeholder' => 'Nom, slug, site web ou e-mail...', 'image_help' => 'Les logos JPG, PNG ou WebP sont optimisés lors de l’enregistrement. Taille maximale : 5 MB.', 'events_summary' => ':count événements', 'events_help' => 'Maintenez Ctrl ou Cmd enfoncé pour sélectionner plusieurs événements.', 'filters' => ['event' => 'Événement'], 'columns' => ['sponsor' => 'Sponsor', 'website' => 'Site web', 'email' => 'E-mail', 'events' => 'Événements', 'order' => 'Ordre', 'status' => 'Statut'], 'form' => ['name' => 'Nom', 'slug' => 'Slug', 'website_url' => 'Site web', 'contact_email' => 'E-mail de contact', 'description' => 'Description', 'display_order' => 'Ordre', 'status' => 'Statut', 'logo_path' => 'Logo', 'events' => 'Événements liés'], 'messages' => ['created' => 'Sponsor enregistré avec succès.', 'updated' => 'Sponsor mis à jour avec succès.', 'deleted' => 'Sponsor supprimé avec succès.', 'delete_blocked' => 'Impossible de supprimer un sponsor lié à des événements.']];
-$en['admin']['subscription_plans'] = ['page_title' => 'Plans d’abonnement', 'subtitle' => 'Gérez les offres abonnés, les prix, la durée et les avantages visibles.', 'table_title' => 'Liste des plans', 'table_subtitle' => 'Filtrez, créez, modifiez ou supprimez les plans sans utilisation active.', 'create' => 'Nouveau plan', 'edit' => 'Modifier le plan', 'delete_title' => 'Supprimer le plan', 'delete_warning' => 'Cette action supprimera le plan :', 'search_placeholder' => 'Nom, slug ou description...', 'duration_summary' => ':days jours', 'discount_summary' => ':discount% de remise', 'features_summary' => ':count avantages', 'usage_summary' => ':subscriptions abonnements - :requests demandes', 'filters' => ['billing_period' => 'Période'], 'columns' => ['plan' => 'Plan', 'price' => 'Prix', 'period' => 'Période', 'usage' => 'Utilisation', 'order' => 'Ordre', 'status' => 'Statut'], 'billing_periods' => ['monthly' => 'Mensuel', 'quarterly' => 'Trimestriel', 'yearly' => 'Annuel', 'one_time' => 'Paiement unique', 'lifetime' => 'À vie'], 'form' => ['name' => 'Nom', 'slug' => 'Slug', 'description' => 'Description', 'price' => 'Prix', 'currency' => 'Devise', 'billing_period' => 'Période de facturation', 'duration_days' => 'Durée en jours', 'discount_percentage' => 'Pourcentage de remise', 'display_order' => 'Ordre', 'status' => 'Statut'], 'features' => ['title' => 'Avantages', 'add' => 'Ajouter un avantage', 'name' => 'Avantage', 'description' => 'Description', 'feature_key' => 'Clé technique', 'value' => 'Valeur', 'display_order' => 'Ordre', 'status' => 'Statut', 'help' => 'Seuls les avantages avec un nom sont enregistrés. Les avantages actifs sont aussi synchronisés dans le champ JSON features du plan.'], 'messages' => ['created' => 'Plan enregistré avec succès.', 'updated' => 'Plan mis à jour avec succès.', 'deleted' => 'Plan supprimé avec succès.', 'delete_blocked' => 'Impossible de supprimer un plan avec des abonnements ou des demandes d’achat associées.']];
-$en['admin']['subscribers'] = ['page_title' => 'Abonnés', 'subtitle' => 'Consultez les comptes abonnés, les coordonnées, le statut d’accès et leur dernier abonnement.', 'table_title' => 'Liste des abonnés', 'table_subtitle' => 'Filtrez, consultez et mettez à jour les données de base sans changer les rôles.', 'edit' => 'Modifier l’abonné', 'search_placeholder' => 'Nom, e-mail, téléphone ou document...', 'identity_value' => 'Document : :value', 'last_login_value' => 'Dernière connexion : :date', 'last_login_empty' => 'Aucune connexion enregistrée', 'activity_summary' => ':subscriptions abonnements - :payments paiements - :requests demandes', 'filters' => ['subscription_status' => 'Abonnement'], 'columns' => ['subscriber' => 'Abonné', 'contact' => 'Contact', 'subscription' => 'Abonnement', 'activity' => 'Activité', 'status' => 'Statut'], 'subscription_status' => ['none' => 'Sans abonnement', 'pending' => 'En attente', 'active' => 'Actif', 'expired' => 'Expiré', 'cancelled' => 'Annulé', 'suspended' => 'Suspendu'], 'form' => ['name' => 'Prénom', 'lastname' => 'Nom', 'email' => 'E-mail', 'number_phone' => 'Téléphone', 'identity_document' => 'Document d’identité', 'state' => 'Statut du compte'], 'messages' => ['updated' => 'Abonné mis à jour avec succès.']];
+$en['admin']['sponsors'] = ['page_title' => 'Sponsors', 'table_title' => 'Liste des sponsors', 'table_subtitle' => 'Filtrez, créez, modifiez ou supprimez les sponsors sans événements liés.', 'create' => 'Nouveau sponsor', 'edit' => 'Modifier le sponsor', 'delete_title' => 'Supprimer le sponsor', 'delete_warning' => 'Cette action supprimera le sponsor :', 'search_placeholder' => 'Nom, slug, site web ou e-mail...', 'image_help' => 'Les logos JPG, PNG ou WebP sont optimisés lors de l’enregistrement. Taille maximale : 5 MB.', 'events_summary' => ':count événements', 'events_help' => 'Maintenez Ctrl ou Cmd enfoncé pour sélectionner plusieurs événements.', 'filters' => ['event' => 'Événement'], 'columns' => ['sponsor' => 'Sponsor', 'website' => 'Site web', 'email' => 'E-mail', 'events' => 'Événements', 'order' => 'Ordre', 'status' => 'Statut'], 'form' => ['name' => 'Nom', 'slug' => 'Slug', 'website_url' => 'Site web', 'contact_email' => 'E-mail de contact', 'description' => 'Description', 'display_order' => 'Ordre', 'status' => 'Statut', 'logo_path' => 'Logo', 'events' => 'Événements liés'], 'messages' => ['created' => 'Sponsor enregistré avec succès.', 'updated' => 'Sponsor mis à jour avec succès.', 'deleted' => 'Sponsor supprimé avec succès.', 'delete_blocked' => 'Impossible de supprimer un sponsor lié à des événements.']];
+$en['admin']['subscription_plans'] = ['page_title' => 'Plans d’abonnement', 'table_title' => 'Liste des plans', 'table_subtitle' => 'Filtrez, créez, modifiez ou supprimez les plans sans utilisation active.', 'create' => 'Nouveau plan', 'edit' => 'Modifier le plan', 'delete_title' => 'Supprimer le plan', 'delete_warning' => 'Cette action supprimera le plan :', 'search_placeholder' => 'Nom, slug ou description...', 'duration_summary' => ':days jours', 'discount_summary' => ':discount% de remise', 'features_summary' => ':count avantages', 'usage_summary' => ':subscriptions abonnements - :requests demandes', 'filters' => ['billing_period' => 'Période'], 'columns' => ['plan' => 'Plan', 'price' => 'Prix', 'period' => 'Période', 'usage' => 'Utilisation', 'order' => 'Ordre', 'status' => 'Statut'], 'billing_periods' => ['monthly' => 'Mensuel', 'quarterly' => 'Trimestriel', 'yearly' => 'Annuel', 'one_time' => 'Paiement unique', 'lifetime' => 'À vie'], 'form' => ['name' => 'Nom', 'slug' => 'Slug', 'description' => 'Description', 'price' => 'Prix', 'currency' => 'Devise', 'billing_period' => 'Période de facturation', 'duration_days' => 'Durée en jours', 'discount_percentage' => 'Pourcentage de remise', 'display_order' => 'Ordre', 'status' => 'Statut'], 'features' => ['title' => 'Avantages', 'add' => 'Ajouter un avantage', 'name' => 'Avantage', 'description' => 'Description', 'feature_key' => 'Clé technique', 'value' => 'Valeur', 'display_order' => 'Ordre', 'status' => 'Statut', 'help' => 'Seuls les avantages avec un nom sont enregistrés. Les avantages actifs sont aussi synchronisés dans le champ JSON features du plan.'], 'messages' => ['created' => 'Plan enregistré avec succès.', 'updated' => 'Plan mis à jour avec succès.', 'deleted' => 'Plan supprimé avec succès.', 'delete_blocked' => 'Impossible de supprimer un plan avec des abonnements ou des demandes d’achat associées.']];
+$en['admin']['subscribers'] = ['page_title' => 'Abonnés', 'table_title' => 'Liste des abonnés', 'table_subtitle' => 'Filtrez, consultez et mettez à jour les données de base sans changer les rôles.', 'edit' => 'Modifier l’abonné', 'search_placeholder' => 'Nom, e-mail, téléphone ou document...', 'identity_value' => 'Document : :value', 'last_login_value' => 'Dernière connexion : :date', 'last_login_empty' => 'Aucune connexion enregistrée', 'activity_summary' => ':subscriptions abonnements - :payments paiements - :requests demandes', 'filters' => ['subscription_status' => 'Abonnement'], 'columns' => ['subscriber' => 'Abonné', 'contact' => 'Contact', 'subscription' => 'Abonnement', 'activity' => 'Activité', 'status' => 'Statut'], 'subscription_status' => ['none' => 'Sans abonnement', 'pending' => 'En attente', 'active' => 'Actif', 'expired' => 'Expiré', 'cancelled' => 'Annulé', 'suspended' => 'Suspendu'], 'form' => ['name' => 'Prénom', 'lastname' => 'Nom', 'email' => 'E-mail', 'number_phone' => 'Téléphone', 'identity_document' => 'Document d’identité', 'state' => 'Statut du compte'], 'messages' => ['updated' => 'Abonné mis à jour avec succès.']];
 
 $en['admin']['rankings'] = [
     'page_title' => 'Classements',
-    'subtitle' => 'Gérez les positions par catégorie de poids et genre.',
     'table_title' => 'Liste des classements',
     'table_subtitle' => 'Filtrez, créez et ajustez les positions officielles par catégorie et genre.',
     'create' => 'Nouveau classement',
@@ -157,7 +150,6 @@ $en['admin']['rankings'] = [
 
 $en['admin']['fighter_teams'] = [
     'page_title' => 'Équipes et salles',
-    'subtitle' => 'Gérez les académies, clubs, salles et équipes d’entraînement.',
     'table_title' => 'Liste des équipes',
     'table_subtitle' => 'Filtrez, créez, modifiez ou supprimez les équipes sans combattants associés.',
     'create' => 'Nouvelle équipe',
@@ -173,7 +165,6 @@ $en['admin']['fighter_teams'] = [
 ];
 $en['admin']['purchase_requests'] = [
     'page_title' => 'Demandes d’achat',
-    'subtitle' => 'Gérez les contacts publics, demandes de billets, abonnements et justificatifs manuels.',
     'table_title' => 'Liste des demandes',
     'table_subtitle' => 'Filtrez, assignez des responsables et mettez à jour le statut de chaque demande.',
     'search_placeholder' => 'Nom, e-mail, téléphone ou UUID...',
@@ -200,7 +191,6 @@ $en['uploads']['public_images'] = ['invalid_type' => 'Format non pris en charge.
 
 $en['admin']['user_subscriptions'] = [
     'page_title' => 'Abonnements utilisateur',
-    'subtitle' => 'Gérez les attributions manuelles de plans, périodes, statuts et notes internes des abonnés.',
     'table_title' => 'Liste des abonnements',
     'table_subtitle' => 'Filtrez, créez, modifiez ou annulez les abonnements utilisateur sans traiter de paiements automatiques.',
     'create' => 'Nouvel abonnement',
@@ -268,7 +258,6 @@ $en['admin']['user_subscriptions'] = [
 
 $en['admin']['subscription_payments'] = [
     'page_title' => 'Paiements d’abonnement',
-    'subtitle' => 'Gérez les paiements manuels d’abonnements, justificatifs privés et statuts de paiement.',
     'table_title' => 'Liste des paiements',
     'table_subtitle' => 'Filtrez, enregistrez, mettez à jour, confirmez ou annulez les paiements manuels.',
     'create' => 'Nouveau paiement',
@@ -347,7 +336,6 @@ $en['admin']['subscription_payments'] = [
 
 $en['admin']['ticket_links'] = [
     'page_title' => 'Liens de billets',
-    'subtitle' => 'Gérez les liens externes de billets, WhatsApp, VIP et streaming par événement.',
     'table_title' => 'Liste des liens de billets',
     'table_subtitle' => 'Filtrez, créez, modifiez ou supprimez les liens publics de vente associés aux événements.',
     'create' => 'Nouveau lien',
@@ -402,7 +390,6 @@ $en['admin']['ticket_links'] = [
 
 $en['admin']['system_settings'] = [
     'page_title' => 'Paramètres du système',
-    'subtitle' => 'Configurez la marque visible, les données de contact, les métadonnées de la landing publique et les images du système.',
     'form_title' => 'Configuration générale',
     'form_subtitle' => 'Ces valeurs sont reflétées dans le panneau d’administration, la connexion et la landing publique.',
     'image_help' => 'Les images JPG, PNG ou WebP sont optimisées lors de l’enregistrement. Taille maximale : 5 MB.',
@@ -442,7 +429,6 @@ $en['admin']['system_settings'] = [
 $en['menu']['events']['venues'] = 'Salles';
 $en['admin']['venues'] = [
     'page_title' => 'Salles',
-    'subtitle' => 'Gérez les arènes, colisées et lieux physiques utilisés par les événements.',
     'table_title' => 'Liste des salles',
     'table_subtitle' => 'Filtrez, créez, modifiez ou supprimez des salles sans événements liés.',
     'create' => 'Nouvelle salle',
@@ -459,7 +445,6 @@ $en['admin']['venues'] = [
 
 $en['admin']['users'] = [
     'page_title' => 'Utilisateurs',
-    'subtitle' => 'Gérez les comptes utilisateur, le statut d’accès et les rôles attribués selon la hiérarchie.',
     'table_title' => 'Liste des utilisateurs',
     'table_subtitle' => 'Filtrez, créez, modifiez ou supprimez les utilisateurs autorisés par la hiérarchie des rôles.',
     'create' => 'Nouvel utilisateur',
@@ -480,7 +465,6 @@ $en['admin']['users'] = [
 $en['menu']['fighters']['media'] = 'Médias des combattants';
 $en['admin']['fighter_media'] = [
     'page_title' => 'Médias des combattants',
-    'subtitle' => 'Gérez les images et liens vidéo associés aux profils des combattants.',
     'table_title' => 'Liste des médias des combattants',
     'table_subtitle' => 'Filtrez, envoyez, modifiez ou supprimez les médias publics des combattants.',
     'create' => 'Nouveau média',
@@ -501,7 +485,6 @@ $en['admin']['fighter_media'] = [
 
 $en['admin']['landing'] = [
     'page_title' => 'Landing publique',
-    'subtitle' => 'Gérez le titre public, la description, les métadonnées SEO et les options visibles de la landing.',
     'form_title' => 'Configuration de la landing',
     'form_subtitle' => 'Ces valeurs apparaissent sur la page publique et doivent rester alignées avec les événements publiés actifs.',
     'latest_events' => 'Aperçu des événements publiés',
@@ -527,7 +510,6 @@ $en['subscriber_portal'] = [
 $en['menu']['reports'] = ['group' => 'Rapports', 'events' => 'Rapports événements', 'subscriptions' => 'Rapports abonnements', 'sales' => 'Rapports ventes'];
 $en['admin']['reports'] = [
     'page_title' => 'Rapports',
-    'subtitle' => 'Consultez les métriques opérationnelles des événements, abonnements et ventes manuelles.',
     'table_title' => 'Rapports opérationnels',
     'table_subtitle' => 'Filtrez par type de rapport, période et statut sans modifier les enregistrements.',
     'types' => ['events' => 'Événements', 'subscriptions' => 'Abonnements', 'sales' => 'Ventes'],
@@ -538,7 +520,6 @@ $en['admin']['reports'] = [
 
 $en['admin']['logs'] = [
     'page_title' => 'Logs',
-    'subtitle' => 'Consultez les entrées récentes du log Laravel sans modifier le fichier.',
     'table_title' => 'Log de l’application',
     'file_size' => 'Taille du fichier',
     'last_modified' => 'Dernière modification',

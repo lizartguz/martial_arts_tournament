@@ -302,6 +302,14 @@ return [
             'help' => 'Wenn Sie Zugriff benötigen, wenden Sie sich an einen Administrator.',
             'dashboard' => 'Zum Dashboard',
         ],
+
+        '419' => [
+            'eyebrow' => 'Sitzung abgelaufen',
+            'title' => 'Ihre Sitzung ist abgelaufen',
+            'message' => 'Aus Sicherheitsgründen wurde Ihre Sitzung nach einer Zeit der Inaktivität beendet.',
+            'help' => 'Melden Sie sich erneut an, um fortzufahren.',
+            'login' => 'Zur Anmeldung',
+        ],
     ],
 
     'authorization' => [

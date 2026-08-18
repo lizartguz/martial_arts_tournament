@@ -302,6 +302,14 @@ return [
             'help' => 'If you think you need access, contact an administrator.',
             'dashboard' => 'Go to main panel',
         ],
+
+        '419' => [
+            'eyebrow' => 'Session expired',
+            'title' => 'Your session expired',
+            'message' => 'For your security, your session was closed after a period of inactivity.',
+            'help' => 'Sign in again to continue.',
+            'login' => 'Go to login',
+        ],
     ],
 
     'authorization' => [

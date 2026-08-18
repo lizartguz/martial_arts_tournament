@@ -302,6 +302,14 @@ return [
             'help' => 'Si crees que necesitas acceso, contacta con un administrador.',
             'dashboard' => 'Ir al panel principal',
         ],
+
+        '419' => [
+            'eyebrow' => 'Sesión expirada',
+            'title' => 'Tu sesión expiró',
+            'message' => 'Por seguridad, tu sesión se cerró después de un tiempo de inactividad.',
+            'help' => 'Inicia sesión nuevamente para continuar.',
+            'login' => 'Ir a iniciar sesión',
+        ],
     ],
 
     'authorization' => [

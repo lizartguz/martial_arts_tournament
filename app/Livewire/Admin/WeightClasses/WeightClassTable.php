@@ -296,13 +296,13 @@ class WeightClassTable extends Component
     {
         return [
             'form.name' => ['required', 'string', 'max:120'],
-            'form.slug' => [
+            'form.slug' => array_filter([
                 'nullable',
                 'string',
                 'max:140',
                 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
-                Rule::unique('weight_classes', 'slug')->ignore($this->editingId),
-            ],
+                $this->slugTouched ? Rule::unique('weight_classes', 'slug')->ignore($this->editingId) : null,
+            ]),
             'form.gender' => ['required', Rule::in(['male', 'female'])],
             'form.min_weight_kg' => ['nullable', 'numeric', 'min:0', 'max:999.99'],
             'form.max_weight_kg' => ['required', 'numeric', 'gt:form.min_weight_kg', 'max:999.99'],

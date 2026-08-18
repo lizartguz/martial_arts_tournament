@@ -34,11 +34,17 @@ class RolesAndPermissionsSeeder extends Seeder
                 ->whereNotIn('name', $permissions)
                 ->delete();
 
-            foreach ($this->rolePermissions() as $roleName => $rolePermissions) {
+            $rolePermissions = $this->rolePermissions();
+
+            foreach ($rolePermissions as $roleName => $permissionsForRole) {
                 Role::query()
                     ->firstOrCreate(['name' => $roleName, 'guard_name' => 'web'])
-                    ->syncPermissions($rolePermissions === ['*'] ? $permissions : $rolePermissions);
+                    ->syncPermissions($permissionsForRole === ['*'] ? $permissions : $permissionsForRole);
             }
+
+            Role::query()
+                ->whereNotIn('name', array_keys($rolePermissions))
+                ->delete();
         });
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
@@ -158,53 +164,6 @@ class RolesAndPermissionsSeeder extends Seeder
         return [
             'super_manager' => ['*'],
             'admin' => array_values(array_diff($this->permissions(), ['logs.download'])),
-            'manager' => [
-                'dashboard.view',
-                'system_settings.view',
-                'venues.view',
-                'venues.create',
-                'venues.update',
-                'events.view',
-                'events.create',
-                'events.update',
-                'fights.view',
-                'fights.create',
-                'fights.update',
-                'fight_results.view',
-                'fight_results.update',
-                'rankings.view',
-                'rankings.update',
-                'fighters.view',
-                'fighters.create',
-                'fighters.update',
-                'fighter_teams.view',
-                'fighter_teams.create',
-                'fighter_teams.update',
-                'weight_classes.view',
-                'event_media.view',
-                'event_media.create',
-                'event_media.update',
-                'fighter_media.view',
-                'fighter_media.create',
-                'fighter_media.update',
-                'subscribers.view',
-                'subscribers.update',
-                'user_subscriptions.view',
-                'user_subscriptions.update',
-                'subscription_payments.view',
-                'subscription_payments.upload_proof',
-                'subscription_payments.confirm',
-                'purchase_requests.view',
-                'purchase_requests.update',
-                'purchase_requests.assign',
-                'purchase_requests.close',
-                'ticket_links.view',
-                'ticket_links.create',
-                'ticket_links.update',
-                'reports.events.view',
-                'reports.subscriptions.view',
-                'reports.sales.view',
-            ],
             'publisher' => [
                 'dashboard.view',
                 'events.view',

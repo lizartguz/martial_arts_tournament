@@ -249,14 +249,14 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/authorization', [AuthorizationC::class, 'index'])
             ->middleware('can:authorization.access')
             ->name('authorization.index');
-
-        Route::post('/firebase/web-push/token/status', [FirebaseWebPushController::class, 'tokenStatus'])
-            ->name('firebase.web-push.token.status');
-        Route::post('/firebase/web-push/token', [FirebaseWebPushController::class, 'storeToken'])
-            ->name('firebase.web-push.token.store');
-        Route::delete('/firebase/web-push/token', [FirebaseWebPushController::class, 'destroyToken'])
-            ->name('firebase.web-push.token.destroy');
     });
+
+    Route::post('/firebase/web-push/token/status', [FirebaseWebPushController::class, 'tokenStatus'])
+        ->name('firebase.web-push.token.status');
+    Route::post('/firebase/web-push/token', [FirebaseWebPushController::class, 'storeToken'])
+        ->name('firebase.web-push.token.store');
+    Route::delete('/firebase/web-push/token', [FirebaseWebPushController::class, 'destroyToken'])
+        ->name('firebase.web-push.token.destroy');
 
     Route::get('/admin/notifications', [NotificationPushC::class, 'index'])
         ->middleware('can:notifications.view')

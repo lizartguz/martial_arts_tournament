@@ -402,13 +402,13 @@ class EventTable extends Component
     {
         return [
             'form.name' => ['required', 'string', 'max:180'],
-            'form.slug' => [
+            'form.slug' => array_filter([
                 'nullable',
                 'string',
                 'max:220',
                 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
-                Rule::unique('events', 'slug')->ignore($this->editingId),
-            ],
+                $this->slugTouched ? Rule::unique('events', 'slug')->ignore($this->editingId) : null,
+            ]),
             'form.subtitle' => ['nullable', 'string', 'max:200'],
             'form.description' => ['nullable', 'string', 'max:8000'],
             'form.venue_id' => ['nullable', 'integer', 'exists:venues,id'],

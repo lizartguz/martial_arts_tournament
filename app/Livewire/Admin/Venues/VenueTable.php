@@ -317,13 +317,13 @@ class VenueTable extends Component
     {
         return [
             'form.name' => ['required', 'string', 'max:180'],
-            'form.slug' => [
+            'form.slug' => array_filter([
                 'nullable',
                 'string',
                 'max:220',
                 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
-                Rule::unique('venues', 'slug')->ignore($this->editingId),
-            ],
+                $this->slugTouched ? Rule::unique('venues', 'slug')->ignore($this->editingId) : null,
+            ]),
             'form.city_id' => ['nullable', 'integer', 'exists:cities,id'],
             'form.address' => ['nullable', 'string', 'max:255'],
             'form.latitude' => ['nullable', 'numeric', 'between:-90,90'],

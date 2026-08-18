@@ -13,7 +13,6 @@ return [
     'role_ranks' => [
         'super_manager' => 100,
         'admin' => 80,
-        'manager' => 60,
         'publisher' => 50,
         'sales' => 40,
         'checkin' => 30,

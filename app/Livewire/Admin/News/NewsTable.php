@@ -349,13 +349,13 @@ class NewsTable extends Component
     {
         return [
             'form.title' => ['required', 'string', 'max:200'],
-            'form.slug' => [
+            'form.slug' => array_filter([
                 'nullable',
                 'string',
                 'max:220',
                 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
-                Rule::unique('news_posts', 'slug')->ignore($this->editingId),
-            ],
+                $this->slugTouched ? Rule::unique('news_posts', 'slug')->ignore($this->editingId) : null,
+            ]),
             'form.excerpt' => ['nullable', 'string', 'max:300'],
             'form.content' => ['nullable', 'string'],
             'form.status' => ['required', Rule::in(array_keys($this->statusOptions()))],

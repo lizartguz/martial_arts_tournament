@@ -3,7 +3,7 @@
 $en = require dirname(__DIR__).'/en/mma.php';
 
 $en['authorization']['protected'] = 'Protegido';
-$en['roles']['names'] = ['super_manager' => 'Root', 'admin' => 'Administrador', 'manager' => 'Gestor', 'publisher' => 'Publicador', 'sales' => 'Vendas', 'checkin' => 'Controle de entrada', 'support' => 'Suporte', 'subscriber' => 'Assinante'];
+$en['roles']['names'] = ['super_manager' => 'Root', 'admin' => 'Administrador', 'publisher' => 'Publicador', 'sales' => 'Vendas', 'checkin' => 'Controle de entrada', 'support' => 'Suporte', 'subscriber' => 'Assinante'];
 $en['menu'] = [
     'dashboard' => 'Início',
     'events' => ['group' => 'Eventos', 'events' => 'Eventos', 'fights' => 'Lutas', 'results' => 'Resultados', 'media' => 'Mídia de eventos'],
@@ -17,7 +17,6 @@ $en['menu'] = [
 $en['admin']['common'] = ['active' => 'Ativo', 'inactive' => 'Inativo', 'empty' => 'Não há registros para mostrar.', 'not_available' => 'Não disponível', 'yes' => 'Sim', 'no' => 'Não', 'developed_by' => 'Desenvolvido por', 'filters' => ['search' => 'Buscar', 'status' => 'Status', 'all' => 'Todos', 'per_page' => 'Por página', 'clear' => 'Limpar'], 'columns' => ['actions' => 'Ações']];
 $en['admin']['events'] = [
     'page_title' => 'Eventos',
-    'subtitle' => 'Gerencie eventos públicos, rascunhos, datas, sedes, slugs e imagens principais.',
     'table_title' => 'Lista de eventos',
     'table_subtitle' => 'Filtre, crie, edite, publique ou exclua eventos sem dependências ativas.',
     'create' => 'Novo evento',
@@ -36,7 +35,6 @@ $en['admin']['events'] = [
 ];
 $en['admin']['event_media'] = [
     'page_title' => 'Mídia de eventos',
-    'subtitle' => 'Gerencie imagens e links de vídeo associados aos eventos.',
     'table_title' => 'Lista de mídia',
     'table_subtitle' => 'Filtre, envie, edite ou exclua peças públicas de mídia dos eventos.',
     'create' => 'Nova peça',
@@ -58,7 +56,6 @@ $en['admin']['event_media'] = [
 
 $en['admin']['news'] = [
     'page_title' => 'Notícias',
-    'subtitle' => 'Gerencie comunicados, novidades, entrevistas e publicações públicas.',
     'table_title' => 'Lista de notícias',
     'table_subtitle' => 'Filtre, crie, edite, publique ou exclua publicações editoriais.',
     'create' => 'Nova notícia',
@@ -77,7 +74,6 @@ $en['admin']['news'] = [
 
 $en['admin']['fights'] = [
     'page_title' => 'Lutas',
-    'subtitle' => 'Gerencie o card de cada evento, cantos, rounds, ordem e status da luta.',
     'table_title' => 'Lista de lutas',
     'table_subtitle' => 'Filtre, programe, edite ou exclua lutas sem resultado oficial.',
     'create' => 'Nova luta',
@@ -96,7 +92,6 @@ $en['admin']['fights'] = [
 ];
 $en['admin']['fight_results'] = [
     'page_title' => 'Resultados',
-    'subtitle' => 'Registre e atualize o resultado oficial de cada luta.',
     'table_title' => 'Resultados das lutas',
     'table_subtitle' => 'Filtre lutas, revise resultados oficiais e registre vencedor, método, round e tempo.',
     'search_placeholder' => 'Evento, luta, lutador ou método...',
@@ -117,7 +112,6 @@ $en['admin']['fight_results'] = [
 
 $en['admin']['fighters'] = [
     'page_title' => 'Lutadores',
-    'subtitle' => 'Gerencie perfis esportivos, recordes, categorias, equipes e imagens de lutadores.',
     'table_title' => 'Lista de lutadores',
     'table_subtitle' => 'Filtre, crie, edite ou exclua lutadores sem lutas nem rankings associados.',
     'create' => 'Novo lutador',
@@ -134,13 +128,12 @@ $en['admin']['fighters'] = [
     'form' => ['first_name' => 'Nome', 'last_name' => 'Sobrenome', 'nickname' => 'Apelido', 'slug' => 'Slug', 'gender' => 'Gênero', 'country_id' => 'País', 'city_id' => 'Cidade', 'fighter_team_id' => 'Equipe/academia', 'weight_class_id' => 'Categoria de peso', 'birthdate' => 'Data de nascimento', 'height_cm' => 'Altura (cm)', 'reach_cm' => 'Alcance (cm)', 'stance' => 'Base', 'bio' => 'Biografia', 'wins' => 'Vitórias', 'losses' => 'Derrotas', 'draws' => 'Empates', 'no_contests' => 'Sem resultado', 'status' => 'Status', 'profile_image' => 'Imagem de perfil', 'cover_image' => 'Imagem de capa'],
     'messages' => ['created' => 'Lutador registrado com sucesso.', 'updated' => 'Lutador atualizado com sucesso.', 'deleted' => 'Lutador excluído com sucesso.', 'delete_blocked' => 'Não é possível excluir um lutador com lutas ou rankings associados.'],
 ];
-$en['admin']['sponsors'] = ['page_title' => 'Patrocinadores', 'subtitle' => 'Gerencie marcas patrocinadoras e parceiros comerciais.', 'table_title' => 'Lista de patrocinadores', 'table_subtitle' => 'Filtre, crie, edite ou exclua patrocinadores sem eventos vinculados.', 'create' => 'Novo patrocinador', 'edit' => 'Editar patrocinador', 'delete_title' => 'Excluir patrocinador', 'delete_warning' => 'Esta ação excluirá o patrocinador:', 'search_placeholder' => 'Nome, slug, site ou e-mail...', 'image_help' => 'Logos JPG, PNG ou WebP são otimizados ao salvar. Tamanho máximo: 5 MB.', 'events_summary' => ':count eventos', 'events_help' => 'Mantenha Ctrl ou Cmd pressionado para selecionar vários eventos.', 'filters' => ['event' => 'Evento'], 'columns' => ['sponsor' => 'Patrocinador', 'website' => 'Site', 'email' => 'E-mail', 'events' => 'Eventos', 'order' => 'Ordem', 'status' => 'Status'], 'form' => ['name' => 'Nome', 'slug' => 'Slug', 'website_url' => 'Site', 'contact_email' => 'E-mail de contato', 'description' => 'Descrição', 'display_order' => 'Ordem', 'status' => 'Status', 'logo_path' => 'Logo', 'events' => 'Eventos vinculados'], 'messages' => ['created' => 'Patrocinador registrado com sucesso.', 'updated' => 'Patrocinador atualizado com sucesso.', 'deleted' => 'Patrocinador excluído com sucesso.', 'delete_blocked' => 'Não é possível excluir um patrocinador vinculado a eventos.']];
-$en['admin']['subscription_plans'] = ['page_title' => 'Planos de assinatura', 'subtitle' => 'Gerencie pacotes para assinantes, preços, duração e benefícios visíveis.', 'table_title' => 'Lista de planos', 'table_subtitle' => 'Filtre, crie, edite ou exclua planos sem uso ativo.', 'create' => 'Novo plano', 'edit' => 'Editar plano', 'delete_title' => 'Excluir plano', 'delete_warning' => 'Esta ação excluirá o plano:', 'search_placeholder' => 'Nome, slug ou descrição...', 'duration_summary' => ':days dias', 'discount_summary' => ':discount% de desconto', 'features_summary' => ':count benefícios', 'usage_summary' => ':subscriptions assinaturas - :requests solicitações', 'filters' => ['billing_period' => 'Período'], 'columns' => ['plan' => 'Plano', 'price' => 'Preço', 'period' => 'Período', 'usage' => 'Uso', 'order' => 'Ordem', 'status' => 'Status'], 'billing_periods' => ['monthly' => 'Mensal', 'quarterly' => 'Trimestral', 'yearly' => 'Anual', 'one_time' => 'Pagamento único', 'lifetime' => 'Vitalício'], 'form' => ['name' => 'Nome', 'slug' => 'Slug', 'description' => 'Descrição', 'price' => 'Preço', 'currency' => 'Moeda', 'billing_period' => 'Período de cobrança', 'duration_days' => 'Duração em dias', 'discount_percentage' => 'Percentual de desconto', 'display_order' => 'Ordem', 'status' => 'Status'], 'features' => ['title' => 'Benefícios', 'add' => 'Adicionar benefício', 'name' => 'Benefício', 'description' => 'Descrição', 'feature_key' => 'Chave técnica', 'value' => 'Valor', 'display_order' => 'Ordem', 'status' => 'Status', 'help' => 'Somente benefícios com nome são salvos. Benefícios ativos também são sincronizados no campo JSON features do plano.'], 'messages' => ['created' => 'Plano registrado com sucesso.', 'updated' => 'Plano atualizado com sucesso.', 'deleted' => 'Plano excluído com sucesso.', 'delete_blocked' => 'Não é possível excluir um plano com assinaturas ou solicitações de compra associadas.']];
-$en['admin']['subscribers'] = ['page_title' => 'Assinantes', 'subtitle' => 'Revise contas de assinantes, dados de contato, status de acesso e a assinatura mais recente.', 'table_title' => 'Lista de assinantes', 'table_subtitle' => 'Filtre, revise e atualize dados básicos do assinante sem alterar seus perfis.', 'edit' => 'Editar assinante', 'search_placeholder' => 'Nome, e-mail, telefone ou documento...', 'identity_value' => 'Documento: :value', 'last_login_value' => 'Último acesso: :date', 'last_login_empty' => 'Nenhum acesso registrado', 'activity_summary' => ':subscriptions assinaturas - :payments pagamentos - :requests solicitações', 'filters' => ['subscription_status' => 'Assinatura'], 'columns' => ['subscriber' => 'Assinante', 'contact' => 'Contato', 'subscription' => 'Assinatura', 'activity' => 'Atividade', 'status' => 'Status'], 'subscription_status' => ['none' => 'Sem assinatura', 'pending' => 'Pendente', 'active' => 'Ativa', 'expired' => 'Expirada', 'cancelled' => 'Cancelada', 'suspended' => 'Suspensa'], 'form' => ['name' => 'Nome', 'lastname' => 'Sobrenome', 'email' => 'E-mail', 'number_phone' => 'Telefone', 'identity_document' => 'Documento de identidade', 'state' => 'Status da conta'], 'messages' => ['updated' => 'Assinante atualizado com sucesso.']];
+$en['admin']['sponsors'] = ['page_title' => 'Patrocinadores', 'table_title' => 'Lista de patrocinadores', 'table_subtitle' => 'Filtre, crie, edite ou exclua patrocinadores sem eventos vinculados.', 'create' => 'Novo patrocinador', 'edit' => 'Editar patrocinador', 'delete_title' => 'Excluir patrocinador', 'delete_warning' => 'Esta ação excluirá o patrocinador:', 'search_placeholder' => 'Nome, slug, site ou e-mail...', 'image_help' => 'Logos JPG, PNG ou WebP são otimizados ao salvar. Tamanho máximo: 5 MB.', 'events_summary' => ':count eventos', 'events_help' => 'Mantenha Ctrl ou Cmd pressionado para selecionar vários eventos.', 'filters' => ['event' => 'Evento'], 'columns' => ['sponsor' => 'Patrocinador', 'website' => 'Site', 'email' => 'E-mail', 'events' => 'Eventos', 'order' => 'Ordem', 'status' => 'Status'], 'form' => ['name' => 'Nome', 'slug' => 'Slug', 'website_url' => 'Site', 'contact_email' => 'E-mail de contato', 'description' => 'Descrição', 'display_order' => 'Ordem', 'status' => 'Status', 'logo_path' => 'Logo', 'events' => 'Eventos vinculados'], 'messages' => ['created' => 'Patrocinador registrado com sucesso.', 'updated' => 'Patrocinador atualizado com sucesso.', 'deleted' => 'Patrocinador excluído com sucesso.', 'delete_blocked' => 'Não é possível excluir um patrocinador vinculado a eventos.']];
+$en['admin']['subscription_plans'] = ['page_title' => 'Planos de assinatura', 'table_title' => 'Lista de planos', 'table_subtitle' => 'Filtre, crie, edite ou exclua planos sem uso ativo.', 'create' => 'Novo plano', 'edit' => 'Editar plano', 'delete_title' => 'Excluir plano', 'delete_warning' => 'Esta ação excluirá o plano:', 'search_placeholder' => 'Nome, slug ou descrição...', 'duration_summary' => ':days dias', 'discount_summary' => ':discount% de desconto', 'features_summary' => ':count benefícios', 'usage_summary' => ':subscriptions assinaturas - :requests solicitações', 'filters' => ['billing_period' => 'Período'], 'columns' => ['plan' => 'Plano', 'price' => 'Preço', 'period' => 'Período', 'usage' => 'Uso', 'order' => 'Ordem', 'status' => 'Status'], 'billing_periods' => ['monthly' => 'Mensal', 'quarterly' => 'Trimestral', 'yearly' => 'Anual', 'one_time' => 'Pagamento único', 'lifetime' => 'Vitalício'], 'form' => ['name' => 'Nome', 'slug' => 'Slug', 'description' => 'Descrição', 'price' => 'Preço', 'currency' => 'Moeda', 'billing_period' => 'Período de cobrança', 'duration_days' => 'Duração em dias', 'discount_percentage' => 'Percentual de desconto', 'display_order' => 'Ordem', 'status' => 'Status'], 'features' => ['title' => 'Benefícios', 'add' => 'Adicionar benefício', 'name' => 'Benefício', 'description' => 'Descrição', 'feature_key' => 'Chave técnica', 'value' => 'Valor', 'display_order' => 'Ordem', 'status' => 'Status', 'help' => 'Somente benefícios com nome são salvos. Benefícios ativos também são sincronizados no campo JSON features do plano.'], 'messages' => ['created' => 'Plano registrado com sucesso.', 'updated' => 'Plano atualizado com sucesso.', 'deleted' => 'Plano excluído com sucesso.', 'delete_blocked' => 'Não é possível excluir um plano com assinaturas ou solicitações de compra associadas.']];
+$en['admin']['subscribers'] = ['page_title' => 'Assinantes', 'table_title' => 'Lista de assinantes', 'table_subtitle' => 'Filtre, revise e atualize dados básicos do assinante sem alterar seus perfis.', 'edit' => 'Editar assinante', 'search_placeholder' => 'Nome, e-mail, telefone ou documento...', 'identity_value' => 'Documento: :value', 'last_login_value' => 'Último acesso: :date', 'last_login_empty' => 'Nenhum acesso registrado', 'activity_summary' => ':subscriptions assinaturas - :payments pagamentos - :requests solicitações', 'filters' => ['subscription_status' => 'Assinatura'], 'columns' => ['subscriber' => 'Assinante', 'contact' => 'Contato', 'subscription' => 'Assinatura', 'activity' => 'Atividade', 'status' => 'Status'], 'subscription_status' => ['none' => 'Sem assinatura', 'pending' => 'Pendente', 'active' => 'Ativa', 'expired' => 'Expirada', 'cancelled' => 'Cancelada', 'suspended' => 'Suspensa'], 'form' => ['name' => 'Nome', 'lastname' => 'Sobrenome', 'email' => 'E-mail', 'number_phone' => 'Telefone', 'identity_document' => 'Documento de identidade', 'state' => 'Status da conta'], 'messages' => ['updated' => 'Assinante atualizado com sucesso.']];
 
 $en['admin']['rankings'] = [
     'page_title' => 'Rankings',
-    'subtitle' => 'Gerencie posições por categoria de peso e gênero.',
     'table_title' => 'Lista de rankings',
     'table_subtitle' => 'Filtre, crie e ajuste posições oficiais por categoria e gênero.',
     'create' => 'Novo ranking',
@@ -157,7 +150,6 @@ $en['admin']['rankings'] = [
 
 $en['admin']['fighter_teams'] = [
     'page_title' => 'Equipes e academias',
-    'subtitle' => 'Gerencie academias, clubes, ginásios e equipes de treinamento.',
     'table_title' => 'Lista de equipes',
     'table_subtitle' => 'Filtre, crie, edite ou exclua equipes sem lutadores associados.',
     'create' => 'Nova equipe',
@@ -173,7 +165,6 @@ $en['admin']['fighter_teams'] = [
 ];
 $en['admin']['purchase_requests'] = [
     'page_title' => 'Solicitações de compra',
-    'subtitle' => 'Gerencie contatos públicos, solicitações de ingressos, assinaturas e comprovantes manuais.',
     'table_title' => 'Lista de solicitações',
     'table_subtitle' => 'Filtre, atribua responsáveis e atualize o status de cada solicitação.',
     'search_placeholder' => 'Nome, e-mail, telefone ou UUID...',
@@ -200,7 +191,6 @@ $en['uploads']['public_images'] = ['invalid_type' => 'Formato não suportado. Us
 
 $en['admin']['user_subscriptions'] = [
     'page_title' => 'Assinaturas de usuário',
-    'subtitle' => 'Gerencie atribuições manuais de planos, períodos, status e notas internas de assinantes.',
     'table_title' => 'Lista de assinaturas',
     'table_subtitle' => 'Filtre, crie, edite ou cancele assinaturas de usuários sem processar pagamentos automáticos.',
     'create' => 'Nova assinatura',
@@ -268,7 +258,6 @@ $en['admin']['user_subscriptions'] = [
 
 $en['admin']['subscription_payments'] = [
     'page_title' => 'Pagamentos de assinatura',
-    'subtitle' => 'Gerencie pagamentos manuais de assinaturas, comprovantes privados e status de pagamento.',
     'table_title' => 'Lista de pagamentos',
     'table_subtitle' => 'Filtre, registre, atualize, confirme ou cancele pagamentos manuais.',
     'create' => 'Novo pagamento',
@@ -347,7 +336,6 @@ $en['admin']['subscription_payments'] = [
 
 $en['admin']['ticket_links'] = [
     'page_title' => 'Links de ingressos',
-    'subtitle' => 'Gerencie links externos de ingressos, WhatsApp, VIP e streaming por evento.',
     'table_title' => 'Lista de links de ingressos',
     'table_subtitle' => 'Filtre, crie, edite ou exclua links públicos de venda associados a eventos.',
     'create' => 'Novo link',
@@ -402,7 +390,6 @@ $en['admin']['ticket_links'] = [
 
 $en['admin']['system_settings'] = [
     'page_title' => 'Configurações do sistema',
-    'subtitle' => 'Configure a marca visível, os dados de contato, os metadados da landing pública e as imagens do sistema.',
     'form_title' => 'Configuração geral',
     'form_subtitle' => 'Esses valores são refletidos no painel administrativo, no login e na landing pública.',
     'image_help' => 'Imagens JPG, PNG ou WebP são otimizadas ao salvar. Tamanho máximo: 5 MB.',
@@ -442,7 +429,6 @@ $en['admin']['system_settings'] = [
 $en['menu']['events']['venues'] = 'Sedes';
 $en['admin']['venues'] = [
     'page_title' => 'Sedes',
-    'subtitle' => 'Gerencie arenas, coliseus e locais físicos usados pelos eventos.',
     'table_title' => 'Lista de sedes',
     'table_subtitle' => 'Filtre, crie, edite ou exclua sedes sem eventos relacionados.',
     'create' => 'Nova sede',
@@ -459,7 +445,6 @@ $en['admin']['venues'] = [
 
 $en['admin']['users'] = [
     'page_title' => 'Usuários',
-    'subtitle' => 'Gerencie contas de usuário, status de acesso e papéis atribuídos conforme a hierarquia.',
     'table_title' => 'Lista de usuários',
     'table_subtitle' => 'Filtre, crie, edite ou exclua usuários permitidos pela hierarquia de papéis configurada.',
     'create' => 'Novo usuário',
@@ -480,7 +465,6 @@ $en['admin']['users'] = [
 $en['menu']['fighters']['media'] = 'Mídia de lutadores';
 $en['admin']['fighter_media'] = [
     'page_title' => 'Mídia de lutadores',
-    'subtitle' => 'Gerencie imagens e links de vídeo associados aos perfis de lutadores.',
     'table_title' => 'Lista de mídia de lutadores',
     'table_subtitle' => 'Filtre, envie, edite ou exclua mídias públicas de lutadores.',
     'create' => 'Nova mídia',
@@ -501,7 +485,6 @@ $en['admin']['fighter_media'] = [
 
 $en['admin']['landing'] = [
     'page_title' => 'Landing pública',
-    'subtitle' => 'Gerencie o título público, a descrição, os metadados SEO e as opções visíveis da landing.',
     'form_title' => 'Configuração da landing',
     'form_subtitle' => 'Estes valores aparecem na página pública e devem permanecer alinhados aos eventos publicados ativos.',
     'latest_events' => 'Pré-visualização de eventos publicados',
@@ -527,7 +510,6 @@ $en['subscriber_portal'] = [
 $en['menu']['reports'] = ['group' => 'Relatórios', 'events' => 'Relatórios de eventos', 'subscriptions' => 'Relatórios de assinaturas', 'sales' => 'Relatórios de vendas'];
 $en['admin']['reports'] = [
     'page_title' => 'Relatórios',
-    'subtitle' => 'Revise métricas operacionais de eventos, assinaturas e vendas manuais.',
     'table_title' => 'Relatórios operacionais',
     'table_subtitle' => 'Filtre por tipo de relatório, intervalo de datas e status sem modificar registros.',
     'types' => ['events' => 'Eventos', 'subscriptions' => 'Assinaturas', 'sales' => 'Vendas'],
@@ -538,7 +520,6 @@ $en['admin']['reports'] = [
 
 $en['admin']['logs'] = [
     'page_title' => 'Logs',
-    'subtitle' => 'Revise entradas recentes do log Laravel sem modificar o arquivo.',
     'table_title' => 'Log da aplicação',
     'file_size' => 'Tamanho do arquivo',
     'last_modified' => 'Última modificação',

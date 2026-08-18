@@ -360,13 +360,13 @@ class SubscriptionPlanTable extends Component
     {
         return [
             'form.name' => ['required', 'string', 'max:120'],
-            'form.slug' => [
+            'form.slug' => array_filter([
                 'nullable',
                 'string',
                 'max:160',
                 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
-                Rule::unique('subscription_plans', 'slug')->ignore($this->editingId),
-            ],
+                $this->slugTouched ? Rule::unique('subscription_plans', 'slug')->ignore($this->editingId) : null,
+            ]),
             'form.description' => ['nullable', 'string', 'max:3000'],
             'form.price' => ['required', 'numeric', 'min:0', 'max:999999.99'],
             'form.currency' => ['required', Rule::in(array_keys($this->currencyOptions()))],

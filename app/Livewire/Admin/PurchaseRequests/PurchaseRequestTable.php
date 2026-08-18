@@ -403,7 +403,7 @@ class PurchaseRequestTable extends Component
             ->paginate($this->perPage);
 
         $assignableUsers = User::query()
-            ->role(['super_manager', 'admin', 'manager', 'sales'])
+            ->role(['super_manager', 'admin', 'sales'])
             ->select(['id', 'name', 'lastname', 'email'])
             ->orderBy('name')
             ->orderBy('lastname')

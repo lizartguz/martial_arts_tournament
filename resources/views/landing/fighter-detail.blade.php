@@ -14,7 +14,7 @@
 
         <section class="mt-6 grid gap-6 rounded-lg border border-white/10 bg-white/5 p-5 sm:grid-cols-[220px_1fr]">
             <div class="mx-auto aspect-square w-full max-w-[220px] overflow-hidden rounded-lg bg-gray-900">
-                <img src="{{ asset($fighter->profile_image ?: ($fighter->gender === 'female' ? 'images/mma/generated/fighter-female.webp' : 'images/mma/generated/fighter-male.webp')) }}" alt="{{ $fullName }}" class="h-full w-full object-cover">
+                <img src="{{ \App\Support\PublicMedia::url($fighter->profile_image, $fighter->gender === 'female' ? 'images/mma/generated/fighter-female.webp' : 'images/mma/generated/fighter-male.webp') }}" alt="{{ $fullName }}" class="h-full w-full object-cover">
             </div>
 
             <div>

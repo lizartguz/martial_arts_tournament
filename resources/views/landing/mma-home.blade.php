@@ -5,12 +5,12 @@
 @section('content')
     @php
         $featured = $events->first();
-        $heroImage = $featured?->poster_image ?: ($settings->defaultImagePath() ?: 'images/mma/generated/landing-hero.webp');
+        $heroImage = \App\Support\PublicMedia::url($featured?->poster_image, $settings->defaultImagePath() ?: 'images/mma/generated/landing-hero.webp');
     @endphp
 
     <section class="relative overflow-hidden border-b border-white/10">
         <div class="absolute inset-0" aria-hidden="true">
-            <img src="{{ asset($heroImage) }}" alt="" class="h-full w-full object-cover">
+            <img src="{{ $heroImage }}" alt="" class="h-full w-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-r from-gray-950 via-gray-950/82 to-gray-950/25"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-gray-950/35"></div>
         </div>
@@ -33,7 +33,7 @@
             @if ($featured)
                 <a href="{{ route('landing.events.show', $featured->slug) }}" class="mb-10 max-w-xl overflow-hidden rounded border border-white/15 bg-gray-950/72 shadow-2xl shadow-black/30 backdrop-blur transition hover:border-emerald-300/70">
                     <div class="grid gap-0 sm:grid-cols-[180px_1fr]">
-                        <img src="{{ asset($featured->poster_image ?: 'images/mma/generated/event-main.webp') }}" alt="{{ $featured->name }}" class="h-48 w-full object-cover sm:h-full">
+                        <img src="{{ \App\Support\PublicMedia::url($featured->poster_image, 'images/mma/generated/event-main.webp') }}" alt="{{ $featured->name }}" class="h-48 w-full object-cover sm:h-full">
                         <div class="p-5">
                             <div class="flex items-center justify-between gap-3 text-xs text-gray-400">
                                 <span>{{ $featured->starts_at?->format('d/m/Y H:i') }}</span>
@@ -62,7 +62,7 @@
         <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             @forelse ($events as $event)
                 <a href="{{ route('landing.events.show', $event->slug) }}" class="group overflow-hidden rounded border border-white/10 bg-white/[0.06] transition hover:-translate-y-0.5 hover:border-emerald-300/70 hover:bg-white/[0.09]">
-                    <img src="{{ asset($event->poster_image ?: 'images/mma/generated/event-card.webp') }}" alt="{{ $event->name }}" class="h-52 w-full object-cover transition duration-300 group-hover:scale-105">
+                    <img src="{{ \App\Support\PublicMedia::url($event->poster_image, 'images/mma/generated/event-card.webp') }}" alt="{{ $event->name }}" class="h-52 w-full object-cover transition duration-300 group-hover:scale-105">
                     <div class="p-4">
                         <div class="flex items-center justify-between gap-3 text-xs text-gray-400">
                             <span>{{ $event->starts_at?->format('d/m/Y H:i') }}</span>
@@ -110,7 +110,7 @@
                     @foreach ($featuredFighters as $fighter)
                         <a href="{{ route('landing.fighters.show', $fighter->slug) }}" class="group overflow-hidden rounded-lg border border-white/10 bg-white/5 hover:border-emerald-400/60">
                             <div class="aspect-square overflow-hidden bg-gray-900">
-                                <img src="{{ asset($fighter->profile_image ?: ($fighter->gender === 'female' ? 'images/mma/generated/fighter-female.webp' : 'images/mma/generated/fighter-male.webp')) }}" alt="{{ trim($fighter->first_name.' '.$fighter->last_name) }}" class="h-full w-full object-cover transition group-hover:scale-105">
+                                <img src="{{ \App\Support\PublicMedia::url($fighter->profile_image, $fighter->gender === 'female' ? 'images/mma/generated/fighter-female.webp' : 'images/mma/generated/fighter-male.webp') }}" alt="{{ trim($fighter->first_name.' '.$fighter->last_name) }}" class="h-full w-full object-cover transition group-hover:scale-105">
                             </div>
                             <div class="p-3">
                                 <p class="truncate text-sm font-semibold">{{ $fighter->nickname ? "\"{$fighter->nickname}\"" : trim($fighter->first_name.' '.$fighter->last_name) }}</p>
@@ -136,7 +136,7 @@
             <div class="grid gap-4 md:grid-cols-3">
                 @foreach ($latestNews as $post)
                     <a href="{{ route('landing.news.show', $post->slug) }}" class="overflow-hidden rounded-lg border border-white/10 bg-white/5 hover:border-emerald-400/60">
-                        <img src="{{ asset($post->cover_image ?: 'images/mma/generated/news-cover.webp') }}" alt="{{ $post->title }}" class="h-40 w-full object-cover">
+                        <img src="{{ \App\Support\PublicMedia::url($post->cover_image, 'images/mma/generated/news-cover.webp') }}" alt="{{ $post->title }}" class="h-40 w-full object-cover">
                         <div class="p-4">
                             <p class="text-xs text-gray-400">{{ $post->published_at?->format('d/m/Y') }}</p>
                             <h3 class="mt-1 line-clamp-2 text-base font-semibold">{{ $post->title }}</h3>

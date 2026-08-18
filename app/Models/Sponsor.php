@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PublicMedia;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -31,6 +32,6 @@ class Sponsor extends Model
      */
     public function logoUrl(): ?string
     {
-        return $this->logo_path ? asset($this->logo_path) : null;
+        return PublicMedia::url($this->logo_path);
     }
 }

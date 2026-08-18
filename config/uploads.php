@@ -12,7 +12,7 @@ return [
     ],
 
     'public_images' => [
-        'disk' => 'public',
+        'disk' => 'local',
         'directory' => 'mma',
         'max_mb' => 5,
         'image_mimes' => ['image/jpeg', 'image/png', 'image/webp'],

@@ -32,7 +32,7 @@ class ImageUploadOptimizer
         string $directory,
         string $prefix = 'image',
         int $maxMegaBytes = 10,
-        string $disk = 'public'
+        string $disk = 'local'
     ): string {
         $mimeType = strtolower((string) $image->getMimeType());
         $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];

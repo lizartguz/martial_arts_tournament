@@ -5,9 +5,9 @@ namespace App\Livewire\Admin\Events;
 use App\Models\Event;
 use App\Models\Venue;
 use App\Services\ImageUploadOptimizer;
+use App\Services\PublicMediaService;
 use App\Services\SlugGeneratorService;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
@@ -23,22 +23,39 @@ class EventTable extends Component
     protected $paginationTheme = 'tailwind';
 
     public int $perPage = 10;
+
     public string $search = '';
+
     public string $status = '';
+
     public string $venueId = '';
+
     public string $featured = '';
+
     public string $dateFrom = '';
+
     public string $dateTo = '';
+
     public bool $showModal = false;
+
     public bool $showDeleteModal = false;
+
     public ?int $editingId = null;
+
     public ?int $pendingDeleteId = null;
+
     public string $deleteName = '';
+
     public bool $slugTouched = false;
+
     public ?TemporaryUploadedFile $posterImage = null;
+
     public ?TemporaryUploadedFile $bannerImage = null;
+
     public ?string $currentPosterImage = null;
+
     public ?string $currentBannerImage = null;
+
     public array $form = [
         'name' => '',
         'slug' => '',
@@ -496,16 +513,7 @@ class EventTable extends Component
      */
     protected function storePublicImage(ImageUploadOptimizer $images, TemporaryUploadedFile $image, string $prefix): string
     {
-        $config = config('uploads.public_images');
-        $path = $images->store(
-            $image,
-            rtrim((string) $config['directory'], '/').'/events',
-            $prefix,
-            (int) $config['max_mb'],
-            (string) $config['disk']
-        );
-
-        return 'storage/'.$path;
+        return app(PublicMediaService::class)->store($image, 'events', $prefix);
     }
 
     /**
@@ -513,10 +521,6 @@ class EventTable extends Component
      */
     protected function deleteStoredImage(?string $path): void
     {
-        if (! $path || ! str_starts_with($path, 'storage/')) {
-            return;
-        }
-
-        Storage::disk('public')->delete(Str::after($path, 'storage/'));
+        app(PublicMediaService::class)->delete($path);
     }
 }

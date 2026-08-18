@@ -27,6 +27,9 @@ class SystemSettingsFormTest extends TestCase
 
         $this->seedRoles();
         $this->actingAsRole('super_manager');
+        // Las imagenes administradas viven en el disco privado desde la
+        // migracion a /media/{path}; `public` se falsea solo por el legado.
+        Storage::fake('local');
         Storage::fake('public');
     }
 
@@ -70,13 +73,17 @@ class SystemSettingsFormTest extends TestCase
             ->set('logoImage', UploadedFile::fake()->image('primero.png', 200, 200))
             ->call('save');
 
-        $firstPath = str(SystemSetting::query()->first()->logo_path)->after('storage/')->toString();
-        Storage::disk('public')->assertExists($firstPath);
+        $firstPath = (string) SystemSetting::query()->first()->logo_path;
+
+        // La ruta guardada ya no lleva el prefijo `storage/`: es relativa al
+        // disco privado, y solo se resuelve a URL por App\Support\PublicMedia.
+        $this->assertStringStartsWith('mma/system/', $firstPath);
+        Storage::disk('local')->assertExists($firstPath);
 
         $component
             ->set('logoImage', UploadedFile::fake()->image('segundo.png', 200, 200))
             ->call('save');
 
-        Storage::disk('public')->assertMissing($firstPath);
+        Storage::disk('local')->assertMissing($firstPath);
     }
 }

@@ -1,5 +1,5 @@
 <a href="{{ route('landing.events.show', $event->slug) }}" class="overflow-hidden rounded-lg border border-white/10 bg-white/5 transition hover:border-emerald-400/70">
-    <img src="{{ asset($event->poster_image ?: 'images/mma/generated/event-card.webp') }}" alt="{{ $event->name }}" class="h-44 w-full object-cover">
+    <img src="{{ \App\Support\PublicMedia::url($event->poster_image, 'images/mma/generated/event-card.webp') }}" alt="{{ $event->name }}" class="h-44 w-full object-cover">
 
     <div class="p-4">
         <div class="flex items-center justify-between gap-3 text-xs text-gray-400">

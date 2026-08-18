@@ -5,9 +5,9 @@ namespace App\Livewire\Admin\Venues;
 use App\Models\City;
 use App\Models\Venue;
 use App\Services\ImageUploadOptimizer;
+use App\Services\PublicMediaService;
 use App\Services\SlugGeneratorService;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
@@ -23,17 +23,29 @@ class VenueTable extends Component
     protected $paginationTheme = 'tailwind';
 
     public int $perPage = 10;
+
     public string $search = '';
+
     public string $status = '';
+
     public string $cityId = '';
+
     public bool $showModal = false;
+
     public bool $showDeleteModal = false;
+
     public ?int $editingId = null;
+
     public ?int $pendingDeleteId = null;
+
     public string $deleteName = '';
+
     public bool $slugTouched = false;
+
     public ?TemporaryUploadedFile $venueImage = null;
+
     public ?string $currentImagePath = null;
+
     public array $form = [
         'name' => '',
         'slug' => '',
@@ -401,16 +413,8 @@ class VenueTable extends Component
             return;
         }
 
-        $config = config('uploads.public_images');
-        $path = $images->store(
-            $this->venueImage,
-            rtrim((string) $config['directory'], '/').'/venues',
-            'venue-image',
-            (int) $config['max_mb'],
-            (string) $config['disk']
-        );
-
-        $validated['image'] = 'storage/'.$path;
+        $validated['image'] = app(PublicMediaService::class)
+            ->store($this->venueImage, 'venues', 'venue-image');
         $this->deleteStoredImage($venue->image);
     }
 
@@ -419,10 +423,6 @@ class VenueTable extends Component
      */
     protected function deleteStoredImage(?string $path): void
     {
-        if (! $path || ! str_starts_with($path, 'storage/')) {
-            return;
-        }
-
-        Storage::disk('public')->delete(Str::after($path, 'storage/'));
+        app(PublicMediaService::class)->delete($path);
     }
 }

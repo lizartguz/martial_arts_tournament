@@ -75,7 +75,7 @@
                         <template x-if="multiple">
                             <input type="checkbox" :checked="opt.selected" class="pointer-events-none accent-emerald-600">
                         </template>
-                        <span class="truncate" x-html="opt.html"></span>
+                        <span class="truncate" x-text="opt.text"></span>
                     </button>
                 </li>
             </template>
@@ -169,7 +169,7 @@
                     if (this.multiple && chosen.length > 1) {
                         return chosen.length + ' seleccionados';
                     }
-                    return chosen[0].html;
+                    return this.escape(chosen[0].text);
                 },
 
                 escape(s) {

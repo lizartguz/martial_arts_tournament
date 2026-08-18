@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PublicMedia;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -46,7 +47,7 @@ class NewsPost extends Model
      */
     public function coverImageUrl(): ?string
     {
-        return $this->cover_image ? asset($this->cover_image) : null;
+        return PublicMedia::url($this->cover_image);
     }
 
     /**

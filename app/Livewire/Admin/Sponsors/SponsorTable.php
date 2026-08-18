@@ -5,9 +5,9 @@ namespace App\Livewire\Admin\Sponsors;
 use App\Models\Event;
 use App\Models\Sponsor;
 use App\Services\ImageUploadOptimizer;
+use App\Services\PublicMediaService;
 use App\Services\SlugGeneratorService;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
@@ -23,18 +23,31 @@ class SponsorTable extends Component
     protected $paginationTheme = 'tailwind';
 
     public int $perPage = 10;
+
     public string $search = '';
+
     public string $eventId = '';
+
     public string $status = '';
+
     public bool $showModal = false;
+
     public bool $showDeleteModal = false;
+
     public ?int $editingId = null;
+
     public ?int $pendingDeleteId = null;
+
     public string $deleteName = '';
+
     public bool $slugTouched = false;
+
     public ?TemporaryUploadedFile $logoImage = null;
+
     public ?string $currentLogoPath = null;
+
     public array $selectedEventIds = [];
+
     public array $form = [
         'name' => '',
         'slug' => '',
@@ -155,7 +168,7 @@ class SponsorTable extends Component
         $validated = $this->validate($this->rules(), attributes: $this->attributes())['form'];
         $sponsor = $this->editingId
             ? Sponsor::query()->findOrFail($this->editingId)
-            : new Sponsor();
+            : new Sponsor;
 
         $slugs = app(SlugGeneratorService::class);
         $validated['slug'] = $this->slugTouched && $validated['slug'] !== ''
@@ -386,16 +399,8 @@ class SponsorTable extends Component
             return;
         }
 
-        $config = config('uploads.public_images');
-        $path = $images->store(
-            $this->logoImage,
-            rtrim((string) $config['directory'], '/').'/sponsors',
-            'sponsor-logo',
-            (int) $config['max_mb'],
-            (string) $config['disk']
-        );
-
-        $validated['logo_path'] = 'storage/'.$path;
+        $validated['logo_path'] = app(PublicMediaService::class)
+            ->store($this->logoImage, 'sponsors', 'sponsor-logo');
         $this->deleteStoredImage($sponsor->logo_path);
     }
 
@@ -404,11 +409,7 @@ class SponsorTable extends Component
      */
     protected function deleteStoredImage(?string $path): void
     {
-        if (! $path || ! str_starts_with($path, 'storage/')) {
-            return;
-        }
-
-        Storage::disk('public')->delete(Str::after($path, 'storage/'));
+        app(PublicMediaService::class)->delete($path);
     }
 
     /**

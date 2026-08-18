@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PublicMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -92,7 +93,7 @@ class Event extends Model
      */
     public function posterUrl(): ?string
     {
-        return $this->poster_image ? asset($this->poster_image) : null;
+        return PublicMedia::url($this->poster_image);
     }
 
     /**
@@ -100,6 +101,6 @@ class Event extends Model
      */
     public function bannerUrl(): ?string
     {
-        return $this->banner_image ? asset($this->banner_image) : null;
+        return PublicMedia::url($this->banner_image);
     }
 }

@@ -19,3 +19,21 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+# Evita el listado de directorios aunque mod_negotiation no este activo.
+Options -Indexes
+
+# Solo el front controller puede ejecutarse: bloquea cualquier PHP heredado
+# que vuelva a aparecer bajo public/ (incluido public/storage y subcarpetas).
+<FilesMatch "\.(?i:php|phtml|phps|phar|php[0-9]|inc)$">
+    Require all denied
+</FilesMatch>
+
+<Files "index.php">
+    Require all granted
+</Files>
+
+# Nunca servir configuracion, logs ni backups desde el webroot.
+<FilesMatch "(?i:^\.|\.(env|log|ini|sql|bak|swp|json|lock|dist|yml|yaml)$)">
+    Require all denied
+</FilesMatch>

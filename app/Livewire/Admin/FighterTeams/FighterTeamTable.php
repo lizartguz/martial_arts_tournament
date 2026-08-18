@@ -5,9 +5,9 @@ namespace App\Livewire\Admin\FighterTeams;
 use App\Models\City;
 use App\Models\FighterTeam;
 use App\Services\ImageUploadOptimizer;
+use App\Services\PublicMediaService;
 use App\Services\SlugGeneratorService;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
@@ -23,17 +23,29 @@ class FighterTeamTable extends Component
     protected $paginationTheme = 'tailwind';
 
     public int $perPage = 10;
+
     public string $search = '';
+
     public string $status = '';
+
     public string $cityId = '';
+
     public bool $showModal = false;
+
     public bool $showDeleteModal = false;
+
     public ?int $editingId = null;
+
     public ?int $pendingDeleteId = null;
+
     public string $deleteName = '';
+
     public bool $slugTouched = false;
+
     public ?TemporaryUploadedFile $logoImage = null;
+
     public ?string $currentLogoPath = null;
+
     public array $form = [
         'name' => '',
         'slug' => '',
@@ -385,16 +397,8 @@ class FighterTeamTable extends Component
             return;
         }
 
-        $config = config('uploads.public_images');
-        $path = $images->store(
-            $this->logoImage,
-            rtrim((string) $config['directory'], '/').'/fighter-teams',
-            'fighter-team-logo',
-            (int) $config['max_mb'],
-            (string) $config['disk']
-        );
-
-        $validated['logo_path'] = 'storage/'.$path;
+        $validated['logo_path'] = app(PublicMediaService::class)
+            ->store($this->logoImage, 'fighter-teams', 'fighter-team-logo');
         $this->deleteStoredImage($team->logo_path);
     }
 
@@ -403,10 +407,6 @@ class FighterTeamTable extends Component
      */
     protected function deleteStoredImage(?string $path): void
     {
-        if (! $path || ! str_starts_with($path, 'storage/')) {
-            return;
-        }
-
-        Storage::disk('public')->delete(Str::after($path, 'storage/'));
+        app(PublicMediaService::class)->delete($path);
     }
 }

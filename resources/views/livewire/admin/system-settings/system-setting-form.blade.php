@@ -112,7 +112,7 @@
                     @if ($logoImage)
                         <img src="{{ $logoImage->temporaryUrl() }}" alt="{{ __('mma.admin.system_settings.form.logo_path') }}" class="max-h-32 max-w-full object-contain">
                     @elseif ($currentLogoPath)
-                        <img src="{{ asset($currentLogoPath) }}" alt="{{ __('mma.admin.system_settings.form.logo_path') }}" class="max-h-32 max-w-full object-contain">
+                        <img src="{{ \App\Support\PublicMedia::url($currentLogoPath) }}" alt="{{ __('mma.admin.system_settings.form.logo_path') }}" class="max-h-32 max-w-full object-contain">
                     @endif
                 </div>
                 <input type="file" wire:model="logoImage" accept="image/png,image/jpeg,image/webp" class="mt-3 w-full text-sm text-gray-700 dark:text-gray-300">
@@ -130,7 +130,7 @@
                     @if ($faviconImage)
                         <img src="{{ $faviconImage->temporaryUrl() }}" alt="{{ __('mma.admin.system_settings.form.favicon_path') }}" class="max-h-20 max-w-full object-contain">
                     @elseif ($currentFaviconPath)
-                        <img src="{{ asset($currentFaviconPath) }}" alt="{{ __('mma.admin.system_settings.form.favicon_path') }}" class="max-h-20 max-w-full object-contain">
+                        <img src="{{ \App\Support\PublicMedia::url($currentFaviconPath) }}" alt="{{ __('mma.admin.system_settings.form.favicon_path') }}" class="max-h-20 max-w-full object-contain">
                     @endif
                 </div>
                 <input type="file" wire:model="faviconImage" accept="image/png,image/jpeg,image/webp" class="mt-3 w-full text-sm text-gray-700 dark:text-gray-300">

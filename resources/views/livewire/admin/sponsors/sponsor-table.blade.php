@@ -69,7 +69,7 @@
                             <div class="flex min-w-[260px] items-center gap-3">
                                 <div class="h-14 w-16 flex-shrink-0 overflow-hidden rounded border border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-700">
                                     @if ($sponsor->logo_path)
-                                        <img src="{{ asset($sponsor->logo_path) }}" alt="{{ $sponsor->name }}" class="h-full w-full object-contain">
+                                        <img src="{{ $sponsor->logoUrl() }}" alt="{{ $sponsor->name }}" class="h-full w-full object-contain">
                                     @else
                                         <div class="flex h-full w-full items-center justify-center text-gray-400">
                                             <i class="fas fa-handshake"></i>
@@ -202,7 +202,7 @@
                         @if ($logoImage)
                             <img src="{{ $logoImage->temporaryUrl() }}" alt="{{ __('mma.admin.sponsors.form.logo_path') }}" class="h-full w-full object-contain">
                         @elseif ($currentLogoPath)
-                            <img src="{{ asset($currentLogoPath) }}" alt="{{ __('mma.admin.sponsors.form.logo_path') }}" class="h-full w-full object-contain">
+                            <img src="{{ \App\Support\PublicMedia::url($currentLogoPath) }}" alt="{{ __('mma.admin.sponsors.form.logo_path') }}" class="h-full w-full object-contain">
                         @else
                             <div class="flex h-full w-full items-center justify-center text-gray-400">
                                 <i class="fas fa-handshake text-xl"></i>

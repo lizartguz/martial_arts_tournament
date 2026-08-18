@@ -70,8 +70,9 @@ return [
     |
     */
 
-    'links' => [
-        public_path('storage') => storage_path('app/public'),
-    ],
+    // Vacio a proposito: ninguna imagen del proyecto se sirve desde el webroot.
+    // Las administradas viven en el disco privado y salen por `media.public.show`.
+    // Restaurar este enlace volveria a exponer `storage/app/public` por HTTP.
+    'links' => [],
 
 ];

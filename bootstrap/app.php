@@ -2,11 +2,13 @@
 
 use App\Http\Middleware\ForceJsonResponse;
 use App\Http\Middleware\LocaleMiddleware;
+use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
 use Livewire\Mechanisms\HandleComponents\CorruptComponentPayloadException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -15,11 +17,20 @@ return Application::configure(basePath: dirname(__DIR__))
         api: __DIR__.'/../routes/api.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
+        /**
+         * Medios publicos: se registran fuera del grupo `web` porque no
+         * necesitan sesion ni CSRF; sin cookie de sesion la respuesta si
+         * puede declararse cacheable publica.
+         */
+        then: function () {
+            Route::group([], base_path('routes/media.php'));
+        },
     )
     /**
      * Registra la configuracion global de middlewares.
      */
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->append(SecurityHeaders::class);
         $middleware->web(append: [
             LocaleMiddleware::class,
         ]);

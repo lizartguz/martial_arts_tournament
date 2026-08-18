@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PublicMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -34,5 +35,13 @@ class Venue extends Model
     public function events()
     {
         return $this->hasMany(Event::class);
+    }
+
+    /**
+     * Devuelve la URL pública controlada de la imagen de la sede.
+     */
+    public function imageUrl(): ?string
+    {
+        return PublicMedia::url($this->image);
     }
 }

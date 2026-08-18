@@ -86,7 +86,7 @@
                             <div class="flex min-w-[240px] items-center gap-3">
                                 <div class="h-12 w-12 flex-shrink-0 overflow-hidden rounded border border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-700">
                                     @if ($event->poster_image)
-                                        <img src="{{ asset($event->poster_image) }}" alt="{{ $event->name }}" class="h-full w-full object-cover">
+                                        <img src="{{ $event->posterUrl() }}" alt="{{ $event->name }}" class="h-full w-full object-cover">
                                     @else
                                         <div class="flex h-full w-full items-center justify-center text-gray-400">
                                             <i class="fas fa-image"></i>
@@ -248,7 +248,7 @@
                         @if ($posterImage)
                             <img src="{{ $posterImage->temporaryUrl() }}" alt="{{ __('mma.admin.events.form.poster_image') }}" class="mt-2 h-36 w-full rounded border border-gray-200 object-cover dark:border-gray-700">
                         @elseif ($currentPosterImage)
-                            <img src="{{ asset($currentPosterImage) }}" alt="{{ __('mma.admin.events.form.poster_image') }}" class="mt-2 h-36 w-full rounded border border-gray-200 object-cover dark:border-gray-700">
+                            <img src="{{ \App\Support\PublicMedia::url($currentPosterImage) }}" alt="{{ __('mma.admin.events.form.poster_image') }}" class="mt-2 h-36 w-full rounded border border-gray-200 object-cover dark:border-gray-700">
                         @endif
                     </div>
                     <div>
@@ -258,7 +258,7 @@
                         @if ($bannerImage)
                             <img src="{{ $bannerImage->temporaryUrl() }}" alt="{{ __('mma.admin.events.form.banner_image') }}" class="mt-2 h-32 w-full rounded border border-gray-200 object-cover dark:border-gray-700">
                         @elseif ($currentBannerImage)
-                            <img src="{{ asset($currentBannerImage) }}" alt="{{ __('mma.admin.events.form.banner_image') }}" class="mt-2 h-32 w-full rounded border border-gray-200 object-cover dark:border-gray-700">
+                            <img src="{{ \App\Support\PublicMedia::url($currentBannerImage) }}" alt="{{ __('mma.admin.events.form.banner_image') }}" class="mt-2 h-32 w-full rounded border border-gray-200 object-cover dark:border-gray-700">
                         @endif
                     </div>
                     <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('mma.admin.events.image_help') }}</p>

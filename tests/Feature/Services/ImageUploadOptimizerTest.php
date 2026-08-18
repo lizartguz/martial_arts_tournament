@@ -8,7 +8,10 @@ use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 /**
- * Protege el comportamiento de optimización de imágenes públicas.
+ * Protege el comportamiento de optimización de imágenes administradas.
+ *
+ * El disco por defecto del optimizador es `local` (privado, fuera del webroot):
+ * omitir el argumento nunca debe terminar escribiendo en `public`.
  *
  * El caso crítico es la transparencia: logos, favicons y sponsors se suben en
  * PNG/WebP con canal alfa, y aplanarlos a JPEG les deja un rectángulo blanco
@@ -18,7 +21,7 @@ class ImageUploadOptimizerTest extends TestCase
 {
     public function test_png_with_transparency_keeps_its_format_and_alpha_channel(): void
     {
-        Storage::fake('public');
+        Storage::fake('local');
 
         $stored = app(ImageUploadOptimizer::class)->store(
             $this->transparentPngUpload(),
@@ -28,7 +31,7 @@ class ImageUploadOptimizerTest extends TestCase
 
         $this->assertStringEndsWith('.png', $stored, 'Un PNG no debe convertirse a otro formato.');
 
-        $result = @imagecreatefromstring(Storage::disk('public')->get($stored));
+        $result = @imagecreatefromstring(Storage::disk('local')->get($stored));
         $this->assertNotFalse($result);
 
         // Esquina superior izquierda: era 100% transparente en el original.
@@ -44,7 +47,7 @@ class ImageUploadOptimizerTest extends TestCase
 
     public function test_jpeg_upload_still_produces_an_optimized_jpeg(): void
     {
-        Storage::fake('public');
+        Storage::fake('local');
 
         $stored = app(ImageUploadOptimizer::class)->store(
             UploadedFile::fake()->image('foto.jpg', 300, 300),
@@ -53,12 +56,12 @@ class ImageUploadOptimizerTest extends TestCase
         );
 
         $this->assertStringEndsWith('.jpg', $stored);
-        $this->assertTrue(Storage::disk('public')->exists($stored));
+        $this->assertTrue(Storage::disk('local')->exists($stored));
     }
 
     public function test_oversized_image_is_resized_to_the_max_width(): void
     {
-        Storage::fake('public');
+        Storage::fake('local');
 
         $stored = app(ImageUploadOptimizer::class)->store(
             UploadedFile::fake()->image('grande.jpg', 3000, 1500),
@@ -66,7 +69,7 @@ class ImageUploadOptimizerTest extends TestCase
             'grande'
         );
 
-        $result = @imagecreatefromstring(Storage::disk('public')->get($stored));
+        $result = @imagecreatefromstring(Storage::disk('local')->get($stored));
 
         $this->assertSame(1920, imagesx($result), 'Las imágenes muy anchas deben redimensionarse a 1920px.');
         $this->assertSame(960, imagesy($result), 'La proporción original debe mantenerse.');
@@ -74,7 +77,7 @@ class ImageUploadOptimizerTest extends TestCase
 
     public function test_non_image_mime_is_rejected(): void
     {
-        Storage::fake('public');
+        Storage::fake('local');
 
         $this->expectException(\InvalidArgumentException::class);
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PublicMedia;
 use Illuminate\Database\Eloquent\Model;
 
 class EventMedia extends Model
@@ -30,5 +31,13 @@ class EventMedia extends Model
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Devuelve la URL pública controlada del archivo de imagen.
+     */
+    public function fileUrl(): ?string
+    {
+        return $this->file_type === 'image' ? PublicMedia::url($this->file_path) : $this->file_path;
     }
 }

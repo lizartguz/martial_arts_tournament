@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PublicMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -101,7 +102,7 @@ class Fighter extends Model
      */
     public function profileImageUrl(): ?string
     {
-        return $this->profile_image ? asset($this->profile_image) : null;
+        return PublicMedia::url($this->profile_image);
     }
 
     /**
@@ -109,6 +110,6 @@ class Fighter extends Model
      */
     public function coverImageUrl(): ?string
     {
-        return $this->cover_image ? asset($this->cover_image) : null;
+        return PublicMedia::url($this->cover_image);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PublicMedia;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -65,6 +66,6 @@ class Fight extends Model
      */
     public function promoImageUrl(): ?string
     {
-        return $this->promo_image ? asset($this->promo_image) : null;
+        return PublicMedia::url($this->promo_image);
     }
 }

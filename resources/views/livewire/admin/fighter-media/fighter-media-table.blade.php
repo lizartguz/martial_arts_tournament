@@ -76,7 +76,7 @@
                             <div class="flex min-w-[280px] items-center gap-3">
                                 <div class="h-14 w-16 flex-shrink-0 overflow-hidden rounded border border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-700">
                                     @if ($media->file_type === 'image')
-                                        <img src="{{ asset($media->file_path) }}" alt="{{ $media->title ?? 'media' }}" class="h-full w-full object-cover">
+                                        <img src="{{ $media->fileUrl() }}" alt="{{ $media->title ?? 'media' }}" class="h-full w-full object-cover">
                                     @else
                                         <div class="flex h-full w-full items-center justify-center text-gray-400">
                                             <i class="fas fa-play"></i>
@@ -178,7 +178,7 @@
                         @if ($mediaImage)
                             <img src="{{ $mediaImage->temporaryUrl() }}" alt="{{ __('mma.admin.fighter_media.form.media_image') }}" class="mt-2 h-40 w-full rounded border border-gray-200 object-cover dark:border-gray-700">
                         @elseif ($currentFilePath && $form['file_type'] === 'image')
-                            <img src="{{ asset($currentFilePath) }}" alt="{{ __('mma.admin.fighter_media.form.media_image') }}" class="mt-2 h-40 w-full rounded border border-gray-200 object-cover dark:border-gray-700">
+                            <img src="{{ \App\Support\PublicMedia::url($currentFilePath) }}" alt="{{ __('mma.admin.fighter_media.form.media_image') }}" class="mt-2 h-40 w-full rounded border border-gray-200 object-cover dark:border-gray-700">
                         @endif
                         <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">{{ __('mma.admin.fighter_media.image_help') }}</p>
                     </div>

@@ -9,7 +9,7 @@
         </a>
 
         <section class="mt-6 overflow-hidden rounded-lg border border-white/10 bg-white/5">
-            <img src="{{ asset($event->poster_image ?: 'images/mma/generated/event-main.webp') }}" alt="{{ $event->name }}" class="h-72 w-full object-cover">
+            <img src="{{ \App\Support\PublicMedia::url($event->poster_image, 'images/mma/generated/event-main.webp') }}" alt="{{ $event->name }}" class="h-72 w-full object-cover">
             <div class="p-5">
                 <div class="text-sm text-gray-400">{{ $event->starts_at?->format('d/m/Y H:i') }} &middot; {{ $event->venue?->name }}</div>
                 <h1 class="mt-2 text-3xl font-bold">{{ $event->name }}</h1>
@@ -50,8 +50,8 @@
                         $blue = $fight->cornerBlue;
                         $redName = $red?->nickname ?: trim(($red?->first_name ?? '').' '.($red?->last_name ?? ''));
                         $blueName = $blue?->nickname ?: trim(($blue?->first_name ?? '').' '.($blue?->last_name ?? ''));
-                        $redImage = $red?->profile_image ?: (($red?->gender === 'female') ? 'images/mma/generated/fighter-female.webp' : 'images/mma/generated/fighter-male.webp');
-                        $blueImage = $blue?->profile_image ?: (($blue?->gender === 'female') ? 'images/mma/generated/fighter-female.webp' : 'images/mma/generated/fighter-male.webp');
+                        $redImage = \App\Support\PublicMedia::url($red?->profile_image, ($red?->gender === 'female') ? 'images/mma/generated/fighter-female.webp' : 'images/mma/generated/fighter-male.webp');
+                        $blueImage = \App\Support\PublicMedia::url($blue?->profile_image, ($blue?->gender === 'female') ? 'images/mma/generated/fighter-female.webp' : 'images/mma/generated/fighter-male.webp');
                     @endphp
 
                     <details class="group">
@@ -59,7 +59,7 @@
                             <div class="flex min-w-0 items-center gap-3">
                                 @if ($red)
                                     <span class="shrink-0 overflow-hidden rounded-full border border-white/10 bg-gray-900">
-                                        <img src="{{ asset($redImage) }}" alt="{{ $redName }}" class="h-14 w-14 object-cover">
+                                        <img src="{{ $redImage }}" alt="{{ $redName }}" class="h-14 w-14 object-cover">
                                     </span>
                                 @else
                                     <span class="h-14 w-14 shrink-0 rounded-full border border-white/10 bg-gray-900"></span>
@@ -88,7 +88,7 @@
                             <div class="flex min-w-0 items-center gap-3 md:flex-row-reverse md:text-right">
                                 @if ($blue)
                                     <span class="shrink-0 overflow-hidden rounded-full border border-white/10 bg-gray-900">
-                                        <img src="{{ asset($blueImage) }}" alt="{{ $blueName }}" class="h-14 w-14 object-cover">
+                                        <img src="{{ $blueImage }}" alt="{{ $blueName }}" class="h-14 w-14 object-cover">
                                     </span>
                                 @else
                                     <span class="h-14 w-14 shrink-0 rounded-full border border-white/10 bg-gray-900"></span>
@@ -116,7 +116,7 @@
 
                                 <article class="overflow-hidden rounded-lg border border-white/10 bg-white/[0.04]">
                                     @if ($fighter)
-                                        <img src="{{ asset($profile['image']) }}" alt="{{ $profile['name'] }}" class="h-64 w-full object-cover">
+                                        <img src="{{ $profile['image'] }}" alt="{{ $profile['name'] }}" class="h-64 w-full object-cover">
                                         <div class="space-y-4 p-4">
                                             <div>
                                                 <p class="text-xs font-semibold uppercase tracking-wide text-emerald-300">{{ $profile['corner'] }}</p>

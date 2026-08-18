@@ -4,8 +4,8 @@ namespace App\Livewire\Admin\SystemSettings;
 
 use App\Models\SystemSetting;
 use App\Services\ImageUploadOptimizer;
+use App\Services\PublicMediaService;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
@@ -15,9 +15,13 @@ class SystemSettingForm extends Component
     use WithFileUploads;
 
     public ?TemporaryUploadedFile $logoImage = null;
+
     public ?TemporaryUploadedFile $faviconImage = null;
+
     public ?string $currentLogoPath = null;
+
     public ?string $currentFaviconPath = null;
+
     public array $form = [
         'product_name' => 'Combate Real',
         'public_title' => 'Combate Real',
@@ -211,16 +215,7 @@ class SystemSettingForm extends Component
      */
     protected function storeImage(ImageUploadOptimizer $images, TemporaryUploadedFile $image, string $prefix): string
     {
-        $config = config('uploads.public_images');
-        $path = $images->store(
-            $image,
-            rtrim((string) $config['directory'], '/').'/system',
-            $prefix,
-            (int) $config['max_mb'],
-            (string) $config['disk']
-        );
-
-        return 'storage/'.$path;
+        return app(PublicMediaService::class)->store($image, 'system', $prefix);
     }
 
     /**
@@ -228,10 +223,6 @@ class SystemSettingForm extends Component
      */
     protected function deleteStoredImage(?string $path): void
     {
-        if (! $path || ! str_starts_with($path, 'storage/')) {
-            return;
-        }
-
-        Storage::disk('public')->delete(str($path)->after('storage/')->toString());
+        app(PublicMediaService::class)->delete($path);
     }
 }

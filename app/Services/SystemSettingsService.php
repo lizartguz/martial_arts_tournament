@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\SystemSetting;
+use App\Support\PublicMedia;
 use Illuminate\Support\Facades\Schema;
 
 class SystemSettingsService
@@ -79,7 +80,7 @@ class SystemSettingsService
      */
     public function logoUrl(): string
     {
-        return asset($this->logoPath());
+        return PublicMedia::url($this->logoPath()) ?? asset($this->logoPath());
     }
 
     /**
@@ -87,7 +88,7 @@ class SystemSettingsService
      */
     public function faviconUrl(): string
     {
-        return asset($this->faviconPath());
+        return PublicMedia::url($this->faviconPath()) ?? asset($this->faviconPath());
     }
 
     /**

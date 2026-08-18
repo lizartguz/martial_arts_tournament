@@ -7,9 +7,8 @@ use App\Models\Fight;
 use App\Models\Fighter;
 use App\Models\WeightClass;
 use App\Services\ImageUploadOptimizer;
+use App\Services\PublicMediaService;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
@@ -24,18 +23,31 @@ class FightTable extends Component
     protected $paginationTheme = 'tailwind';
 
     public int $perPage = 10;
+
     public string $search = '';
+
     public string $eventId = '';
+
     public string $status = '';
+
     public string $boutType = '';
+
     public string $weightClassId = '';
+
     public bool $showModal = false;
+
     public bool $showDeleteModal = false;
+
     public ?int $editingId = null;
+
     public ?int $pendingDeleteId = null;
+
     public string $deleteName = '';
+
     public ?TemporaryUploadedFile $promoImage = null;
+
     public ?string $currentPromoImage = null;
+
     public array $form = [
         'event_id' => null,
         'weight_class_id' => null,
@@ -484,16 +496,8 @@ class FightTable extends Component
             return;
         }
 
-        $config = config('uploads.public_images');
-        $path = $images->store(
-            $this->promoImage,
-            rtrim((string) $config['directory'], '/').'/fights',
-            'fight-promo',
-            (int) $config['max_mb'],
-            (string) $config['disk']
-        );
-
-        $validated['promo_image'] = 'storage/'.$path;
+        $validated['promo_image'] = app(PublicMediaService::class)
+            ->store($this->promoImage, 'fights', 'fight-promo');
         $this->deleteStoredImage($fight->promo_image);
     }
 
@@ -502,11 +506,7 @@ class FightTable extends Component
      */
     protected function deleteStoredImage(?string $path): void
     {
-        if (! $path || ! str_starts_with($path, 'storage/')) {
-            return;
-        }
-
-        Storage::disk('public')->delete(Str::after($path, 'storage/'));
+        app(PublicMediaService::class)->delete($path);
     }
 
     /**

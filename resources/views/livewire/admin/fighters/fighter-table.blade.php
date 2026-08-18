@@ -91,7 +91,7 @@
                             <div class="flex min-w-[260px] items-center gap-3">
                                 <div class="h-12 w-12 flex-shrink-0 overflow-hidden rounded border border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-700">
                                     @if ($fighter->profile_image)
-                                        <img src="{{ asset($fighter->profile_image) }}" alt="{{ $fullName }}" class="h-full w-full object-cover">
+                                        <img src="{{ $fighter->profileImageUrl() }}" alt="{{ $fullName }}" class="h-full w-full object-cover">
                                     @else
                                         <div class="flex h-full w-full items-center justify-center text-gray-400">
                                             <i class="fas fa-user"></i>
@@ -295,7 +295,7 @@
                         @if ($profileImage)
                             <img src="{{ $profileImage->temporaryUrl() }}" alt="{{ __('mma.admin.fighters.form.profile_image') }}" class="mt-2 h-40 w-full rounded border border-gray-200 object-cover dark:border-gray-700">
                         @elseif ($currentProfileImage)
-                            <img src="{{ asset($currentProfileImage) }}" alt="{{ __('mma.admin.fighters.form.profile_image') }}" class="mt-2 h-40 w-full rounded border border-gray-200 object-cover dark:border-gray-700">
+                            <img src="{{ \App\Support\PublicMedia::url($currentProfileImage) }}" alt="{{ __('mma.admin.fighters.form.profile_image') }}" class="mt-2 h-40 w-full rounded border border-gray-200 object-cover dark:border-gray-700">
                         @endif
                     </div>
                     <div>
@@ -305,7 +305,7 @@
                         @if ($coverImage)
                             <img src="{{ $coverImage->temporaryUrl() }}" alt="{{ __('mma.admin.fighters.form.cover_image') }}" class="mt-2 h-32 w-full rounded border border-gray-200 object-cover dark:border-gray-700">
                         @elseif ($currentCoverImage)
-                            <img src="{{ asset($currentCoverImage) }}" alt="{{ __('mma.admin.fighters.form.cover_image') }}" class="mt-2 h-32 w-full rounded border border-gray-200 object-cover dark:border-gray-700">
+                            <img src="{{ \App\Support\PublicMedia::url($currentCoverImage) }}" alt="{{ __('mma.admin.fighters.form.cover_image') }}" class="mt-2 h-32 w-full rounded border border-gray-200 object-cover dark:border-gray-700">
                         @endif
                     </div>
                     <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('mma.admin.fighters.image_help') }}</p>

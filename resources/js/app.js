@@ -121,8 +121,30 @@ const buildAlertHtml = (description, metadata) => {
     return parts.join('');
 };
 
+const unwrapAlertPayload = (payload) => {
+    if (payload instanceof CustomEvent) {
+        return unwrapAlertPayload(payload.detail);
+    }
+
+    if (Array.isArray(payload)) {
+        return unwrapAlertPayload(payload[0]);
+    }
+
+    if (payload && typeof payload === 'object') {
+        if ('detail' in payload && Object.keys(payload).length <= 2) {
+            return unwrapAlertPayload(payload.detail);
+        }
+
+        if ('0' in payload && !('title' in payload) && !('message' in payload) && !('success' in payload)) {
+            return unwrapAlertPayload(payload[0]);
+        }
+    }
+
+    return payload;
+};
+
 const normalizeAlertPayload = (payload, variant = 'info') => {
-    const data = Array.isArray(payload) ? payload[0] : payload;
+    const data = unwrapAlertPayload(payload);
 
     if (typeof data === 'string') {
         return { title: data, type: variant };
@@ -151,7 +173,8 @@ const fireAppAlert = (payload, variant = 'info') => {
     const options = normalizeAlertPayload(payload, variant);
 
     if (!options.title) {
-        throw new Error('AppAlert requires a title.');
+        console.warn('AppAlert ignored an empty payload.', payload);
+        return Promise.resolve(null);
     }
 
     const type = options.type === 'failed' ? 'error' : options.type;

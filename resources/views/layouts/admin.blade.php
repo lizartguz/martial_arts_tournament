@@ -459,6 +459,48 @@
             };
         }
 
+        /**
+         * Posiciona los menus de acciones fuera del scroll horizontal de las tablas.
+         */
+        function tableActionMenu() {
+            return {
+                open: false,
+                style: '',
+
+                toggle(trigger) {
+                    if (this.open) {
+                        this.close();
+                        return;
+                    }
+
+                    this.openAt(trigger);
+                },
+
+                openAt(trigger) {
+                    if (!trigger) {
+                        return;
+                    }
+
+                    const rect = trigger.getBoundingClientRect();
+                    const width = Number(trigger.dataset.menuWidth || 192);
+                    const gap = 6;
+                    const estimatedHeight = 220;
+                    const left = Math.max(8, Math.min(rect.right - width, window.innerWidth - width - 8));
+                    const preferredTop = rect.bottom + gap;
+                    const top = preferredTop + estimatedHeight > window.innerHeight - 8
+                        ? Math.max(8, rect.top - estimatedHeight - gap)
+                        : preferredTop;
+
+                    this.style = `left: ${left}px; top: ${top}px; width: ${width}px;`;
+                    this.open = true;
+                },
+
+                close() {
+                    this.open = false;
+                },
+            };
+        }
+
     </script>
 
     @livewireScripts

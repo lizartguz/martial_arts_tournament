@@ -1,6 +1,6 @@
 # Flujo de inicio de sesión (login)
 
-Documento actualizado: 20 de junio de 2026.
+Documento actualizado: 18 de agosto de 2026.
 
 ## Objetivo
 
@@ -130,6 +130,14 @@ Función que cumple:
 > Nota: `boot()` también define la vista de login (`auth.login`), las acciones de registro/actualización de perfil/contraseña de Fortify, y los **rate limiters** (ver sección final).
 
 La vista de login se renderiza con el componente `x-guest-layout`, que usa `resources/views/layouts/guest.blade.php`. Ese layout debe mantener las directivas Blade compilables (`@vite`, `csrf_token()`, `asset()`, Livewire) para que los estilos de autenticación se carguen desde Vite y no queden impresos como texto crudo en el HTML.
+
+---
+
+## Eliminación lógica de cuentas
+
+El flujo vigente de eliminación de cuenta desde `/user/profile` conserva el registro en `users` y marca `deleted_at`. El modelo `App\Models\User` usa `SoftDeletes`, por lo que las consultas normales de Eloquent y el login de Fortify excluyen automáticamente esas cuentas.
+
+La acción `App\Actions\Jetstream\DeleteUser` revoca tokens y elimina la foto de perfil por seguridad y privacidad, pero la fila del usuario permanece disponible para auditoría y trazabilidad histórica. Si se requiere liberar el correo para un nuevo registro, debe definirse una política adicional de anonimización o reemplazo controlado de identificadores únicos.
 
 ---
 

@@ -83,12 +83,12 @@
                             </span>
                         </td>
                         <td>
-                            <div class="flex justify-center" x-data="{ open: false }" @click.outside="open = false">
-                                <button type="button" class="tw-btn-xs tw-btn-outline" @click="open = !open">
+                            <div class="flex justify-center" x-data="tableActionMenu()" @click.outside="close()">
+                                <button type="button" class="tw-btn-xs tw-btn-outline" x-ref="trigger" @click="toggle($refs.trigger)">
                                     <i class="fas fa-ellipsis-v"></i>{{ __('mma.admin.common.columns.actions') }}
                                 </button>
                                 <div x-show="open" x-cloak
-                                     class="absolute z-20 mt-8 w-40 rounded border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+                                     x-bind:style="style" class="fixed z-[80] rounded border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-800">
                                     @can('weight_classes.update')
                                         <button type="button" class="block w-full px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-700"
                                                 wire:click="edit({{ $weightClass->id }})" @click="open = false">

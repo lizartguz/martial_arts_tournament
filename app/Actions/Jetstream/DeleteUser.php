@@ -8,7 +8,7 @@ use Laravel\Jetstream\Contracts\DeletesUsers;
 class DeleteUser implements DeletesUsers
 {
     /**
-     * Elimina el registro seleccionado cuando está permitido.
+     * Desactiva la cuenta conservando la fila para auditoría.
      */
     public function delete(User $user): void
     {

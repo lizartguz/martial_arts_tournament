@@ -32,6 +32,7 @@ return new class extends Migration
             $table->tinyInteger('state')->default(1)->comment('0 bloqueado/inactivo, 1 activo');
             $table->timestamp('last_login_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->index('state');
             $table->index('number_phone');

@@ -438,7 +438,12 @@ class FighterMediaTable extends Component
         }
 
         if ($media->exists && $media->file_type === 'image' && $media->file_path) {
-            $validated['file_path'] = $media->file_path;
+            // Si cambió el estado (Activo/Inactivo) sin subir un archivo nuevo,
+            // renombrar el archivo: la URL vieja queda huérfana al instante en
+            // vez de depender de que expire el caché público.
+            $validated['file_path'] = $media->status === (int) $validated['status']
+                ? $media->file_path
+                : app(PublicMediaService::class)->rename($media->file_path) ?? $media->file_path;
 
             return true;
         }

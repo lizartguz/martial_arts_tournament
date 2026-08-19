@@ -106,6 +106,7 @@ return new class extends Migration
 
             $table->index(['event_id', 'category', 'status']);
             $table->index(['event_id', 'is_featured']);
+            $table->index('file_path');
         });
 
         /**
@@ -126,6 +127,7 @@ return new class extends Migration
 
             $table->index(['fighter_id', 'status']);
             $table->index(['fighter_id', 'is_featured']);
+            $table->index('file_path');
         });
 
         /**

@@ -10,10 +10,12 @@ use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 /**
  * Punto único para guardar, borrar y resolver las imágenes administradas.
  *
- * Viven en un solo disco, el privado configurado en `uploads.public_images`, y
- * se leen solo por la ruta `media.public.show`. No hay segundo disco ni rutas
- * con prefijo `storage/`: lo que no encaje en `normalize()` es un 404, no un
- * caso a tolerar.
+ * Viven en un solo disco, el privado configurado en `uploads.public_images`.
+ * Se leen por `media.public.show` (sin sesión) salvo las galerías con estado
+ * de publicación (event-media/fighter-media), que van por `media.gallery.show`
+ * porque esa ruta necesita saber quién pide el archivo. No hay segundo disco
+ * ni rutas con prefijo `storage/`: lo que no encaje en `normalize()` es un
+ * 404, no un caso a tolerar.
  */
 class PublicMediaService
 {
@@ -43,7 +45,9 @@ class PublicMediaService
         $normalized = $this->normalize($candidate);
 
         if ($normalized) {
-            return route('media.public.show', ['path' => $normalized]);
+            return $this->isGalleryPath($normalized)
+                ? route('media.gallery.show', ['galleryPath' => $normalized])
+                : route('media.public.show', ['path' => $normalized]);
         }
 
         // Estáticos del repo (`images/mma/brand/...`), que no pasan por storage.
@@ -80,6 +84,50 @@ class PublicMediaService
         }
 
         Storage::disk($this->disk())->delete($normalized);
+    }
+
+    /**
+     * Renombra un archivo administrado sin reprocesarlo.
+     *
+     * Se usa cuando cambia la visibilidad de una pieza (Activo/Inactivo) sin
+     * que llegue un archivo nuevo: la URL anterior queda huérfana de
+     * inmediato en vez de depender de que expire un caché.
+     */
+    public function rename(?string $path): ?string
+    {
+        $normalized = $this->normalize($path);
+
+        if (! $normalized) {
+            return null;
+        }
+
+        $disk = Storage::disk($this->disk());
+
+        if (! $disk->exists($normalized)) {
+            return null;
+        }
+
+        $directory = trim((string) pathinfo($normalized, PATHINFO_DIRNAME), '/');
+        $extension = strtolower((string) pathinfo($normalized, PATHINFO_EXTENSION));
+        $newPath = $directory.'/'.Str::random(32).'.'.$extension;
+
+        if (! $disk->copy($normalized, $newPath)) {
+            return null;
+        }
+
+        $disk->delete($normalized);
+
+        return $newPath;
+    }
+
+    /**
+     * Indica si la ruta pertenece a una galeria con estado de publicacion
+     * (event-media/fighter-media), servida por media.gallery.show en vez de
+     * media.public.show porque necesita saber quien la pide.
+     */
+    public function isGalleryPath(string $normalized): bool
+    {
+        return in_array(explode('/', $normalized)[1] ?? '', ['event-media', 'fighter-media'], true);
     }
 
     /**

@@ -15,6 +15,12 @@ class PublicMediaController extends Controller
         $normalized = $media->normalize($path);
         abort_unless($normalized, 404);
 
+        // Defensa en profundidad: las galerias con estado de publicacion se
+        // sirven por media.gallery.show, que si conoce la sesion. Si por
+        // algun truco de encoding una peticion para esas carpetas termina
+        // aqui igual, se rechaza en vez de servirla sin chequear el estado.
+        abort_if($media->isGalleryPath($normalized), 404);
+
         $disk = Storage::disk($media->disk());
         abort_unless($disk->exists($normalized), 404);
 

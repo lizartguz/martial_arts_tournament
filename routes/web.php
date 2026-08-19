@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\VenueController;
 use App\Http\Controllers\Admin\WeightClassController;
 use App\Http\Controllers\AuthorizationC;
 use App\Http\Controllers\FirebaseWebPushController;
+use App\Http\Controllers\GalleryMediaController;
 use App\Http\Controllers\NotificationImageController;
 use App\Http\Controllers\NotificationPushC;
 use App\Http\Controllers\NotificationViewController;
@@ -35,6 +36,15 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingController::class, 'index'])->name('landing.home');
+
+/**
+ * Galerias de eventos y peleadores: unica ruta de /media/{path} que corre
+ * dentro del grupo web (con sesion), porque necesita saber quien pide el
+ * archivo para decidir si una pieza Inactiva se sirve o no.
+ */
+Route::get('/media/{galleryPath}', [GalleryMediaController::class, 'show'])
+    ->where('galleryPath', 'mma/(event-media|fighter-media)/.+')
+    ->name('media.gallery.show');
 
 /**
  * Resuelve la respuesta de esta ruta GET.

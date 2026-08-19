@@ -11,7 +11,7 @@
     <link rel="shortcut icon" type="image/png" href="{{ \App\Support\AdminPanel::favicon() }}?v=20260510">
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
 
-    <script>
+    <script nonce="{{ \App\Support\CspNonce::value() }}">
         /**
          * Inicializa este comportamiento inmediato del navegador.
          */

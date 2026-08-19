@@ -74,7 +74,7 @@
 </div>
 
 @once
-<script>
+<script nonce="{{ \App\Support\CspNonce::value() }}">
     /**
      * Inicializa el comportamiento cuando el DOM esta listo.
      */

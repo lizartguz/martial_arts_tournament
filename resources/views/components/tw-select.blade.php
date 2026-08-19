@@ -87,7 +87,7 @@
 </div>
 
 @once
-<script>
+<script nonce="{{ \App\Support\CspNonce::value() }}">
     if (!window.twSelect) {
         /**
          * Inicializa el selector personalizado de la interfaz.

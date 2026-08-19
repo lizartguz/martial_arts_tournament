@@ -55,10 +55,10 @@
             {{ $slot }}
         </div>
 
-        @livewireScripts
+        @livewireScripts(['nonce' => \App\Support\CspNonce::value()])
 
         @if(($showThemeToggle ?? false) && ! request()->routeIs('register', 'public.station.feed'))
-        <script>
+        <script nonce="{{ \App\Support\CspNonce::value() }}">
             // Función para alternar modo oscuro
             /**
              * Alterna el modo oscuro de la vista invitada.

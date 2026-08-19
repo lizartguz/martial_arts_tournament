@@ -13,6 +13,9 @@
 /.zed
 /auth.json
 /node_modules
+/test-results
+/playwright-report
+/playwright/.cache
 /package-lock.json
 /composer.lock
 /bootstrap/cache/*.php

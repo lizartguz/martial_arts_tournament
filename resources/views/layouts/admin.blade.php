@@ -18,7 +18,7 @@
     @yield('meta_tags')
 
     {{-- Aplica el tema antes del primer pintado para evitar flash --}}
-    <script>
+    <script nonce="{{ \App\Support\CspNonce::value() }}">
         window.AppAlertDefaults = {
             confirmButtonText: @js(__('messages.actions.close')),
         };
@@ -41,7 +41,7 @@
 
     {{-- Fija el estado del menú lateral antes del primer pintado (sin parpadeo) y lo
          conserva entre vistas vía localStorage, igual que el tema oscuro. --}}
-    <script>
+    <script nonce="{{ \App\Support\CspNonce::value() }}">
         /**
          * Inicializa este comportamiento inmediato del navegador.
          */
@@ -173,7 +173,7 @@
 <body class="min-h-screen admin-content-bg" x-data="adminLayout()">
 
     {{-- Aplica data-theme al body antes de que Alpine arranque --}}
-    <script>
+    <script nonce="{{ \App\Support\CspNonce::value() }}">
         /**
          * Inicializa este comportamiento inmediato del navegador.
          */
@@ -403,7 +403,7 @@
     <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('js/dark-mode.js') }}"></script>
 
-    <script>
+    <script nonce="{{ \App\Support\CspNonce::value() }}">
         if (window.jQuery && window.$ !== window.jQuery) {
             window.$ = window.jQuery;
         }
@@ -499,7 +499,7 @@
 
     </script>
 
-    @livewireScripts
+    @livewireScripts(['nonce' => \App\Support\CspNonce::value()])
     @vite('resources/js/analytics.js')
     @vite('resources/js/push-notifications.js')
     @yield('js')

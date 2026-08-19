@@ -37,7 +37,7 @@
     </x-dropdown>
 </div>
 
-<script>
+<script nonce="{{ \App\Support\CspNonce::value() }}">
     document.addEventListener('livewire:initialized', () => {
         let locale = localStorage.getItem('locale');
         let localeB = "{{ $selectedLanguage }}"

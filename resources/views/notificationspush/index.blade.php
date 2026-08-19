@@ -55,7 +55,7 @@
         'attachment_alt' => __('messages.notices.gallery.attachment_alt'),
     ];
 @endphp
-<script>
+<script nonce="{{ \App\Support\CspNonce::value() }}">
     window.notificationI18n = @json($notificationI18n);
 
     /**

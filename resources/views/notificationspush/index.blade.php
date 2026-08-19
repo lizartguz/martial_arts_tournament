@@ -38,7 +38,7 @@
 
 @section('footer')
 <div class="text-center">
-    SenvaTec {{ date('Y') }} | Desarrollado por <a href="https://www.artguz.com" style="color: #869099;">Artguz SRL</a>
+    {{ config('app.name') }} {{ date('Y') }}
 </div>
 @stop
 

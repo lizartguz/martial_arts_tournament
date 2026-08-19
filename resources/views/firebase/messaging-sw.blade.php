@@ -33,7 +33,7 @@ if (hasFirebaseMessagingConfig) {
         const title = notification.title || 'Nueva notificación';
         const options = {
             body: notification.body || '',
-            icon: notification.icon || '/frontend/images/logo_with_text.png',
+            icon: notification.icon || '{{ asset('images/mma/brand/combate-real-icon.png') }}',
             data: {
                 link:
                     payload?.fcmOptions?.link

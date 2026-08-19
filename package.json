@@ -2,9 +2,8 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "npm run vendor:assets && vite build",
-        "dev": "npm run vendor:assets && vite",
-        "vendor:assets": "node scripts/copy-vendor-assets.mjs"
+        "build": "vite build",
+        "dev": "vite"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.7",

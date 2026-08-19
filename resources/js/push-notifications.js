@@ -208,7 +208,7 @@ function showForegroundNotification(payload) {
     const link = payload?.fcmOptions?.link || payload?.data?.link || '/';
     const browserNotification = new Notification(notification.title || 'Nueva notificacion', {
         body: notification.body || '',
-        icon: notification.icon || '/frontend/images/logo_with_text.png',
+        icon: notification.icon || '/images/mma/brand/combate-real-icon.png',
     });
 
     browserNotification.onclick = () => {

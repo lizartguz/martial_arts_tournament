@@ -295,7 +295,7 @@ class PushNotificationService
                     'notification' => array_filter([
                         'title' => $title,
                         'body' => $body,
-                        'icon' => asset('frontend/images/logo_with_text.png'),
+                        'icon' => asset('images/mma/brand/combate-real-icon.png'),
                         'image' => $image,
                     ]),
                     'fcm_options' => array_filter([

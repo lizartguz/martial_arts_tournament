@@ -2,8 +2,8 @@
 <tr>
 <td class="header">
 <a href="{{ $url }}" style="display: inline-block;">
-@if (trim($slot) === 'SenvaTec')
-<img src="{{asset('images/logo_artguz_clima.png')}}" class="logo" alt="SenvaTec">
+@if (trim($slot) === config('app.name'))
+<img src="{{ \App\Support\PublicMedia::url('images/mma/brand/combate-real-logo.svg') }}" class="logo" alt="{{ config('app.name') }}">
 @else
 {{ $slot }}
 @endif

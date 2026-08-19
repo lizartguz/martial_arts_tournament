@@ -28,8 +28,9 @@ class NotificationPrivateImagesTest extends TestCase
 
         $this->createMinimalSchema();
         $this->withoutMiddleware(AuthenticateSession::class);
+        // Los adjuntos de avisos viven en un unico disco privado; no hay
+        // segundo disco publico que falsear.
         Storage::fake('local');
-        Storage::fake('public');
         app(PermissionRegistrar::class)->forgetCachedPermissions();
         Permission::findOrCreate('ManageMarketing', 'web');
     }
@@ -136,24 +137,6 @@ class NotificationPrivateImagesTest extends TestCase
 
         $this->get($signedUrl.'&user=999999')
             ->assertForbidden();
-    }
-
-    public function test_command_moves_legacy_images_to_private_storage(): void
-    {
-        $recipient = $this->createUser('recipient@example.test');
-        $notification = $this->createNotification($recipient);
-
-        Storage::disk('public')->put($notification->image, 'legacy-public-content');
-
-        $this->artisan('app:notifications-migrate-images-private')
-            ->assertSuccessful();
-
-        Storage::disk('local')->assertExists($notification->image);
-        Storage::disk('public')->assertMissing($notification->image);
-        $this->assertSame(
-            'legacy-public-content',
-            Storage::disk('local')->get($notification->image)
-        );
     }
 
     public function test_firebase_payload_does_not_expose_private_images(): void

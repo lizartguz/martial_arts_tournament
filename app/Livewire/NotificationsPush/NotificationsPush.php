@@ -1011,6 +1011,14 @@ class NotificationsPush extends Component
     private function resultData()
     {
         $searchTitle = trim((string) $this->searchTitle);
+        // Livewire recibe propiedades desde el cliente; esta lista blanca evita ordenar por campos manipulados.
+        $allowedSortColumns = ['id', 'title', 'description', 'reg_date', 'deadline', 'scheduled_at', 'state', 'created_at'];
+        $sortColumn = in_array($this->sortColumn, $allowedSortColumns, true) ? $this->sortColumn : 'id';
+        $sortDirection = strtolower((string) $this->sortDirection);
+
+        if (! in_array($sortDirection, ['asc', 'desc'], true)) {
+            $sortDirection = 'desc';
+        }
 
         return NotificationM::query()
             ->with('user')
@@ -1032,7 +1040,7 @@ class NotificationsPush extends Component
             ->when($this->stateChange !== 'all', function ($query) {
                 $query->where('state', (int) $this->stateChange);
             })
-            ->orderBy($this->sortColumn, $this->sortDirection)
+            ->orderBy($sortColumn, $sortDirection)
             ->paginate($this->perPage);
     }
 

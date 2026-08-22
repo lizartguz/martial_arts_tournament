@@ -406,6 +406,19 @@ class NotificationPrivateImagesTest extends TestCase
         ]);
     }
 
+    public function test_notification_table_ignores_manipulated_sort_values(): void
+    {
+        $viewer = $this->createUser('notice-sort-viewer@example.test');
+        $viewer->givePermissionTo('notifications.view');
+        $this->createNotification($viewer);
+
+        Livewire::actingAs($viewer)
+            ->test(NotificationsPush::class)
+            ->set('sortColumn', 'id desc; drop table users')
+            ->set('sortDirection', 'sideways')
+            ->assertSee('Aviso privado');
+    }
+
     public function test_same_web_push_token_is_reassigned_to_the_latest_authenticated_user(): void
     {
         $firstUser = $this->createUser('push-first@example.test');

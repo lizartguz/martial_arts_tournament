@@ -41,7 +41,7 @@
             <div wire:loading wire:target="saveNotification,changeStatus,deleteNotif,visibleAdd,noVisibleAdd,editNotif">
                 <span class="tw-spinner"></span>
             </div>
-            @if(!$formAdd)
+            @if(!$formAdd && auth()->user()?->can('notifications.create'))
                 <button class="tw-btn tw-btn-emerald" wire:click="visibleAdd">
                     <i class="fa fa-plus text-xs"></i> {{ __('messages.notices.buttons.new') }}
                 </button>
@@ -458,31 +458,37 @@
                                                 <i class="fa fa-images mr-1"></i> {{ __('messages.notices.buttons.images') }}
                                             </button>
                                         @endif
-                                        <button type="button"
-                                                class="tw-btn-xs tw-btn-outline-blue"
-                                                wire:click="resendPush({{ $item->id }})"
-                                                wire:loading.attr="disabled" wire:target="resendPush"
-                                                wire:confirm="{{ __('messages.notices.confirm.resend') }}">
-                                            <span wire:loading.remove wire:target="resendPush({{ $item->id }})">
-                                                <i class="fa fa-paper-plane mr-1"></i> {{ __('messages.notices.buttons.resend') }}
-                                            </span>
-                                            <span wire:loading.inline wire:target="resendPush({{ $item->id }})">
-                                                <span class="tw-spinner-sm mr-1"></span> {{ __('messages.notices.buttons.sending') }}
-                                            </span>
-                                        </button>
-                                        <button type="button"
-                                                class="tw-btn-xs {{ $item->state == 1 ? 'tw-btn-outline' : 'tw-btn-outline-emerald' }}"
-                                                wire:click="changeStatus({{ $item->id }}, {{ $item->state }})"
-                                                wire:loading.attr="disabled" wire:target="resendPush"
-                                                wire:confirm="{{ $item->state == 1 ? __('messages.notices.confirm.deactivate') : __('messages.notices.confirm.activate') }}">
-                                            {{ $item->state == 1 ? __('messages.notices.buttons.deactivate') : __('messages.notices.buttons.activate') }}
-                                        </button>
-                                        <button type="button"
-                                                class="tw-btn-xs tw-btn-outline-red"
-                                                wire:click="confirmDeleteNotif({{ $item->id }})"
-                                                wire:loading.attr="disabled" wire:target="confirmDeleteNotif({{ $item->id }})">
-                                            <i class="fa fa-trash-alt mr-1"></i> {{ __('messages.notices.buttons.delete') }}
-                                        </button>
+                                        @can('notifications.send')
+                                            <button type="button"
+                                                    class="tw-btn-xs tw-btn-outline-blue"
+                                                    wire:click="resendPush({{ $item->id }})"
+                                                    wire:loading.attr="disabled" wire:target="resendPush"
+                                                    wire:confirm="{{ __('messages.notices.confirm.resend') }}">
+                                                <span wire:loading.remove wire:target="resendPush({{ $item->id }})">
+                                                    <i class="fa fa-paper-plane mr-1"></i> {{ __('messages.notices.buttons.resend') }}
+                                                </span>
+                                                <span wire:loading.inline wire:target="resendPush({{ $item->id }})">
+                                                    <span class="tw-spinner-sm mr-1"></span> {{ __('messages.notices.buttons.sending') }}
+                                                </span>
+                                            </button>
+                                        @endcan
+                                        @can('notifications.update')
+                                            <button type="button"
+                                                    class="tw-btn-xs {{ $item->state == 1 ? 'tw-btn-outline' : 'tw-btn-outline-emerald' }}"
+                                                    wire:click="changeStatus({{ $item->id }}, {{ $item->state }})"
+                                                    wire:loading.attr="disabled" wire:target="resendPush"
+                                                    wire:confirm="{{ $item->state == 1 ? __('messages.notices.confirm.deactivate') : __('messages.notices.confirm.activate') }}">
+                                                {{ $item->state == 1 ? __('messages.notices.buttons.deactivate') : __('messages.notices.buttons.activate') }}
+                                            </button>
+                                        @endcan
+                                        @can('notifications.delete')
+                                            <button type="button"
+                                                    class="tw-btn-xs tw-btn-outline-red"
+                                                    wire:click="confirmDeleteNotif({{ $item->id }})"
+                                                    wire:loading.attr="disabled" wire:target="confirmDeleteNotif({{ $item->id }})">
+                                                <i class="fa fa-trash-alt mr-1"></i> {{ __('messages.notices.buttons.delete') }}
+                                            </button>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>

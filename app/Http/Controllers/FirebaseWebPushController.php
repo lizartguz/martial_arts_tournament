@@ -95,7 +95,8 @@ class FirebaseWebPushController extends Controller
             'token' => ['required', 'string', 'max:2048'],
         ]);
 
-        $this->fcmTokenService->deactivateTokenByValue(
+        $this->fcmTokenService->deactivateWebTokenForUser(
+            $request->user(),
             $validated['token'],
             'Token web desregistrado desde el navegador'
         );

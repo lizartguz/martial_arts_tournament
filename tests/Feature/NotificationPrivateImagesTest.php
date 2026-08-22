@@ -32,7 +32,9 @@ class NotificationPrivateImagesTest extends TestCase
         // segundo disco publico que falsear.
         Storage::fake('local');
         app(PermissionRegistrar::class)->forgetCachedPermissions();
-        Permission::findOrCreate('ManageMarketing', 'web');
+        foreach (['notifications.view', 'notifications.create', 'notifications.update', 'notifications.delete', 'notifications.send'] as $permission) {
+            Permission::findOrCreate($permission, 'web');
+        }
     }
 
     protected function tearDown(): void
@@ -66,7 +68,7 @@ class NotificationPrivateImagesTest extends TestCase
     {
         $recipient = $this->createUser('recipient@example.test');
         $manager = $this->createUser('manager@example.test');
-        $manager->givePermissionTo('ManageMarketing');
+        $manager->givePermissionTo('notifications.view');
         $notification = $this->createNotification($recipient);
 
         Storage::disk('local')->put($notification->image, 'manager-image-content');
@@ -100,17 +102,9 @@ class NotificationPrivateImagesTest extends TestCase
         ]);
     }
 
-    public function test_marketing_manager_can_open_the_fictitious_notification_preview(): void
+    public function test_legacy_fictitious_notification_preview_route_is_not_exposed(): void
     {
-        $manager = $this->createUser('manager@example.test');
-        $manager->givePermissionTo('ManageMarketing');
-
-        $this->actingAs($manager)
-            ->get(route('notifications.preview'))
-            ->assertOk()
-            ->assertSee('Vista de demostracion')
-            ->assertSee('Alerta preventiva por lluvias intensas')
-            ->assertSee('senvatec-hero-weather-station.png');
+        $this->assertFalse(\Illuminate\Support\Facades\Route::has('notifications.preview'));
     }
 
     public function test_mobile_image_url_requires_an_untampered_signature(): void
@@ -231,8 +225,8 @@ class NotificationPrivateImagesTest extends TestCase
         $layout = file_get_contents(resource_path('views/layouts/admin.blade.php'));
 
         $this->assertStringContainsString('id="web-push-toggle"', $layout);
-        $this->assertStringContainsString('web-push-navbar-link', $layout);
-        $this->assertStringContainsString('fas fa-bell text-secondary', $layout);
+        $this->assertStringContainsString('aria-label="Activar notificaciones"', $layout);
+        $this->assertStringContainsString('fas fa-bell text-sm', $layout);
         $this->assertStringContainsString('href="#"', $layout);
     }
 
@@ -289,6 +283,127 @@ class NotificationPrivateImagesTest extends TestCase
                 'success' => true,
                 'registered' => false,
             ]);
+    }
+
+    public function test_authenticated_user_cannot_delete_another_users_web_push_token(): void
+    {
+        $owner = $this->createUser('push-delete-owner@example.test');
+        $otherUser = $this->createUser('push-delete-other@example.test');
+
+        app(\App\Services\FcmTokenService::class)->registerWebTokenForUser(
+            $owner,
+            'firebase-private-delete-token'
+        );
+
+        $this->actingAs($otherUser)
+            ->deleteJson(route('firebase.web-push.token.destroy'), [
+                'token' => 'firebase-private-delete-token',
+            ])
+            ->assertOk()
+            ->assertJson(['success' => true]);
+
+        $this->assertDatabaseHas('fcm_tokens', [
+            'token' => 'firebase-private-delete-token',
+            'user_id' => $owner->id,
+            'is_active' => 1,
+            'invalidated_at' => null,
+        ]);
+
+        $this->actingAs($owner)
+            ->deleteJson(route('firebase.web-push.token.destroy'), [
+                'token' => 'firebase-private-delete-token',
+            ])
+            ->assertOk()
+            ->assertJson(['success' => true]);
+
+        $this->assertDatabaseHas('fcm_tokens', [
+            'token' => 'firebase-private-delete-token',
+            'user_id' => $owner->id,
+            'is_active' => 0,
+        ]);
+    }
+
+    public function test_user_with_only_notification_view_cannot_create_or_mutate_notifications(): void
+    {
+        $viewer = $this->createUser('notice-viewer@example.test');
+        $viewer->givePermissionTo('notifications.view');
+        $notification = $this->createNotification($viewer);
+
+        Livewire::actingAs($viewer)
+            ->test(NotificationsPush::class)
+            ->call('visibleAdd')
+            ->assertForbidden();
+
+        Livewire::actingAs($viewer)
+            ->test(NotificationsPush::class)
+            ->set('titleAU', 'Aviso sin permiso')
+            ->set('descriptionAU', 'No debe guardarse')
+            ->set('deadlineAU', now()->addDay()->toDateString())
+            ->set('stateAU', 0)
+            ->call('saveNotification')
+            ->assertForbidden();
+
+        Livewire::actingAs($viewer)
+            ->test(NotificationsPush::class)
+            ->call('editNotif', $notification->id)
+            ->assertForbidden();
+
+        Livewire::actingAs($viewer)
+            ->test(NotificationsPush::class)
+            ->call('changeStatus', $notification->id, 1)
+            ->assertForbidden();
+
+        Livewire::actingAs($viewer)
+            ->test(NotificationsPush::class)
+            ->call('confirmDeleteNotif', $notification->id)
+            ->assertForbidden();
+
+        Livewire::actingAs($viewer)
+            ->test(NotificationsPush::class)
+            ->call('resendPush', $notification->id)
+            ->assertForbidden();
+
+        $this->assertDatabaseMissing('notifications', [
+            'title' => 'Aviso sin permiso',
+        ]);
+        $this->assertDatabaseHas('notifications', [
+            'id' => $notification->id,
+            'state' => 1,
+        ]);
+    }
+
+    public function test_user_with_create_permission_without_send_can_save_inactive_notification_only(): void
+    {
+        $creator = $this->createUser('notice-creator@example.test');
+        $creator->givePermissionTo(['notifications.view', 'notifications.create']);
+
+        Livewire::actingAs($creator)
+            ->test(NotificationsPush::class)
+            ->set('titleAU', 'Borrador autorizado')
+            ->set('descriptionAU', 'Creado sin permiso de envio')
+            ->set('deadlineAU', now()->addDay()->toDateString())
+            ->set('stateAU', 0)
+            ->call('saveNotification')
+            ->assertHasNoErrors();
+
+        $this->assertDatabaseHas('notifications', [
+            'title' => 'Borrador autorizado',
+            'creator_user_id' => $creator->id,
+            'state' => 0,
+        ]);
+
+        Livewire::actingAs($creator)
+            ->test(NotificationsPush::class)
+            ->set('titleAU', 'Envio sin permiso')
+            ->set('descriptionAU', 'No debe dispararse')
+            ->set('deadlineAU', now()->addDay()->toDateString())
+            ->set('stateAU', 1)
+            ->call('saveNotification')
+            ->assertForbidden();
+
+        $this->assertDatabaseMissing('notifications', [
+            'title' => 'Envio sin permiso',
+        ]);
     }
 
     public function test_same_web_push_token_is_reassigned_to_the_latest_authenticated_user(): void
@@ -370,7 +485,7 @@ class NotificationPrivateImagesTest extends TestCase
     public function test_manager_can_resend_an_existing_notification_without_creating_another_record(): void
     {
         $manager = $this->createUser('manager-resend@example.test');
-        $manager->givePermissionTo('ManageMarketing');
+        $manager->givePermissionTo(['notifications.view', 'notifications.send']);
         $recipient = $this->createUser('recipient-resend@example.test');
         $notification = $this->createNotification($recipient);
 
@@ -396,7 +511,7 @@ class NotificationPrivateImagesTest extends TestCase
     public function test_concurrent_resend_is_rejected_before_calling_firebase(): void
     {
         $manager = $this->createUser('manager-duplicate@example.test');
-        $manager->givePermissionTo('ManageMarketing');
+        $manager->givePermissionTo(['notifications.view', 'notifications.send']);
         $recipient = $this->createUser('recipient-duplicate@example.test');
         $notification = $this->createNotification($recipient);
         $lock = Cache::lock("notification-push-resend:{$notification->id}", 300);
@@ -459,6 +574,7 @@ class NotificationPrivateImagesTest extends TestCase
             $table->rememberToken();
             $table->tinyInteger('state')->nullable();
             $table->tinyInteger('access_type')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
 

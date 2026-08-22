@@ -169,6 +169,30 @@ class FcmTokenService
         ])->save();
     }
 
+    /**
+     * Desactiva solo tokens web que pertenecen al usuario autenticado.
+     */
+    public function deactivateWebTokenForUser(User $user, string $token, ?string $message = null): void
+    {
+        $record = FcmToken::query()
+            ->where('token', $token)
+            ->where('user_id', $user->id)
+            ->where('platform', 'web')
+            ->where('delivery_platform', 'web')
+            ->first();
+
+        if (! $record) {
+            return;
+        }
+
+        $record->forceFill([
+            'is_active' => false,
+            'invalidated_at' => Carbon::now('America/La_Paz'),
+            'last_error_at' => null,
+            'last_error_message' => $message,
+        ])->save();
+    }
+
     // Marca un token como invalido sin borrarlo para poder auditar el error.
     /**
      * Invalida token cuando deja de ser usable.

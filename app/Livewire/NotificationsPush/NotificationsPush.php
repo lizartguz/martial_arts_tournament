@@ -11,6 +11,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
@@ -92,7 +93,7 @@ class NotificationsPush extends Component
      */
     public function mount()
     {
-        abort_unless(Auth::user()?->can('notifications.view'), 403);
+        Gate::authorize('notifications.view');
         $this->loadRoleOptions();
     }
 
@@ -117,6 +118,8 @@ class NotificationsPush extends Component
      */
     public function visibleAdd()
     {
+        Gate::authorize('notifications.create');
+
         $this->clearVariable();
         $this->formAdd = true;
         $this->formUpdate = false;
@@ -137,6 +140,8 @@ class NotificationsPush extends Component
      */
     public function editNotif($id)
     {
+        Gate::authorize('notifications.update');
+
         $notification = NotificationM::find($id);
         if (! $notification) {
             $this->dispatch('failedAlert', ['failed' => __('messages.notices.alerts.not_found')]);
@@ -261,6 +266,8 @@ class NotificationsPush extends Component
      */
     public function saveNotification()
     {
+        Gate::authorize($this->formUpdate ? 'notifications.update' : 'notifications.create');
+
         $this->debugNotificationLog('saveNotification llamado');
         Log::info('Intento de guardar aviso iniciado.', $this->notificationLogContext());
 
@@ -307,6 +314,10 @@ class NotificationsPush extends Component
 
         $this->debugNotificationLog('Validacion correcta al guardar aviso');
         Log::info('Validacion correcta al guardar aviso.', $this->notificationLogContext());
+
+        if ($this->shouldAttemptImmediatePushFromForm()) {
+            Gate::authorize('notifications.send');
+        }
 
         if (! empty($this->scheduledAtAU) && Carbon::parse($this->deadlineAU)->lt(Carbon::parse($this->scheduledAtAU)->startOfDay())) {
             $this->debugNotificationLog('Fecha de expiracion menor que fecha programada');
@@ -473,6 +484,8 @@ class NotificationsPush extends Component
      */
     public function confirmDeleteNotif(int $id): void
     {
+        Gate::authorize('notifications.delete');
+
         $notification = NotificationM::find($id);
 
         if (! $notification) {
@@ -501,6 +514,8 @@ class NotificationsPush extends Component
      */
     public function deleteNotif($payload = null)
     {
+        Gate::authorize('notifications.delete');
+
         $id = $this->pendingDeleteId ?? (is_array($payload) ? ($payload['id'] ?? null) : $payload);
 
         if (! $id) {
@@ -530,8 +545,15 @@ class NotificationsPush extends Component
      */
     public function changeStatus($id, $estadoActual)
     {
+        Gate::authorize('notifications.update');
+
         try {
             $newState = $estadoActual == 1 ? 0 : 1;
+
+            if ($newState === 1) {
+                Gate::authorize('notifications.send');
+            }
+
             NotificationM::where('id', $id)->update(['state' => $newState]);
 
             if ($newState === 1) {
@@ -551,6 +573,8 @@ class NotificationsPush extends Component
      */
     public function resendPush(int $id): void
     {
+        Gate::authorize('notifications.send');
+
         $lock = Cache::lock("notification-push-resend:{$id}", 300);
 
         if (! $lock->get()) {
@@ -960,6 +984,25 @@ class NotificationsPush extends Component
             && $notification->push_sent_at === null
             && (! $notification->scheduled_at || $notification->scheduled_at->lte($now))
             && (! $notification->deadline || $notification->deadline->gte($now->toDateString()));
+    }
+
+    /**
+     * Determina si el formulario intentara disparar push inmediatamente.
+     */
+    private function shouldAttemptImmediatePushFromForm(): bool
+    {
+        $now = Carbon::now('America/La_Paz');
+        $alreadySent = $this->formUpdate
+            && $this->idAU
+            && NotificationM::query()
+                ->whereKey($this->idAU)
+                ->whereNotNull('push_sent_at')
+                ->exists();
+
+        return (int) $this->stateAU === 1
+            && ! $alreadySent
+            && (empty($this->scheduledAtAU) || Carbon::parse($this->scheduledAtAU)->lte($now))
+            && (! $this->deadlineAU || Carbon::parse($this->deadlineAU)->gte($now->copy()->startOfDay()));
     }
 
     /**

@@ -314,6 +314,7 @@ Los permisos para venta interna y check-in (`ticket_orders.*`, `ticket_checkins.
 ```text
 notifications.view
 notifications.create
+notifications.update
 notifications.send
 notifications.delete
 fcm_tokens.view
@@ -464,6 +465,7 @@ ticket_links.update
 ticket_links.delete
 notifications.view
 notifications.create
+notifications.update
 notifications.send
 notifications.delete
 fcm_tokens.view
@@ -578,6 +580,8 @@ ticket_links.create
 ticket_links.update
 notifications.view
 notifications.create
+notifications.update
+notifications.delete
 notifications.send
 ```
 
@@ -654,6 +658,8 @@ Estos permisos pueden asignarse a usuarios puntuales cuando el flujo operativo l
 ```text
 events.publish
 reports.export
+notifications.update
+notifications.delete
 notifications.send
 subscription_payments.confirm
 subscription_payments.upload_proof

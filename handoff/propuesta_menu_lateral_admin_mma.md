@@ -207,6 +207,10 @@ fighters.delete
 subscription_plans.view
 subscription_payments.confirm
 purchase_requests.view
+notifications.view
+notifications.create
+notifications.update
+notifications.delete
 notifications.send
 authorization.access
 ```

@@ -138,6 +138,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'ticket_links.delete',
             'notifications.view',
             'notifications.create',
+            'notifications.update',
+            'notifications.delete',
             'notifications.send',
             'reports.events.view',
             'reports.subscriptions.view',
@@ -195,6 +197,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 'ticket_links.update',
                 'notifications.view',
                 'notifications.create',
+                'notifications.update',
+                'notifications.delete',
                 'notifications.send',                                                                                     
             ],
             'sales' => [
